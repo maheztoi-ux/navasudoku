@@ -1,0 +1,25 @@
+{
+  "name": "NavaSudoku",
+  "short_name": "NavaSudoku",
+  "description": "A themed Sudoku puzzle game using colors, Navrasa, Navagraha and Navratna symbol sets instead of numbers.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#150E28",
+  "theme_color": "#150E28",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
