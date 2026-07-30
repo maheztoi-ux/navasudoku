@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.maheztoi_ux.twa",
+        "sha256_cert_fingerprints": ["82:6C:C4:C8:F4:5B:F5:23:A7:50:73:BD:6C:E0:B6:7C:6A:28:CD:7B:7C:75:23:02:45:CC:2C:52:7B:3C:0C:44"]
+      }
+    }]
