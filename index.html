@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NavaSudoku — Prototype v2</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#150E28">
 <style>
   :root{
     --bg: #150E28;
@@ -16,74 +14,223 @@
     --block-line: #E8C862;
     --gold: #D4AF37;
     --gold-soft: rgba(212,175,55,0.15);
-    --ink: #F0E6FF;
+    --ink: #FFFFFF;
     --ink-dim: #A896C8;
     --error: #E85D4E;
     --success: #4ECDA0;
     --given: #FFFFFF;
+    --keytile: #1F153B;
+  }
+  html[data-theme="light"]{
+    --bg: #F5F1E8;
+    --panel: #FFFFFF;
+    --panel-alt: #EFE8D8;
+    --line-soft: rgba(40,30,20,0.14);
+    --line-strong: rgba(40,30,20,0.08);
+    --block-line: #B8860B;
+    --gold: #A8790C;
+    --gold-soft: rgba(168,121,12,0.14);
+    --ink: #241A0F;
+    --ink-dim: #605543;
+    --error: #C43D2E;
+    --success: #1F8F68;
+    --given: #14100A;
+    --keytile: #EDE6D6;
+  }
+  html[data-theme="light"] body{
+    background: radial-gradient(ellipse at top, #FFFDF6 0%, var(--bg) 55%);
+  }
+  html[data-theme="light"] .cell.peer{ background:rgba(0, 144, 168, 0.13); }
+  html[data-theme="light"] .cell,
+  html[data-theme="light"] .cell.given,
+  html[data-theme="light"] .sym-btn .number-text{
+    color:#008C99;
+    text-shadow:none;
+    font-weight:700;
+  }
+  html[data-theme="light"] #closeSettingsBtn{
+    border-color:var(--gold);
+    color:var(--gold);
   }
   *{box-sizing:border-box;}
+  html, body{ height:100%; margin:0; overscroll-behavior:none; }
   body{
-    margin:0;
-    min-height:100vh;
+    height:100vh;
+    max-height:100vh;
+    height:100dvh;
+    overflow:hidden;
     background: radial-gradient(ellipse at top, #241a44 0%, var(--bg) 55%);
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     color:var(--ink);
     display:flex;
     flex-direction:column;
     align-items:center;
-    padding:18px 14px 60px;
+    justify-content:flex-start;
+    box-sizing:border-box;
+    padding:12px;
+    padding-bottom:max(12px, env(safe-area-inset-bottom));
+    gap:0.5vh;
   }
-  h1{
-    font-family: Georgia, 'Times New Roman', serif;
-    font-weight:700;
-    letter-spacing:0.04em;
-    font-size:1.5rem;
-    margin:4px 0 0;
-    background:linear-gradient(135deg, var(--gold), #F4E4A6);
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
+  #appHeader{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    flex-shrink:0;
+    width:100%;
+    gap:8px;
   }
-  .tagline{
-    color:var(--ink-dim);
-    font-size:0.74rem;
-    letter-spacing:0.13em;
-    text-transform:uppercase;
-    margin-bottom:14px;
-  }
-
   /* Top HUD: timer, mistakes, hints */
   #hud{
     display:flex;
-    gap:14px;
+    gap:2.5vw;
     align-items:center;
     background:var(--panel);
     border:1px solid var(--line-soft);
     border-radius:12px;
-    padding:8px 16px;
-    margin-bottom:14px;
-    font-size:0.82rem;
+    padding:0.6vh 3vw;
+    margin:0;
+    font-size:clamp(0.62rem, 1.7vh, 0.82rem);
     flex-wrap:wrap;
     justify-content:center;
   }
   .hud-item{ display:flex; align-items:center; gap:5px; color:var(--ink-dim); }
   .hud-item b{ color:var(--ink); font-variant-numeric:tabular-nums; }
   .hud-item.warn b{ color:var(--error); }
-  #pauseBtn{
+  #settingsBtn{
     background:none;
     border:1px solid var(--line-soft);
     color:var(--ink);
-    border-radius:6px;
-    padding:3px 10px;
+    border-radius:8px;
+    width:30px; height:30px;
+    display:flex; align-items:center; justify-content:center;
     cursor:pointer;
+    font-size:1rem;
+    line-height:1;
+  }
+  #settingsModal{
+    position:fixed; inset:0;
+    background:rgba(10,6,20,0.72);
+    display:none;
+    align-items:center; justify-content:center;
+    z-index:60;
+    padding:20px;
+  }
+  #settingsModal.show{ display:flex; }
+  .settings-card{
+    background:var(--panel);
+    border:1px solid var(--gold);
+    border-radius:16px;
+    padding:22px 20px;
+    width:100%;
+    max-width:320px;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,0.7);
+  }
+  .settings-card h3{
+    font-family: Georgia, serif;
+    color:var(--gold);
+    margin:0 0 16px;
+    font-size:1.1rem;
+    text-align:center;
+  }
+  .settings-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:10px 4px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .settings-row:last-of-type{ border-bottom:none; }
+  .settings-row span{ font-size:0.85rem; color:var(--ink); }
+  .settings-btn{
+    background:var(--panel-alt);
+    border:1px solid var(--line-soft);
+    color:var(--ink);
+    padding:7px 14px;
+    border-radius:8px;
     font-size:0.78rem;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .settings-btn.active{ background:var(--gold); border-color:var(--gold); color:var(--panel); font-weight:700; box-shadow:0 0 0 1px var(--gold); }
+  .theme-toggle{
+    display:flex;
+    border:1px solid var(--line-soft);
+    border-radius:8px;
+    overflow:hidden;
+  }
+  .theme-toggle button{
+    background:var(--panel-alt);
+    border:none;
+    color:var(--ink-dim);
+    padding:6px 12px;
+    font-size:0.78rem;
+    cursor:pointer;
+  }
+  .theme-toggle button.active{ background:var(--gold); color:var(--panel); font-weight:700; }
+  #closeSettingsBtn{
+    width:100%;
+    margin-top:16px;
+    background:transparent;
+    border:1px solid #FFD700;
+    color:#FFD700;
+    padding:9px;
+    border-radius:8px;
+    font-size:0.8rem;
+    font-weight:600;
+    cursor:pointer;
+  }
+  #newGameSettingsBtn.confirming{
+    background:rgba(232,93,78,0.32);
+    border-color:var(--error);
+    color:#fff;
+    font-weight:600;
+  }
+  #confirmOverlay{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,0.55);
+    display:none;
+    align-items:center; justify-content:center;
+    z-index:80;
+    padding:24px;
+  }
+  #confirmOverlay.show{ display:flex; }
+  .confirm-card{
+    background:var(--panel);
+    border:1px solid var(--error);
+    border-radius:14px;
+    padding:18px;
+    max-width:280px;
+    text-align:center;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,0.7);
+  }
+  .confirm-card p{ margin:0 0 16px; font-size:0.85rem; color:var(--ink); line-height:1.4; }
+  .confirm-actions{ display:flex; gap:8px; }
+  .confirm-actions button{
+    flex:1;
+    padding:9px;
+    border-radius:8px;
+    font-size:0.78rem;
+    cursor:pointer;
+  }
+  #confirmCancelBtn{ background:transparent; border:1px solid var(--line-soft); color:var(--ink-dim); }
+  #confirmYesBtn{ background:var(--error); border:1px solid var(--error); color:#fff; font-weight:600; }
+  #newGameSettingsBtn{
+    width:100%;
+    background:rgba(232,93,78,0.14);
+    border:1px solid var(--error);
+    color:var(--error);
+    padding:9px;
+    border-radius:8px;
+    font-size:0.8rem;
+    cursor:pointer;
+    margin-top:4px;
   }
 
   .theme-row, .diff-row{
     display:flex;
-    gap:8px;
-    margin-bottom:10px;
+    gap:1.5vw;
+    margin:0;
     flex-wrap:wrap;
     justify-content:center;
   }
@@ -91,30 +238,32 @@
     background:var(--panel);
     border:1px solid var(--line-soft);
     color:var(--ink-dim);
-    padding:7px 14px;
+    padding:clamp(3px,0.7vh,7px) clamp(8px,2vw,14px);
     border-radius:20px;
-    font-size:0.78rem;
+    font-size:clamp(0.62rem, 1.6vh, 0.78rem);
     cursor:pointer;
     transition:all 0.15s ease;
   }
   .theme-btn.active{ background:var(--gold-soft); border-color:var(--gold); color:var(--gold); }
-  .diff-btn{
-    background:transparent;
-    border:1px solid var(--line-soft);
-    color:var(--ink-dim);
-    padding:5px 12px;
-    border-radius:6px;
-    font-size:0.72rem;
-    cursor:pointer;
-  }
-  .diff-btn.active{ border-color:var(--success); color:var(--success); }
-  .diff-row{ margin-bottom:18px; }
 
-  #boardWrap{ position:relative; }
+  #boardWrap{
+    position:relative;
+    flex:1 1 auto;
+    min-height:0;
+    min-width:0;
+    display:flex;
+    width:100%;
+    overflow:hidden;
+  }
   #board{
     display:grid;
-    grid-template-columns:repeat(9, minmax(30px,42px));
-    grid-template-rows:repeat(9, minmax(30px,42px));
+    grid-template-columns:repeat(9, 1fr);
+    grid-template-rows:repeat(9, 1fr);
+    width:100%;
+    max-width:100%;
+    aspect-ratio:1/1;
+    max-height:100%;
+    margin:auto auto;
     background:var(--line-strong);
     gap:1px;
     border:3px solid var(--gold);
@@ -127,16 +276,18 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    font-size:1.1rem;
+    font-size:clamp(0.68rem, 4.6vh, 1.1rem);
     cursor:pointer;
     position:relative;
     user-select:none;
     transition:background 0.12s ease, transform 0.12s ease;
+    color:#00F0FF;
+    text-shadow:0 0 6px rgba(0,240,255,0.55);
   }
-  .cell.given{ background:var(--panel-alt); cursor:default; color:var(--given); font-weight:600; }
+  .cell.given{ background:var(--panel-alt); cursor:default; color:#00F0FF; text-shadow:0 0 6px rgba(0,240,255,0.55); }
   .cell.selected{ background:var(--gold-soft); box-shadow: inset 0 0 0 2px var(--gold); }
   .cell.error{ background:rgba(232,93,78,0.22); box-shadow: inset 0 0 0 2px var(--error); }
-  .cell.peer{ background:rgba(212,175,55,0.06); }
+  .cell.peer{ background:rgba(0, 240, 255, 0.08); }
   .cell.match{ box-shadow: inset 0 0 0 2px var(--success); background:rgba(78,205,160,0.14); }
   .cell.hint-glow{ animation: hintPulse 0.9s ease 2; }
   @keyframes hintPulse{
@@ -149,10 +300,10 @@
   #board .cell:nth-child(9n){ border-right:none; }
   .row-thick{ border-bottom:3px solid var(--block-line) !important; }
 
-  .swatch{ width:62%; height:62%; border-radius:7px; box-shadow:0 0 0 1px rgba(244,228,166,0.4); display:flex; align-items:center; justify-content:center; }
-  .sw{ width:62%; height:62%; border-radius:6px; box-shadow:0 0 0 1px rgba(244,228,166,0.4); display:flex; align-items:center; justify-content:center; }
-  .swatch-icon{ font-size:0.7rem; line-height:1; }
-  .ico-oct{ display:inline-block; width:0.62em; height:0.62em; background:currentColor; clip-path: polygon(30% 0%,70% 0%,100% 30%,100% 70%,70% 100%,30% 100%,0% 70%,0% 30%); }
+  .swatch{ width:62%; height:62%; border-radius:7px; box-shadow:0 0 0 1px rgba(244,228,166,0.4); display:flex; align-items:center; justify-content:center; color:#FFFFFF; font-weight:700; }
+  .sw{ width:26px; height:26px; border-radius:6px; box-shadow:0 0 0 1px rgba(244,228,166,0.4); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#FFFFFF; font-weight:700; font-size:0.78rem; }
+  .sw .shape-icon{ width:60%; height:60%; }
+  .shape-icon{ width:60%; height:60%; display:block; }
   .face{ font-size:1.3rem; line-height:1; }
 
   /* Pause overlay */
@@ -170,39 +321,64 @@
   }
   #pauseOverlay.show{ display:flex; }
 
-  #palette{
+  #bottomZone{
     display:flex;
-    gap:8px;
-    margin-top:20px;
-    flex-wrap:wrap;
+    flex-direction:column;
+    align-items:center;
+    flex-shrink:0;
+    width:100%;
+    gap:0.35vh;
+  }
+  #palette{
+    display:grid;
+    grid-template-columns:repeat(5, 48px);
     justify-content:center;
+    gap:1.5vw;
+    margin:0;
     max-width:380px;
   }
   .sym-btn{
-    width:42px; height:42px;
+    width:48px; height:clamp(48px, 6.5vh, 58px);
     border-radius:10px;
-    background:var(--panel);
+    background:var(--keytile);
     border:1px solid var(--line-soft);
-    display:flex; align-items:center; justify-content:center;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
     cursor:pointer;
     font-size:1.2rem;
     color:var(--ink);
-    transition:transform 0.1s ease;
+    transition:transform 0.1s ease, opacity 0.2s ease;
+    box-shadow:0 0 6px rgba(110, 86, 207, 0.4);
   }
   .sym-btn:hover{ transform:translateY(-2px); border-color:var(--gold); }
-  .sym-btn.erase{ color:var(--error); font-size:0.95rem; }
+  .sym-btn.erase{ color:var(--error); font-size:1.1rem; }
+  .sym-btn .count-text{
+    font-size:clamp(0.56rem, 1.3vh, 0.68rem);
+    opacity:0.9;
+    line-height:1;
+    margin-bottom:1px;
+    font-weight:700;
+  }
+  .sym-btn .number-text{ font-size:clamp(0.95rem, 2.8vh, 1.4rem); font-weight:600; line-height:1; color:#00F0FF; text-shadow:0 0 6px rgba(0,240,255,0.55); }
+  .sym-btn .btn-inner{ display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .sym-btn.completed{
+    pointer-events:none;
+    background:transparent;
+    border-color:transparent;
+    box-shadow:none;
+  }
+  .sym-btn.completed .btn-inner{ opacity:0; visibility:hidden; }
 
-  #status{ margin-top:14px; font-size:0.82rem; color:var(--ink-dim); min-height:20px; text-align:center; }
+  #status{ margin:0; font-size:clamp(0.6rem, 1.5vh, 0.8rem); color:var(--ink-dim); min-height:0; text-align:center; }
   #status.warnText{ color:var(--error); }
 
-  .controls{ display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; justify-content:center; }
+  .controls{ display:flex; gap:1.5vw; margin:0; flex-wrap:wrap; justify-content:center; }
   .ctrl-btn{
     background:var(--panel);
     border:1px solid var(--line-soft);
     color:var(--ink);
-    padding:8px 16px;
+    padding:clamp(4px,0.8vh,7px) clamp(10px,2.6vw,16px);
     border-radius:8px;
-    font-size:0.8rem;
+    font-size:clamp(0.62rem, 1.5vh, 0.78rem);
     cursor:pointer;
   }
   .ctrl-btn:hover{ border-color:var(--gold); }
@@ -247,14 +423,56 @@
   /* Win modal */
   #winModal{
     position:fixed; inset:0;
-    background:rgba(10,6,20,0.88);
+    background:rgba(10,6,20,0.72);
+    backdrop-filter:blur(6px);
+    -webkit-backdrop-filter:blur(6px);
     display:none;
     align-items:center; justify-content:center;
     z-index:50;
     padding:20px;
   }
   #winModal.show{ display:flex; }
+  #winModal.show .win-card{ animation: modalPop 0.35s ease forwards; }
+  @keyframes modalPop{
+    from{ opacity:0; transform:translateY(24px) scale(0.96); }
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+  html[data-theme="light"] #winModal .win-card{ background:var(--panel-alt); }
+  #gameOverModal{
+    position:fixed; inset:0;
+    background:rgba(10,6,20,0.88);
+    display:none;
+    align-items:center; justify-content:center;
+    z-index:50;
+    padding:20px;
+  }
+  #gameOverModal.show{ display:flex; }
+  #gameOverModal .win-card{ border-color:var(--error); }
+  #gameOverNewBtn{
+    width:100%;
+    background:var(--error);
+    border:1px solid var(--error);
+    color:#fff;
+    font-weight:600;
+    padding:12px;
+    border-radius:8px;
+    font-size:0.9rem;
+    cursor:pointer;
+  }
+  #gameOverRestartBtn, #confirmRestartBtn{
+    width:100%;
+    background:transparent;
+    border:1px solid var(--line-soft);
+    color:var(--ink-dim);
+    padding:10px;
+    border-radius:8px;
+    font-size:0.82rem;
+    cursor:pointer;
+    margin-top:8px;
+  }
   .win-card{
+    position:relative;
+    overflow:hidden;
     background:var(--panel);
     border:1px solid var(--gold);
     border-radius:16px;
@@ -264,11 +482,27 @@
     box-shadow:0 30px 80px -20px rgba(0,0,0,0.7);
   }
   .win-card h2{
-    font-family: Georgia, serif;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-weight:700;
     color:var(--gold);
+    text-shadow:0 0 14px rgba(212,175,55,0.6);
     margin:0 0 6px;
     font-size:1.5rem;
   }
+  .confetti-layer{ position:absolute; inset:0; overflow:hidden; pointer-events:none; border-radius:16px; }
+  .confetti-piece{
+    position:absolute;
+    top:-12px;
+    width:7px; height:13px;
+    opacity:0.9;
+    animation: confettiFall 1.7s ease-in forwards;
+  }
+  @keyframes confettiFall{
+    to{ transform:translateY(260px) rotate(360deg); opacity:0; }
+  }
+  .star-rating{ font-size:1.9rem; letter-spacing:6px; margin:2px 0 14px; }
+  .star{ color:var(--line-soft); transition:color 0.2s ease; }
+  .star.filled{ color:var(--gold); text-shadow:0 0 8px rgba(212,175,55,0.65); }
   .win-stats{
     display:flex;
     justify-content:center;
@@ -278,61 +512,169 @@
   .win-stat{ display:flex; flex-direction:column; align-items:center; }
   .win-stat b{ font-size:1.3rem; color:var(--ink); }
   .win-stat span{ font-size:0.7rem; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.08em; }
-
-  @media (max-width:400px){
-    #board{ grid-template-columns:repeat(9, minmax(28px,36px)); grid-template-rows:repeat(9, minmax(28px,36px)); }
-    .cell{ font-size:0.95rem; }
+  #winNextBtn{
+    width:100%;
+    background:var(--gold);
+    border:1px solid var(--gold);
+    color:var(--panel);
+    font-weight:700;
+    padding:13px;
+    border-radius:10px;
+    font-size:0.95rem;
+    cursor:pointer;
+    box-shadow:0 4px 16px -4px rgba(212,175,55,0.5);
+  }
+  #winRetryBtn{
+    width:100%;
+    background:transparent;
+    border:1px solid var(--line-soft);
+    color:var(--ink-dim);
+    padding:9px;
+    border-radius:8px;
+    font-size:0.8rem;
+    cursor:pointer;
+    margin-top:8px;
+  }
+  #uspBanner{
+    margin-top:14px;
+    padding:10px 12px;
+    background:var(--gold-soft);
+    border:1px solid var(--gold);
+    border-radius:10px;
+    font-size:0.76rem;
+    color:var(--gold);
+    text-align:center;
+  }
+  #uspBanner button{
+    display:block;
+    margin:6px auto 0;
+    background:var(--gold);
+    color:var(--panel);
+    border:none;
+    padding:5px 14px;
+    border-radius:14px;
+    font-size:0.72rem;
+    font-weight:600;
+    cursor:pointer;
   }
 </style>
 </head>
 <body>
 
-<h1>NavaSudoku</h1>
-<div class="tagline">nine numbers, nine faces, nine colors</div>
-
-<div id="hud">
-  <div class="hud-item">⏱ <b id="timerDisplay">00:00</b></div>
-  <div class="hud-item" id="mistakeItem">✕ Mistakes <b id="mistakeDisplay">0/3</b></div>
-  <div class="hud-item">💡 Hints <b id="hintDisplay">3</b></div>
-  <button id="pauseBtn">Pause</button>
+<div id="appHeader">
+  <div id="hud">
+    <div class="hud-item">⏱ <b id="timerDisplay">00:00</b></div>
+    <div class="hud-item" id="mistakeItem">✕ Mistakes <b id="mistakeDisplay">0/3</b></div>
+    <div class="hud-item">💡 Hints <b id="hintDisplay">3</b></div>
+    <button id="settingsBtn" title="Settings">⚙️</button>
+  </div>
+  <div class="theme-row" id="themeRow"></div>
 </div>
-
-<div class="theme-row" id="themeRow"></div>
-<div class="diff-row" id="diffRow"></div>
 
 <div id="boardWrap">
   <div id="board"></div>
   <div id="pauseOverlay">Paused — tap to resume</div>
 </div>
 
-<div id="palette"></div>
-
-<div id="status">Select a cell, then pick a symbol.</div>
-
-<div class="controls">
-  <button class="ctrl-btn" id="notesBtn">✏️ Notes</button>
-  <button class="ctrl-btn" id="zenBtn">🧘 Zen</button>
-  <button class="ctrl-btn" id="rapidBtn">👆 Rapid Fill</button>
+<div id="bottomZone">
+  <div id="palette"></div>
+  <div id="status"></div>
+  <div class="controls">
+    <button class="ctrl-btn" id="notesBtn">✏️ Notes</button>
+    <button class="ctrl-btn" id="rapidBtn">👆 Rapid Fill</button>
+  </div>
+  <div class="controls">
+    <button class="ctrl-btn" id="undoBtn">↩ Undo</button>
+    <button class="ctrl-btn" id="hintBtn">💡 Hint</button>
+  </div>
 </div>
 
-<div class="controls">
-  <button class="ctrl-btn" id="undoBtn">↩ Undo</button>
-  <button class="ctrl-btn" id="hintBtn">💡 Hint</button>
-  <button class="ctrl-btn" id="newGameBtn">New Puzzle</button>
+<div id="settingsModal">
+  <div class="settings-card">
+    <h3>Settings</h3>
+    <div class="settings-row">
+      <span>Appearance</span>
+      <div class="theme-toggle">
+        <button id="lightThemeBtn">☀️ Light</button>
+        <button id="darkThemeBtn">🌙 Dark</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <span>Zen Mode</span>
+      <div class="theme-toggle">
+        <button id="zenOffBtn">OFF</button>
+        <button id="zenOnBtn">ON</button>
+      </div>
+    </div>
+    <div class="settings-row" style="display:none;">
+      <span>Vibration</span>
+      <div class="theme-toggle">
+        <button id="vibeOffBtn">OFF</button>
+        <button id="vibeOnBtn">ON</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <span>Game</span>
+      <button class="settings-btn" id="pauseBtn">Pause</button>
+    </div>
+    <div class="settings-row">
+      <span>Difficulty</span>
+      <div class="theme-toggle" id="diffRow"></div>
+    </div>
+    <button id="newGameSettingsBtn">🔄 New Puzzle</button>
+    <button id="closeSettingsBtn">Close</button>
+  </div>
+</div>
+
+<div id="confirmOverlay">
+  <div class="confirm-card">
+    <h2 id="confirmHeading" style="display:none; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-weight:700; color:var(--error); margin:0 0 6px; font-size:1.5rem;">Game Over</h2>
+    <p id="confirmMessage">Start a new puzzle?<br>Your current progress will be lost.</p>
+    <div class="win-stats" id="confirmStats" style="display:none;">
+      <div class="win-stat"><b id="confirmStatTime">00:00</b><span>Time</span></div>
+      <div class="win-stat"><b id="confirmStatMistakes">0/3</b><span>Mistakes</span></div>
+    </div>
+    <div class="confirm-actions">
+      <button id="confirmCancelBtn">Cancel</button>
+      <button id="confirmYesBtn">Yes, start new</button>
+    </div>
+    <button id="confirmRestartBtn" style="display:none;">↺ Retry Puzzle</button>
+  </div>
 </div>
 
 <div id="winModal">
   <div class="win-card">
-    <h2>Solved!</h2>
-    <div class="win-stats">
-      <div class="win-stat"><b id="winTime">00:00</b><span>Time</span></div>
-      <div class="win-stat"><b id="winMistakes">0</b><span>Mistakes</span></div>
-      <div class="win-stat"><b id="winHints">0</b><span>Hints used</span></div>
+    <div class="confetti-layer" id="confettiLayer"></div>
+    <h2>Puzzle Solved!</h2>
+    <div class="star-rating" id="starRating">
+      <span class="star">★</span><span class="star">★</span><span class="star">★</span>
     </div>
-    <button class="ctrl-btn" id="winNewBtn">Play Again</button>
+    <div class="win-stats">
+      <div class="win-stat"><b id="winTime">00:00</b><span>⏱️ Time</span></div>
+      <div class="win-stat"><b id="winMistakes">0</b><span>❌ Mistakes</span></div>
+    </div>
+    <button id="winNextBtn">Next Puzzle</button>
+    <button id="winRetryBtn">↺ Retry Puzzle</button>
+    <div id="uspBanner" style="display:none;">
+      Mastered Numbers? Try Color Sudoku!
+      <button id="uspTryBtn">Try it</button>
+    </div>
     <div id="shareText"></div>
     <button class="ctrl-btn" id="shareBtn">📋 Copy Result</button>
     <div id="shareStatus"></div>
+  </div>
+</div>
+
+<div id="gameOverModal">
+  <div class="win-card">
+    <h2 style="color:var(--error);">Game Over</h2>
+    <p style="margin:0 0 12px; font-size:0.85rem; color:var(--ink-dim);">You've made too many mistakes for this puzzle.</p>
+    <div class="win-stats">
+      <div class="win-stat"><b id="goTime">00:00</b><span>Time</span></div>
+      <div class="win-stat"><b id="goMistakes">0/3</b><span>Mistakes</span></div>
+    </div>
+    <button id="gameOverNewBtn">🔄 Start New Puzzle</button>
+    <button id="gameOverRestartBtn">↺ Retry Puzzle</button>
   </div>
 </div>
 
@@ -349,8 +691,21 @@ const COLOR_SET = [
   {c:"#38B6FF", ic:"#fff"},
   {c:"#8B4A1F", ic:"#fff"}
 ];
-const SHAPE_ICONS = ["●","■","▲","◆","★","⬡","⬠","✚","<span class=\"ico-oct\"></span>"];
-const swatchRender = (v)=>`<div class="swatch" style="background:${v.c}"><span class="swatch-icon" style="color:${v.ic}">${v.icon}</span></div>`;
+function svgIcon(inner){
+  return `<svg class="shape-icon" viewBox="0 0 24 24" fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+}
+const SHAPE_ICONS = [
+  svgIcon('<path d="M12 3L21 20H3Z"/>'),                                                          // 1. Bold Triangle
+  svgIcon('<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6Z"/>'),                                            // 2. Solid Plus/Cross
+  svgIcon('<path d="M12 2l2.39 7.26H22l-6.19 4.5 2.36 7.24L12 16.5l-6.17 4.5 2.36-7.24L2 9.26h7.61z"/>'), // 3. 5-Point Star
+  svgIcon('<path d="M12 2L22 12L12 22L2 12Z"/>'),                                                  // 4. Sharp Diamond
+  svgIcon('<path d="M4 4h16v16H4Z"/>'),                                                            // 5. Centered Square
+  svgIcon('<circle cx="12" cy="12" r="9"/>'),                                                      // 6. Perfect Circle
+  svgIcon('<path d="M17 3H7L2 12L7 21H17L22 12Z"/>'),                                              // 7. Flat-topped Hexagon
+  svgIcon('<path d="M12 21s-8-4.6-8-11a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 6.4-8 11-8 11Z"/>'),           // 8. Smooth Heart
+  svgIcon('<path d="M12 2C12 2 4 12 4 16a8 8 0 1 0 16 0C20 12 12 2 12 2Z"/>')                       // 9. Water Drop
+];
+const swatchRender = (v)=>`<div class="swatch" style="background:${v.c}">${v.icon}</div>`;
 
 const THEMES = {
   numbers: { label:"Numbers", symbols:["1","2","3","4","5","6","7","8","9"], render:(v)=>v },
@@ -555,6 +910,10 @@ let seconds=0, timerInterval=null, paused=false, gameOver=false;
 let notes=null; // 9x9 array of 9-boolean arrays (candidate marks)
 let notesMode=false;
 let zenMode=false;
+let vibrationEnabled = (localStorage.getItem("navasudoku_vibration") ?? "off") === "on";
+function vibrate(pattern){
+  if(vibrationEnabled && navigator.vibrate) navigator.vibrate(pattern);
+}
 let rapidFillMode=false;
 let lockedSymbol=null; // 0..8 index of locked palette symbol, or null
 const EMOJI_MAP=["🟥","🟦","🟨","🟩","🟧","🟪","🩷","🔵","🟫"];
@@ -584,10 +943,37 @@ async function newGame(){
   lockedSymbol=null;
   document.getElementById("pauseOverlay").classList.remove("show");
   document.getElementById("winModal").classList.remove("show");
+  document.getElementById("gameOverModal").classList.remove("show");
   updateHud();
   updateModeButtons();
   renderPalette();
-  setStatus("Select a cell, then pick a symbol.", false);
+  setStatus("", false);
+  renderBoard();
+  restartTimer();
+  saveState();
+}
+
+function restartBoard(){
+  // Reload the exact same puzzle/solution, just reset progress
+  given=puzzle.map(row=>row.map(v=>v!==0));
+  board=puzzle.map(row=>row.slice());
+  selected=null;
+  history=[];
+  mistakes=0;
+  hintsLeft=3;
+  seconds=0;
+  gameOver=false;
+  paused=false;
+  notes=freshNotes();
+  lockedSymbol=null;
+  document.getElementById("pauseOverlay").classList.remove("show");
+  document.getElementById("winModal").classList.remove("show");
+  document.getElementById("gameOverModal").classList.remove("show");
+  document.getElementById("confirmOverlay").classList.remove("show");
+  updateHud();
+  updateModeButtons();
+  renderPalette();
+  setStatus("", false);
   renderBoard();
   restartTimer();
   saveState();
@@ -656,9 +1042,10 @@ function resumeFromSave(s){
   renderPalette();
   document.getElementById("pauseOverlay").classList.remove("show");
   document.getElementById("winModal").classList.remove("show");
+  document.getElementById("gameOverModal").classList.remove("show");
   updateHud();
   updateModeButtons();
-  setStatus(gameOver ? "" : "Welcome back — resumed your puzzle.", false);
+  // (resume-status message intentionally removed)
   renderBoard();
   restartTimer();
 }
@@ -679,7 +1066,8 @@ function updateHud(){
 }
 function updateModeButtons(){
   document.getElementById("notesBtn").classList.toggle("active", notesMode);
-  document.getElementById("zenBtn").classList.toggle("active", zenMode);
+  document.getElementById("zenOffBtn").classList.toggle("active", !zenMode);
+  document.getElementById("zenOnBtn").classList.toggle("active", zenMode);
   document.getElementById("rapidBtn").classList.toggle("active", rapidFillMode);
 }
 
@@ -705,23 +1093,52 @@ function renderDiffRow(){
   row.innerHTML="";
   Object.keys(DIFFICULTIES).forEach(key=>{
     const btn=document.createElement("button");
-    btn.className="diff-btn"+(key===currentDifficulty?" active":"");
+    btn.className=(key===currentDifficulty?"active":"");
     btn.textContent=key[0].toUpperCase()+key.slice(1);
-    btn.onclick=()=>{ currentDifficulty=key; renderDiffRow(); newGame(); };
+    btn.onclick=()=>{
+      if(key===currentDifficulty) return;
+      openConfirm(()=>{
+        currentDifficulty=key;
+        renderDiffRow();
+        document.getElementById("settingsModal").classList.remove("show");
+        newGame();
+      });
+    };
     row.appendChild(btn);
   });
+}
+function getRemainingCounts(){
+  const counts = Array(10).fill(9);
+  for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+    const v=board[r][c];
+    if(v!==0 && v===solution[r][c]) counts[v]--;
+  }
+  return counts;
 }
 function renderPalette(){
   const pal=document.getElementById("palette");
   pal.innerHTML="";
   const theme=THEMES[currentTheme];
+  const counts=getRemainingCounts();
   theme.symbols.forEach((sym,i)=>{
+    const val=i+1;
+    const remaining=counts[val];
     const btn=document.createElement("div");
     btn.className="sym-btn";
-    if(typeof sym==="object" && sym.c){ btn.innerHTML=`<div class="sw" style="background:${sym.c}"><span class="swatch-icon" style="color:${sym.ic}">${sym.icon}</span></div>`; }
-    else { btn.textContent=sym; }
-    if(rapidFillMode && lockedSymbol===i+1) btn.classList.add("locked");
-    btn.onclick=()=>onPaletteTap(i+1);
+    const inner=document.createElement("div");
+    inner.className="btn-inner";
+    const countEl=document.createElement("span");
+    countEl.className="count-text";
+    countEl.textContent=`${remaining} left`;
+    inner.appendChild(countEl);
+    const mainEl=document.createElement("span");
+    if(typeof sym==="object" && sym.c){ mainEl.innerHTML=`<div class="sw" style="background:${sym.c}">${sym.icon}</div>`; }
+    else { mainEl.textContent=sym; mainEl.className="number-text"; }
+    inner.appendChild(mainEl);
+    btn.appendChild(inner);
+    if(remaining<=0) btn.classList.add("completed");
+    if(rapidFillMode && lockedSymbol===val) btn.classList.add("locked");
+    btn.onclick=()=>onPaletteTap(val);
     pal.appendChild(btn);
   });
   const erase=document.createElement("div");
@@ -735,7 +1152,6 @@ function onPaletteTap(v){
   if(rapidFillMode){
     lockedSymbol = (lockedSymbol===v) ? null : v;
     renderPalette();
-    setStatus(lockedSymbol!==null ? "Symbol locked — tap cells to fill." : "Symbol unlocked.", false);
   } else {
     placeValue(v);
   }
@@ -761,7 +1177,7 @@ function renderBoard(){
       }
       if(selected && selected.r===r && selected.c===c) cell.classList.add("selected");
       else if(selectedVal!==0 && val===selectedVal) cell.classList.add("match");
-      else if(selected && (selected.r===r || selected.c===c)) cell.classList.add("peer");
+      else if(selected && (selected.r===r || selected.c===c || (Math.floor(selected.r/3)===Math.floor(r/3) && Math.floor(selected.c/3)===Math.floor(c/3)))) cell.classList.add("peer");
       if(val!==0 && !isValid(replaceCell(board,r,c,0), r, c, val)) cell.classList.add("error");
       cell.onclick=()=>{
         if(gameOver || paused) return;
@@ -809,33 +1225,43 @@ function placeValue(v){
   // Track mistakes: only count when placing a non-zero value that's wrong vs solution
   if(v!==0 && v!==solution[r][c]){
     mistakes++;
+    vibrate(60);
   }
   history.push({r,c,prevVal});
   board[r][c]=v;
   notes[r][c]=Array(9).fill(false);
   if(v!==0) clearPeerNotes(r,c,v);
   renderBoard();
+  renderPalette();
   updateHud();
 
   if(mistakes>=maxMistakes && !zenMode){
-    setStatus(`Too many mistakes (${maxMistakes}). Try Undo or start a New Puzzle.`, true);
-    gameOver=true;
-    saveState();
+    mistakes=maxMistakes;
+    triggerGameOver();
     return;
   }
   setStatus("", false);
   checkWin();
   saveState();
 }
+function triggerGameOver(){
+  updateHud();
+  gameOver=true;
+  clearInterval(timerInterval);
+  document.getElementById("goTime").textContent=formatTime(seconds);
+  document.getElementById("goMistakes").textContent=`${mistakes}/${maxMistakes}`;
+  document.getElementById("gameOverModal").classList.add("show");
+  saveState();
+}
 
 function undo(){
+  if(gameOver || paused) return;
   if(history.length===0) return;
   const last=history.pop();
   board[last.r][last.c]=last.prevVal;
-  gameOver=false;
   renderBoard();
+  renderPalette();
   updateHud();
-  setStatus("Move undone.", false);
   saveState();
 }
 
@@ -856,8 +1282,8 @@ function useHint(){
   const cellEls=document.getElementById("board").children;
   const idx=pick.r*9+pick.c;
   cellEls[idx].classList.add("hint-glow");
+  renderPalette();
   updateHud();
-  setStatus("Hint placed.", false);
   checkWin();
   saveState();
 }
@@ -868,15 +1294,54 @@ function buildShareText(){
   return `NavaSudoku — ${diffLabel}\n⏱ ${formatTime(seconds)}  ✕ ${mistakes}  💡 ${3-hintsLeft}\n\n${grid}`;
 }
 
+const STAR_THRESHOLDS = {
+  easy:   { threeMinSec: 180,  twoMinSec: 420,  twoMaxMistakes: 2 },
+  medium: { threeMinSec: 360,  twoMinSec: 720,  twoMaxMistakes: 2 },
+  hard:   { threeMinSec: 600,  twoMinSec: 1080, twoMaxMistakes: 2 }
+};
+function computeStars(){
+  const t = STAR_THRESHOLDS[currentDifficulty] || STAR_THRESHOLDS.easy;
+  if(seconds < t.threeMinSec && mistakes===0) return 3;
+  if(seconds < t.twoMinSec && mistakes<=t.twoMaxMistakes) return 2;
+  return 1;
+}
+function renderStars(count){
+  document.querySelectorAll("#starRating .star").forEach((el,i)=>{
+    el.classList.toggle("filled", i<count);
+  });
+}
+function spawnConfetti(){
+  const layer=document.getElementById("confettiLayer");
+  layer.innerHTML="";
+  const colors=["#D4AF37","#00F0FF","#FF69B4","#50C878","#FF8C00","#7A1FC9"];
+  for(let i=0;i<18;i++){
+    const p=document.createElement("div");
+    p.className="confetti-piece";
+    p.style.left=(Math.random()*100)+"%";
+    p.style.background=colors[Math.floor(Math.random()*colors.length)];
+    p.style.animationDelay=(Math.random()*0.4)+"s";
+    p.style.transform=`rotate(${Math.floor(Math.random()*360)}deg)`;
+    layer.appendChild(p);
+  }
+}
 function checkWin(){
   for(let r=0;r<9;r++) for(let c=0;c<9;c++){
     if(board[r][c]!==solution[r][c]) return false;
   }
   gameOver=true;
   clearInterval(timerInterval);
+  vibrate([40,60,40,60,80]);
+
+  // Track consecutive Numbers-theme wins for the USP teaser banner
+  let numbersStreak=parseInt(localStorage.getItem("navasudoku_numbers_streak")||"0",10);
+  numbersStreak = (currentTheme==="numbers") ? numbersStreak+1 : 0;
+  localStorage.setItem("navasudoku_numbers_streak", String(numbersStreak));
+  document.getElementById("uspBanner").style.display = (numbersStreak>=2) ? "" : "none";
+
+  renderStars(computeStars());
+  spawnConfetti();
   document.getElementById("winTime").textContent=formatTime(seconds);
   document.getElementById("winMistakes").textContent=mistakes;
-  document.getElementById("winHints").textContent=3-hintsLeft;
   document.getElementById("shareText").textContent=buildShareText();
   document.getElementById("shareStatus").textContent="";
   document.getElementById("winModal").classList.add("show");
@@ -889,9 +1354,88 @@ function setStatus(msg, warn){
   el.className = warn ? "warnText" : "";
 }
 
+/* ---------- SETTINGS MODAL ---------- */
+document.getElementById("settingsBtn").onclick=()=>{
+  document.getElementById("settingsModal").classList.add("show");
+};
+document.getElementById("closeSettingsBtn").onclick=()=>{
+  document.getElementById("settingsModal").classList.remove("show");
+  document.getElementById("confirmOverlay").classList.remove("show");
+};
+document.getElementById("settingsModal").addEventListener("click", (e)=>{
+  if(e.target.id==="settingsModal"){
+    document.getElementById("settingsModal").classList.remove("show");
+    document.getElementById("confirmOverlay").classList.remove("show");
+  }
+});
+let pendingConfirmAction=null;
+function openConfirm(action, message, yesLabel){
+  pendingConfirmAction=action;
+  document.getElementById("confirmHeading").style.display="none";
+  document.getElementById("confirmStats").style.display="none";
+  document.getElementById("confirmRestartBtn").style.display="none";
+  document.getElementById("confirmMessage").innerHTML = message || "Start a new puzzle?<br>Your current progress will be lost.";
+  document.getElementById("confirmYesBtn").textContent = yesLabel || "Yes, start new";
+  document.getElementById("confirmCancelBtn").style.display = "";
+  document.getElementById("confirmOverlay").classList.add("show");
+}
+const newGameSettingsBtnEl=document.getElementById("newGameSettingsBtn");
+newGameSettingsBtnEl.onclick=()=>{
+  openConfirm(()=>{
+    document.getElementById("settingsModal").classList.remove("show");
+    newGame();
+  });
+};
+document.getElementById("confirmCancelBtn").onclick=()=>{
+  document.getElementById("confirmOverlay").classList.remove("show");
+  pendingConfirmAction=null;
+};
+document.getElementById("confirmYesBtn").onclick=()=>{
+  const action=pendingConfirmAction;
+  pendingConfirmAction=null;
+  const keepOpen = action ? action() : false;
+  if(!keepOpen) document.getElementById("confirmOverlay").classList.remove("show");
+};
+document.getElementById("confirmOverlay").addEventListener("click", (e)=>{
+  if(e.target.id==="confirmOverlay"){
+    document.getElementById("confirmOverlay").classList.remove("show");
+    pendingConfirmAction=null;
+  }
+});
+
+
+/* ---------- LIGHT/DARK THEME ---------- */
+function applyAppearance(mode){
+  document.documentElement.setAttribute("data-theme", mode);
+  document.getElementById("lightThemeBtn").classList.toggle("active", mode==="light");
+  document.getElementById("darkThemeBtn").classList.toggle("active", mode==="dark");
+  localStorage.setItem("navasudoku_appearance", mode);
+}
+document.getElementById("lightThemeBtn").onclick=()=>applyAppearance("light");
+document.getElementById("darkThemeBtn").onclick=()=>applyAppearance("dark");
+applyAppearance(localStorage.getItem("navasudoku_appearance") || "dark");
+
 /* ---------- CONTROLS ---------- */
-document.getElementById("newGameBtn").onclick=newGame;
-document.getElementById("winNewBtn").onclick=newGame;
+document.getElementById("newGameBtn") && (document.getElementById("newGameBtn").onclick=newGame);
+document.getElementById("winNextBtn").onclick=newGame;
+document.getElementById("winRetryBtn").onclick=()=>{
+  document.getElementById("winModal").classList.remove("show");
+  restartBoard();
+};
+document.getElementById("uspTryBtn").onclick=()=>{
+  currentTheme="colors";
+  renderThemeRow();
+  document.getElementById("winModal").classList.remove("show");
+  newGame();
+};
+document.getElementById("gameOverNewBtn").onclick=()=>{
+  document.getElementById("gameOverModal").classList.remove("show");
+  newGame();
+};
+document.getElementById("gameOverRestartBtn").onclick=()=>{
+  document.getElementById("gameOverModal").classList.remove("show");
+  restartBoard();
+};
 document.getElementById("undoBtn").onclick=undo;
 document.getElementById("hintBtn").onclick=useHint;
 document.getElementById("pauseBtn").onclick=()=>{
@@ -899,33 +1443,82 @@ document.getElementById("pauseBtn").onclick=()=>{
   paused=!paused;
   document.getElementById("pauseOverlay").classList.toggle("show", paused);
   document.getElementById("pauseBtn").textContent = paused ? "Resume" : "Pause";
+  document.getElementById("pauseBtn").classList.toggle("active", paused);
 };
 document.getElementById("pauseOverlay").onclick=()=>{
   paused=false;
   document.getElementById("pauseOverlay").classList.remove("show");
   document.getElementById("pauseBtn").textContent="Pause";
+  document.getElementById("pauseBtn").classList.remove("active");
 };
 document.getElementById("notesBtn").onclick=()=>{
   notesMode=!notesMode;
   if(notesMode && rapidFillMode){ rapidFillMode=false; lockedSymbol=null; } // mutually exclusive input modes
   updateModeButtons();
   renderPalette();
-  setStatus(notesMode ? "Notes mode on — tap a symbol to mark/unmark a candidate." : "Notes mode off.", false);
 };
-document.getElementById("zenBtn").onclick=()=>{
-  zenMode=!zenMode;
+function setZenMode(on){
+  if(zenMode===on) return;
+  zenMode=on;
   updateModeButtons();
   updateHud();
   setStatus(zenMode ? "Zen mode on — no timer pressure, no mistake limit." : "Zen mode off.", false);
   saveState();
+  if(!zenMode && mistakes>=maxMistakes && !gameOver){
+    document.getElementById("settingsModal").classList.remove("show");
+    triggerGameOver();
+  }
+}
+document.getElementById("zenOffBtn").onclick=()=>{
+  if(zenMode && mistakes>=maxMistakes){
+    openConfirm(()=>{
+      // Stage 1 confirmed: end the game, then morph this same popup into the Game Over screen
+      zenMode=false;
+      updateModeButtons();
+      updateHud();
+      gameOver=true;
+      clearInterval(timerInterval);
+      document.getElementById("settingsModal").classList.remove("show");
+      document.getElementById("confirmHeading").style.display="";
+      document.getElementById("confirmMessage").textContent="You've made too many mistakes for this puzzle.";
+      document.getElementById("confirmStatTime").textContent=formatTime(seconds);
+      document.getElementById("confirmStatMistakes").textContent=`${mistakes}/${maxMistakes}`;
+      document.getElementById("confirmStats").style.display="";
+      document.getElementById("confirmCancelBtn").style.display="none";
+      document.getElementById("confirmYesBtn").textContent="🔄 Start New Puzzle";
+      document.getElementById("confirmRestartBtn").style.display="";
+      document.getElementById("confirmRestartBtn").onclick=()=>{
+        document.getElementById("confirmOverlay").classList.remove("show");
+        restartBoard();
+      };
+      pendingConfirmAction=()=>{ newGame(); };
+      saveState();
+      return true; // keep the popup open, now showing Game Over content
+    }, "Turning off Zen now will end this game — you're already over the mistake limit.<br>Continue?", "Yes, end game");
+    return;
+  }
+  setZenMode(false);
 };
+document.getElementById("zenOnBtn").onclick=()=>setZenMode(true);
+function updateVibrationButtons(){
+  document.getElementById("vibeOffBtn").classList.toggle("active", !vibrationEnabled);
+  document.getElementById("vibeOnBtn").classList.toggle("active", vibrationEnabled);
+}
+function setVibration(on){
+  vibrationEnabled=on;
+  localStorage.setItem("navasudoku_vibration", on ? "on" : "off");
+  updateVibrationButtons();
+  if(on) vibrate(30);
+}
+document.getElementById("vibeOffBtn").onclick=()=>setVibration(false);
+document.getElementById("vibeOnBtn").onclick=()=>setVibration(true);
+updateVibrationButtons();
 document.getElementById("rapidBtn").onclick=()=>{
   rapidFillMode=!rapidFillMode;
   if(rapidFillMode && notesMode){ notesMode=false; } // mutually exclusive input modes
   lockedSymbol=null;
   updateModeButtons();
   renderPalette();
-  setStatus(rapidFillMode ? "Rapid Fill on — tap a symbol to lock it, then tap cells." : "Rapid Fill off.", false);
 };
 document.getElementById("shareBtn").onclick=async ()=>{
   const text=buildShareText();
@@ -959,6 +1552,11 @@ if(savedGame){
   renderDiffRow();
   renderPalette();
   newGame();
+}
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(()=>{});
+  });
 }
 </script>
 </body>
