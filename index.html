@@ -65,10 +65,10 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:flex-start;
+    justify-content:space-between;
     box-sizing:border-box;
-    padding:12px;
-    padding-bottom:max(12px, env(safe-area-inset-bottom));
+    padding:10px 12px;
+    padding-bottom:max(24px, env(safe-area-inset-bottom));
     gap:0.5vh;
   }
   #appHeader{
@@ -97,15 +97,20 @@
   .hud-item b{ color:var(--ink); font-variant-numeric:tabular-nums; }
   .hud-item.warn b{ color:var(--error); }
   #settingsBtn{
-    background:none;
-    border:1px solid var(--line-soft);
-    color:var(--ink);
-    border-radius:8px;
-    width:30px; height:30px;
+    position:fixed;
+    top:max(16px, env(safe-area-inset-top));
+    right:16px;
+    z-index:40;
+    background:var(--gold-soft);
+    border:1px solid var(--gold);
+    color:var(--gold);
+    border-radius:10px;
+    width:36px; height:36px;
     display:flex; align-items:center; justify-content:center;
     cursor:pointer;
-    font-size:1rem;
+    font-size:1.1rem;
     line-height:1;
+    box-shadow:0 4px 14px -4px rgba(80,50,10,0.4);
   }
   #settingsModal{
     position:fixed; inset:0;
@@ -254,6 +259,7 @@
     display:flex;
     width:100%;
     overflow:hidden;
+    margin-bottom:8px;
   }
   #board{
     display:grid;
@@ -268,7 +274,7 @@
     gap:1px;
     border:3px solid var(--gold);
     border-radius:4px;
-    box-shadow:0 20px 50px -20px rgba(0,0,0,0.6), 0 0 0 1px var(--line-soft);
+    box-shadow:0 20px 50px -20px rgba(90,55,15,0.55), 0 0 0 1px var(--line-soft);
     overflow:hidden;
   }
   .cell{
@@ -333,7 +339,7 @@
     display:grid;
     grid-template-columns:repeat(5, 48px);
     justify-content:center;
-    gap:1.5vw;
+    gap:10px;
     margin:0;
     max-width:380px;
   }
@@ -561,12 +567,12 @@
 </head>
 <body>
 
+<button id="settingsBtn" title="Settings">⚙️</button>
 <div id="appHeader">
   <div id="hud">
     <div class="hud-item">⏱ <b id="timerDisplay">00:00</b></div>
     <div class="hud-item" id="mistakeItem">✕ Mistakes <b id="mistakeDisplay">0/3</b></div>
     <div class="hud-item">💡 Hints <b id="hintDisplay">3</b></div>
-    <button id="settingsBtn" title="Settings">⚙️</button>
   </div>
   <div class="theme-row" id="themeRow"></div>
 </div>
