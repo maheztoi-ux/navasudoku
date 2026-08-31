@@ -263,15 +263,18 @@
     width:100%;
     overflow:hidden;
     margin-bottom:8px;
+    container-type:size;
   }
   #board{
     display:grid;
     grid-template-columns:repeat(9, 1fr);
     grid-template-rows:repeat(9, 1fr);
     width:100%;
-    max-width:100%;
+    height:auto;
     aspect-ratio:1/1;
     max-height:100%;
+    width:min(100cqw, 100cqh);
+    height:min(100cqw, 100cqh);
     margin:auto auto;
     background:var(--line-strong);
     gap:1px;
