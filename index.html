@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NavaSudoku — Prototype v2</title>
+<title>Neo Sudoku — Prototype v2</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#150E28">
 <style>
@@ -144,6 +144,15 @@
     margin:0 0 16px;
     font-size:1.1rem;
     text-align:center;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .settings-card h3::before, .settings-card h3::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
   }
   .settings-row{
     display:flex;
@@ -198,6 +207,39 @@
     border-color:var(--error);
     color:#fff;
     font-weight:600;
+  }
+  #shareSettingsBtn{
+    width:100%;
+    background:rgba(78,205,160,0.14);
+    border:1px solid var(--success);
+    color:var(--success);
+    padding:9px;
+    border-radius:8px;
+    cursor:pointer;
+    margin-top:10px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:2px;
+  }
+  #shareSettingsBtn .share-main{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:0.85rem;
+    font-weight:700;
+  }
+  #shareSettingsBtn .share-sub{
+    font-size:0.7rem;
+    font-weight:400;
+    opacity:0.85;
+  }
+  #shareSettingsStatus{
+    text-align:center;
+    font-size:0.72rem;
+    color:var(--success);
+    min-height:1em;
+    margin-top:4px;
   }
   #confirmOverlay{
     position:fixed; inset:0;
@@ -270,7 +312,6 @@
     width:100%;
     overflow:hidden;
     margin-bottom:8px;
-    container-type:size;
   }
   #board{
     display:grid;
@@ -280,9 +321,8 @@
     height:auto;
     aspect-ratio:1/1;
     max-height:100%;
-    width:min(100cqw, 100cqh);
-    height:min(100cqw, 100cqh);
-    margin:0;
+    max-width:100%;
+    margin:auto;
     background:var(--line-strong);
     gap:1px;
     border:3px solid var(--gold);
@@ -335,14 +375,21 @@
     40%{ box-shadow: inset 0 0 0 2px rgba(212,175,55,0.7), 0 0 8px rgba(212,175,55,0.5); }
     100%{ box-shadow: inset 0 0 0 0 rgba(212,175,55,0); }
   }
+  .cell.row-glow, .cell.col-glow{ animation: cellBoxGlow 550ms ease; }
   .cell.win-glow{ animation: cellWinGlow 480ms ease; }
   @keyframes cellWinGlow{
     0%{ box-shadow: inset 0 0 0 0 rgba(212,175,55,0); transform:scale(1); }
     45%{ box-shadow: inset 0 0 0 2px rgba(212,175,55,0.85), 0 0 12px rgba(212,175,55,0.6); transform:scale(1.04); }
     100%{ box-shadow: inset 0 0 0 0 rgba(212,175,55,0); transform:scale(1); }
   }
+  .cell.locked-pulse{ animation: cellLockedPulse 260ms ease; }
+  @keyframes cellLockedPulse{
+    0%{ box-shadow: inset 0 0 0 0 rgba(0,240,255,0); transform:scale(1); }
+    40%{ box-shadow: inset 0 0 0 2px rgba(0,240,255,0.6), 0 0 8px rgba(0,240,255,0.4); transform:scale(1.03); }
+    100%{ box-shadow: inset 0 0 0 0 rgba(0,240,255,0); transform:scale(1); }
+  }
   @media (prefers-reduced-motion: reduce){
-    .cell.correct-pulse, .cell.wrong-shake, .cell.box-glow, .cell.win-glow, .cell.hint-glow{
+    .cell.correct-pulse, .cell.wrong-shake, .cell.box-glow, .cell.row-glow, .cell.col-glow, .cell.win-glow, .cell.hint-glow, .cell.locked-pulse{
       animation:none !important;
     }
   }
@@ -440,7 +487,9 @@
     font-size:clamp(0.62rem, 1.5vh, 0.78rem);
     cursor:pointer;
   }
-  .ctrl-btn:hover{ border-color:var(--gold); }
+  @media (hover:hover) and (pointer:fine){
+    .ctrl-btn:hover{ border-color:var(--gold); }
+  }
   .ctrl-btn:disabled{ opacity:0.35; cursor:default; }
   .ctrl-btn.active{ border-color:var(--gold); background:var(--gold-soft); color:var(--gold); }
 
@@ -652,14 +701,14 @@
   <div class="settings-card">
     <h3>Settings</h3>
     <div class="settings-row">
-      <span>Appearance</span>
+      <span>🎨 Appearance</span>
       <div class="theme-toggle">
         <button id="lightThemeBtn">☀️ Light</button>
         <button id="darkThemeBtn">🌙 Dark</button>
       </div>
     </div>
     <div class="settings-row">
-      <span>Zen Mode</span>
+      <span>🍃 Zen Mode</span>
       <div class="theme-toggle">
         <button id="zenOffBtn">OFF</button>
         <button id="zenOnBtn">ON</button>
@@ -673,14 +722,19 @@
       </div>
     </div>
     <div class="settings-row">
-      <span>Game</span>
+      <span>🎮 Game</span>
       <button class="settings-btn" id="pauseBtn">Pause</button>
     </div>
     <div class="settings-row">
-      <span>Difficulty</span>
+      <span>📶 Difficulty</span>
       <div class="theme-toggle" id="diffRow"></div>
     </div>
     <button id="newGameSettingsBtn">🔄 New Puzzle</button>
+    <button id="shareSettingsBtn">
+      <span class="share-main">🔗 Share Neo Sudoku</span>
+      <span class="share-sub">Invite your friends to play!</span>
+    </button>
+    <div id="shareSettingsStatus"></div>
     <button id="closeSettingsBtn">Close</button>
   </div>
 </div>
@@ -695,7 +749,7 @@
     </div>
     <div class="confirm-actions">
       <button id="confirmCancelBtn">Cancel</button>
-      <button id="confirmYesBtn">Yes, start new</button>
+      <button id="confirmYesBtn">Yes, Start New Puzzle</button>
     </div>
     <button id="confirmRestartBtn" style="display:none;">↺ Retry Puzzle</button>
   </div>
@@ -1139,6 +1193,18 @@ function isBoxComplete(r,c){
   }
   return true;
 }
+function isRowComplete(r){
+  for(let j=0;j<9;j++){
+    if(board[r][j]!==solution[r][j]) return false;
+  }
+  return true;
+}
+function isColComplete(c){
+  for(let i=0;i<9;i++){
+    if(board[i][c]!==solution[i][c]) return false;
+  }
+  return true;
+}
 let rapidFillMode=false;
 let lockedSymbol=null; // 0..8 index of locked palette symbol, or null
 const EMOJI_MAP=["🟥","🟦","🟨","🟩","🟧","🟪","🩷","🔵","🟫"];
@@ -1165,6 +1231,8 @@ async function newGame(){
   paused=false;
   isGenerating=false;
   notes=freshNotes();
+  notesMode=false;
+  rapidFillMode=false;
   lockedSymbol=null;
   document.getElementById("pauseOverlay").classList.remove("show");
   document.getElementById("winModal").classList.remove("show");
@@ -1191,6 +1259,8 @@ function restartBoard(){
   gameOver=false;
   paused=false;
   notes=freshNotes();
+  notesMode=false;
+  rapidFillMode=false;
   lockedSymbol=null;
   document.getElementById("pauseOverlay").classList.remove("show");
   document.getElementById("winModal").classList.remove("show");
@@ -1216,6 +1286,9 @@ function restartTimer(){
 }
 /* ---------- STATE PERSISTENCE ---------- */
 const STORAGE_KEY = "navasudoku_save_v1";
+// TODO: once Neo Sudoku is live on the Play Store, replace this with the Play Store listing URL
+// e.g. "https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME"
+const SHARE_URL = window.location.href;
 let storageAvailable = true;
 
 function saveState(){
@@ -1566,11 +1639,21 @@ function clearPeerNotes(r,c,v){
   }
 }
 
+function playLockedPulse(r,c){
+  vibrate(15);
+  if(prefersReducedMotion()) return;
+  const cellEls=document.getElementById("board").children;
+  const el=cellEls[r*9+c];
+  el.classList.add("locked-pulse");
+  setTimeout(()=>el.classList.remove("locked-pulse"), 280);
+}
+
 function placeValue(v){
   if(gameOver || paused) return;
   if(!selected){ setStatus("Pick a cell first.", true); return; }
   const {r,c}=selected;
-  if(given[r][c]) return;
+  if(given[r][c]){ playLockedPulse(r,c); return; }
+  if(board[r][c]!==0 && board[r][c]===solution[r][c]){ playLockedPulse(r,c); return; } // already correct — locked, can't change
 
   if(notesMode){
     if(board[r][c]!==0) return; // notes only apply to empty cells
@@ -1585,6 +1668,8 @@ function placeValue(v){
   if(prevVal===v) return;
 
   const boxWasComplete = isBoxComplete(r,c);
+  const rowWasComplete = isRowComplete(r);
+  const colWasComplete = isColComplete(c);
 
   // Track mistakes: only count when placing a non-zero value that's wrong vs solution
   if(v!==0 && v!==solution[r][c]){
@@ -1619,6 +1704,38 @@ function placeValue(v){
           for(let i=br;i<br+3;i++) for(let j=bc;j<bc+3;j++){
             const el=cellEls[i*9+j];
             el.classList.remove("box-glow");
+            el.style.animationDelay="";
+          }
+        }, 550+stagger);
+      }
+      if(!rowWasComplete && isRowComplete(r)){
+        let stagger=0;
+        for(let j=0;j<9;j++){
+          const el=cellEls[r*9+j];
+          el.style.animationDelay = stagger+"ms";
+          el.classList.add("row-glow");
+          stagger+=32;
+        }
+        setTimeout(()=>{
+          for(let j=0;j<9;j++){
+            const el=cellEls[r*9+j];
+            el.classList.remove("row-glow");
+            el.style.animationDelay="";
+          }
+        }, 550+stagger);
+      }
+      if(!colWasComplete && isColComplete(c)){
+        let stagger=0;
+        for(let i=0;i<9;i++){
+          const el=cellEls[i*9+c];
+          el.style.animationDelay = stagger+"ms";
+          el.classList.add("col-glow");
+          stagger+=32;
+        }
+        setTimeout(()=>{
+          for(let i=0;i<9;i++){
+            const el=cellEls[i*9+c];
+            el.classList.remove("col-glow");
             el.style.animationDelay="";
           }
         }, 550+stagger);
@@ -1663,7 +1780,7 @@ function useHint(){
   for(let r=0;r<9;r++) for(let c=0;c<9;c++){
     if(!given[r][c] && board[r][c]!==solution[r][c]) candidates.push({r,c});
   }
-  if(candidates.length===0) return;
+  if(candidates.length===0){ setStatus("No cells left to hint — you've got them all!", false); return; }
   const pick=candidates[Math.floor(Math.random()*candidates.length)];
   history.push({r:pick.r,c:pick.c,prevVal:board[pick.r][pick.c]});
   board[pick.r][pick.c]=solution[pick.r][pick.c];
@@ -1675,6 +1792,7 @@ function useHint(){
   cellEls[idx].classList.add("hint-glow");
   renderPalette();
   updateHud();
+  setStatus(`Hint used — filled in the correct symbol. ${hintsLeft} hint${hintsLeft===1?"":"s"} left.`, false);
   checkWin();
   saveState();
 }
@@ -1682,7 +1800,7 @@ function useHint(){
 function buildShareText(){
   const diffLabel = currentDifficulty[0].toUpperCase()+currentDifficulty.slice(1);
   const grid = board.map(row=>row.map(v=>EMOJI_MAP[v-1]).join("")).join("\n");
-  return `NavaSudoku — ${diffLabel}\n⏱ ${formatTime(seconds)}  ✕ ${mistakes}  💡 ${3-hintsLeft}\n\n${grid}`;
+  return `Neo Sudoku — ${diffLabel}\n⏱ ${formatTime(seconds)}  ✕ ${mistakes}  💡 ${3-hintsLeft}\n\n${grid}`;
 }
 
 const STAR_THRESHOLDS = {
@@ -1766,6 +1884,7 @@ function setStatus(msg, warn){
 /* ---------- SETTINGS MODAL ---------- */
 document.getElementById("settingsBtn").onclick=()=>{
   document.getElementById("settingsModal").classList.add("show");
+  document.getElementById("shareSettingsStatus").textContent="";
 };
 document.getElementById("closeSettingsBtn").onclick=()=>{
   document.getElementById("settingsModal").classList.remove("show");
@@ -1784,7 +1903,7 @@ function openConfirm(action, message, yesLabel){
   document.getElementById("confirmStats").style.display="none";
   document.getElementById("confirmRestartBtn").style.display="none";
   document.getElementById("confirmMessage").innerHTML = message || "Start a new puzzle?<br>Your current progress will be lost.";
-  document.getElementById("confirmYesBtn").textContent = yesLabel || "Yes, start new";
+  document.getElementById("confirmYesBtn").textContent = yesLabel || "Yes, Start New Puzzle";
   document.getElementById("confirmCancelBtn").style.display = "";
   document.getElementById("confirmOverlay").classList.add("show");
 }
@@ -1865,6 +1984,7 @@ document.getElementById("notesBtn").onclick=()=>{
   if(notesMode && rapidFillMode){ rapidFillMode=false; lockedSymbol=null; } // mutually exclusive input modes
   updateModeButtons();
   renderPalette();
+  setStatus(notesMode ? "Notes mode on — tap numbers to mark candidates." : "Notes mode off.", false);
 };
 function setZenMode(on){
   if(zenMode===on) return;
@@ -1928,6 +2048,7 @@ document.getElementById("rapidBtn").onclick=()=>{
   lockedSymbol=null;
   updateModeButtons();
   renderPalette();
+  setStatus(rapidFillMode ? "Rapid Fill on — pick a symbol, then tap cells to fill." : "Rapid Fill off.", false);
 };
 document.getElementById("shareBtn").onclick=async ()=>{
   const text=buildShareText();
@@ -1944,6 +2065,35 @@ document.getElementById("shareBtn").onclick=async ()=>{
       document.getElementById("shareStatus").textContent="Copied to clipboard!";
     }catch(e2){
       document.getElementById("shareStatus").textContent="Couldn't auto-copy — long-press the text above to copy manually.";
+    }
+  }
+};
+
+document.getElementById("shareSettingsBtn").onclick=async ()=>{
+  const inviteText="Come play Neo Sudoku with me! 🧩";
+  const statusEl=document.getElementById("shareSettingsStatus");
+  if(navigator.share){
+    try{
+      await navigator.share({ title:"Neo Sudoku", text:inviteText, url:SHARE_URL });
+    }catch(e){
+      // user cancelled the share sheet — no error message needed
+    }
+    return;
+  }
+  const fallbackText=`${inviteText} ${SHARE_URL}`;
+  try{
+    await navigator.clipboard.writeText(fallbackText);
+    statusEl.textContent="Link copied!";
+  }catch(e){
+    try{
+      const ta=document.createElement("textarea");
+      ta.value=fallbackText; ta.style.position="fixed"; ta.style.opacity="0";
+      document.body.appendChild(ta); ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      statusEl.textContent="Link copied!";
+    }catch(e2){
+      statusEl.textContent="Couldn't auto-copy the link.";
     }
   }
 };
