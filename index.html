@@ -50,6 +50,11 @@
     text-shadow:none;
     font-weight:700;
   }
+  html[data-theme="light"] .cell:not(.given){
+    color:var(--gold);
+    text-shadow:none;
+    font-weight:700;
+  }
   html[data-theme="light"] #closeSettingsBtn{
     border-color:var(--gold);
     color:var(--gold);
@@ -260,6 +265,8 @@
     min-height:0;
     min-width:0;
     display:flex;
+    align-items:center;
+    justify-content:center;
     width:100%;
     overflow:hidden;
     margin-bottom:8px;
@@ -275,7 +282,7 @@
     max-height:100%;
     width:min(100cqw, 100cqh);
     height:min(100cqw, 100cqh);
-    margin:auto auto;
+    margin:0;
     background:var(--line-strong);
     gap:1px;
     border:3px solid var(--gold);
@@ -292,11 +299,13 @@
     cursor:pointer;
     position:relative;
     user-select:none;
-    transition:background 0.12s ease, transform 0.12s ease;
+    transition:background 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease;
     color:#00F0FF;
     text-shadow:0 0 6px rgba(0,240,255,0.55);
   }
   .cell.given{ background:var(--panel-alt); cursor:default; color:#00F0FF; text-shadow:0 0 6px rgba(0,240,255,0.55); }
+  .cell:not(.given){ color:var(--gold); text-shadow:0 0 6px var(--gold-soft); }
+  .cell:not(.given) .swatch{ box-shadow:0 0 0 1px rgba(244,228,166,0.4), inset 0 0 0 2px var(--gold); }
   .cell.selected{ background:var(--gold-soft); box-shadow: inset 0 0 0 2px var(--gold); }
   .cell.error{ background:rgba(232,93,78,0.22); box-shadow: inset 0 0 0 2px var(--error); }
   .cell.peer{ background:rgba(0, 240, 255, 0.08); }
@@ -305,6 +314,37 @@
   @keyframes hintPulse{
     0%,100%{ box-shadow: inset 0 0 0 2px var(--success); }
     50%{ box-shadow: inset 0 0 0 2px transparent; }
+  }
+  .cell.correct-pulse{ animation: cellCorrectPulse 380ms ease; }
+  @keyframes cellCorrectPulse{
+    0%{ transform:scale(1); box-shadow: inset 0 0 0 0 rgba(78,205,160,0); }
+    35%{ transform:scale(1.06); box-shadow: inset 0 0 0 2px rgba(78,205,160,0.6), 0 0 10px rgba(78,205,160,0.4); }
+    100%{ transform:scale(1); box-shadow: inset 0 0 0 0 rgba(78,205,160,0); }
+  }
+  .cell.wrong-shake{ animation: cellWrongShake 260ms ease; }
+  @keyframes cellWrongShake{
+    0%,100%{ transform:translateX(0); background:rgba(232,93,78,0.22); box-shadow: inset 0 0 0 2px var(--error); }
+    20%{ transform:translateX(-3px); }
+    40%{ transform:translateX(3px); }
+    60%{ transform:translateX(-2px); }
+    80%{ transform:translateX(2px); }
+  }
+  .cell.box-glow{ animation: cellBoxGlow 550ms ease; }
+  @keyframes cellBoxGlow{
+    0%{ box-shadow: inset 0 0 0 0 rgba(212,175,55,0); }
+    40%{ box-shadow: inset 0 0 0 2px rgba(212,175,55,0.7), 0 0 8px rgba(212,175,55,0.5); }
+    100%{ box-shadow: inset 0 0 0 0 rgba(212,175,55,0); }
+  }
+  .cell.win-glow{ animation: cellWinGlow 480ms ease; }
+  @keyframes cellWinGlow{
+    0%{ box-shadow: inset 0 0 0 0 rgba(212,175,55,0); transform:scale(1); }
+    45%{ box-shadow: inset 0 0 0 2px rgba(212,175,55,0.85), 0 0 12px rgba(212,175,55,0.6); transform:scale(1.04); }
+    100%{ box-shadow: inset 0 0 0 0 rgba(212,175,55,0); transform:scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .cell.correct-pulse, .cell.wrong-shake, .cell.box-glow, .cell.win-glow, .cell.hint-glow{
+      animation:none !important;
+    }
   }
   #board .cell{ border-right:1px solid var(--line-soft); }
   #board .cell:nth-child(9n){ border-right:none; }
@@ -317,6 +357,16 @@
   .sw .shape-icon{ width:60%; height:60%; }
   .shape-icon{ width:60%; height:60%; display:block; }
   .face{ font-size:1.3rem; line-height:1; }
+
+  /* Theme-switch transition layers */
+  .tt-wrap{ position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+  .tt-layer{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }
+  .tt-icon{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
+  .tt-num-plain{ font-size:clamp(0.68rem, 4.6vh, 1.1rem); font-weight:inherit; line-height:1; }
+  .tt-num-keypad{ font-size:clamp(0.95rem, 2.8vh, 1.4rem); font-weight:600; line-height:1; }
+  @media (prefers-reduced-motion: reduce){
+    .tt-layer, .tt-num-plain, .tt-num-keypad{ transition:none !important; }
+  }
 
   /* Pause overlay */
   #pauseOverlay{
@@ -367,18 +417,15 @@
     font-size:clamp(0.56rem, 1.3vh, 0.68rem);
     opacity:0.9;
     line-height:1;
-    margin-bottom:1px;
+    margin-top:1px;
     font-weight:700;
   }
   .sym-btn .number-text{ font-size:clamp(0.95rem, 2.8vh, 1.4rem); font-weight:600; line-height:1; color:#00F0FF; text-shadow:0 0 6px rgba(0,240,255,0.55); }
   .sym-btn .btn-inner{ display:flex; flex-direction:column; align-items:center; justify-content:center; }
   .sym-btn.completed{
     pointer-events:none;
-    background:transparent;
-    border-color:transparent;
-    box-shadow:none;
+    opacity:0.35;
   }
-  .sym-btn.completed .btn-inner{ opacity:0; visibility:hidden; }
 
   #status{ margin:0; font-size:clamp(0.6rem, 1.5vh, 0.8rem); color:var(--ink-dim); min-height:0; text-align:center; }
   #status.warnText{ color:var(--error); }
@@ -791,21 +838,99 @@ function countSolutions(grid, limit=2){
   solve(grid.map(row=>row.slice()));
   return count;
 }
-function generatePuzzle(givensTarget){
+function candidatesGrid(g){
+  const cand=[];
+  for(let r=0;r<9;r++){ cand.push(new Array(9).fill(0)); }
+  for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+    if(g[r][c]!==0) continue;
+    let mask=0;
+    for(let n=1;n<=9;n++){ if(isValid(g,r,c,n)) mask |= (1<<(n-1)); }
+    cand[r][c]=mask;
+  }
+  return cand;
+}
+function popcount(mask){ let cnt=0; while(mask){ mask &= mask-1; cnt++; } return cnt; }
+function bitToNum(mask){ for(let n=1;n<=9;n++){ if(mask & (1<<(n-1))) return n; } return 0; }
+function buildUnits(){
+  const units=[];
+  for(let r=0;r<9;r++){ const u=[]; for(let c=0;c<9;c++) u.push([r,c]); units.push(u); }
+  for(let c=0;c<9;c++){ const u=[]; for(let r=0;r<9;r++) u.push([r,c]); units.push(u); }
+  for(let br=0;br<3;br++) for(let bc=0;bc<3;bc++){
+    const u=[]; for(let r=br*3;r<br*3+3;r++) for(let c=bc*3;c<bc*3+3;c++) u.push([r,c]);
+    units.push(u);
+  }
+  return units;
+}
+const ALL_UNITS = buildUnits();
+// Simulates a human solver limited to a technique set. Returns true only if the
+// puzzle can be fully solved WITHOUT guessing, using techniques allowed for "level".
+function humanSolve(grid, level){
+  const g = grid.map(row=>row.slice());
+  let changed=true;
+  while(changed){
+    changed=false;
+    let cand = candidatesGrid(g);
+
+    if(level==="medium"){
+      for(const unit of ALL_UNITS){
+        const pairCells = unit.filter(function(rc){ return g[rc[0]][rc[1]]===0 && popcount(cand[rc[0]][rc[1]])===2; });
+        for(let i=0;i<pairCells.length;i++){
+          for(let j=i+1;j<pairCells.length;j++){
+            const a=pairCells[i], b=pairCells[j];
+            const maskA=cand[a[0]][a[1]], maskB=cand[b[0]][b[1]];
+            if(maskA===maskB){
+              for(const rc of unit){
+                if((rc[0]===a[0]&&rc[1]===a[1])||(rc[0]===b[0]&&rc[1]===b[1])) continue;
+                if(cand[rc[0]][rc[1]] & maskA) cand[rc[0]][rc[1]] &= ~maskA;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+      if(g[r][c]===0 && popcount(cand[r][c])===1){
+        g[r][c]=bitToNum(cand[r][c]);
+        changed=true;
+      }
+    }
+    if(changed) continue;
+
+    for(const unit of ALL_UNITS){
+      for(let n=1;n<=9;n++){
+        const bit=1<<(n-1);
+        let foundCell=null, count=0;
+        for(const rc of unit){
+          if(g[rc[0]][rc[1]]===0 && (cand[rc[0]][rc[1]] & bit)){ count++; foundCell=rc; }
+        }
+        if(count===1 && g[foundCell[0]][foundCell[1]]===0){
+          g[foundCell[0]][foundCell[1]]=n;
+          changed=true;
+        }
+      }
+    }
+  }
+  for(let r=0;r<9;r++) for(let c=0;c<9;c++) if(g[r][c]===0) return false;
+  return true;
+}
+function generatePuzzle(givensTarget, level){
   const solution=emptyGrid();
   fillGrid(solution);
   const puzzle=solution.map(row=>row.slice());
   const cells=shuffle([...Array(81).keys()]);
   let removed=0;
   const toRemove=81-givensTarget;
+  const checkTechnique = (level==="easy" || level==="medium");
   for(const idx of cells){
     if(removed>=toRemove) break;
     const r=Math.floor(idx/9), c=idx%9;
     const backup=puzzle[r][c];
     if(backup===0) continue;
     puzzle[r][c]=0;
-    const sols=countSolutions(puzzle,2);
-    if(sols!==1){ puzzle[r][c]=backup; } else { removed++; }
+    let ok = countSolutions(puzzle,2)===1;
+    if(ok && checkTechnique){ ok = humanSolve(puzzle, level); }
+    if(!ok){ puzzle[r][c]=backup; } else { removed++; }
   }
   return { puzzle, solution };
 }
@@ -867,26 +992,104 @@ const WORKER_SRC = `
     solve(grid.map(row=>row.slice()));
     return count;
   }
-  function generatePuzzle(givensTarget){
+  function candidatesGrid(g){
+    const cand=[];
+    for(let r=0;r<9;r++){ cand.push(new Array(9).fill(0)); }
+    for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+      if(g[r][c]!==0) continue;
+      let mask=0;
+      for(let n=1;n<=9;n++){ if(isValid(g,r,c,n)) mask |= (1<<(n-1)); }
+      cand[r][c]=mask;
+    }
+    return cand;
+  }
+  function popcount(mask){ let cnt=0; while(mask){ mask &= mask-1; cnt++; } return cnt; }
+  function bitToNum(mask){ for(let n=1;n<=9;n++){ if(mask & (1<<(n-1))) return n; } return 0; }
+  function buildUnits(){
+    const units=[];
+    for(let r=0;r<9;r++){ const u=[]; for(let c=0;c<9;c++) u.push([r,c]); units.push(u); }
+    for(let c=0;c<9;c++){ const u=[]; for(let r=0;r<9;r++) u.push([r,c]); units.push(u); }
+    for(let br=0;br<3;br++) for(let bc=0;bc<3;bc++){
+      const u=[]; for(let r=br*3;r<br*3+3;r++) for(let c=bc*3;c<bc*3+3;c++) u.push([r,c]);
+      units.push(u);
+    }
+    return units;
+  }
+  const ALL_UNITS = buildUnits();
+  // Simulates a human solver limited to a technique set. Returns true only if the
+  // puzzle can be fully solved WITHOUT guessing, using techniques allowed for "level".
+  function humanSolve(grid, level){
+    const g = grid.map(row=>row.slice());
+    let changed=true;
+    while(changed){
+      changed=false;
+      let cand = candidatesGrid(g);
+
+      if(level==="medium"){
+        for(const unit of ALL_UNITS){
+          const pairCells = unit.filter(function(rc){ return g[rc[0]][rc[1]]===0 && popcount(cand[rc[0]][rc[1]])===2; });
+          for(let i=0;i<pairCells.length;i++){
+            for(let j=i+1;j<pairCells.length;j++){
+              const a=pairCells[i], b=pairCells[j];
+              const maskA=cand[a[0]][a[1]], maskB=cand[b[0]][b[1]];
+              if(maskA===maskB){
+                for(const rc of unit){
+                  if((rc[0]===a[0]&&rc[1]===a[1])||(rc[0]===b[0]&&rc[1]===b[1])) continue;
+                  if(cand[rc[0]][rc[1]] & maskA) cand[rc[0]][rc[1]] &= ~maskA;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+        if(g[r][c]===0 && popcount(cand[r][c])===1){
+          g[r][c]=bitToNum(cand[r][c]);
+          changed=true;
+        }
+      }
+      if(changed) continue;
+
+      for(const unit of ALL_UNITS){
+        for(let n=1;n<=9;n++){
+          const bit=1<<(n-1);
+          let foundCell=null, count=0;
+          for(const rc of unit){
+            if(g[rc[0]][rc[1]]===0 && (cand[rc[0]][rc[1]] & bit)){ count++; foundCell=rc; }
+          }
+          if(count===1 && g[foundCell[0]][foundCell[1]]===0){
+            g[foundCell[0]][foundCell[1]]=n;
+            changed=true;
+          }
+        }
+      }
+    }
+    for(let r=0;r<9;r++) for(let c=0;c<9;c++) if(g[r][c]===0) return false;
+    return true;
+  }
+  function generatePuzzle(givensTarget, level){
     const solution=emptyGrid();
     fillGrid(solution);
     const puzzle=solution.map(row=>row.slice());
     const cells=shuffle([...Array(81).keys()]);
     let removed=0;
     const toRemove=81-givensTarget;
+    const checkTechnique = (level==="easy" || level==="medium");
     for(const idx of cells){
       if(removed>=toRemove) break;
       const r=Math.floor(idx/9), c=idx%9;
       const backup=puzzle[r][c];
       if(backup===0) continue;
       puzzle[r][c]=0;
-      const sols=countSolutions(puzzle,2);
-      if(sols!==1){ puzzle[r][c]=backup; } else { removed++; }
+      let ok = countSolutions(puzzle,2)===1;
+      if(ok && checkTechnique){ ok = humanSolve(puzzle, level); }
+      if(!ok){ puzzle[r][c]=backup; } else { removed++; }
     }
     return { puzzle, solution };
   }
   self.onmessage = function(e){
-    const result = generatePuzzle(e.data.target);
+    const result = generatePuzzle(e.data.target, e.data.level);
     self.postMessage(result);
   };
 `;
@@ -899,15 +1102,15 @@ try{
   workerAvailable = false; // fall back to main-thread generation below
 }
 
-function generatePuzzleAsync(target){
+function generatePuzzleAsync(target, level){
   if(workerAvailable && sudokuWorker){
     return new Promise((resolve)=>{
       sudokuWorker.onmessage = (e)=> resolve(e.data);
-      sudokuWorker.postMessage({ target });
+      sudokuWorker.postMessage({ target, level });
     });
   }
   // Fallback: main thread (only if Worker creation failed, e.g. restricted sandbox)
-  return Promise.resolve(generatePuzzle(target));
+  return Promise.resolve(generatePuzzle(target, level));
 }
 
 /* ---------- GAME STATE ---------- */
@@ -926,6 +1129,16 @@ let vibrationEnabled = (localStorage.getItem("navasudoku_vibration") ?? "off") =
 function vibrate(pattern){
   if(vibrationEnabled && navigator.vibrate) navigator.vibrate(pattern);
 }
+function prefersReducedMotion(){
+  return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+}
+function isBoxComplete(r,c){
+  const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
+  for(let i=br;i<br+3;i++) for(let j=bc;j<bc+3;j++){
+    if(board[i][j]!==solution[i][j]) return false;
+  }
+  return true;
+}
 let rapidFillMode=false;
 let lockedSymbol=null; // 0..8 index of locked palette symbol, or null
 const EMOJI_MAP=["🟥","🟦","🟨","🟩","🟧","🟪","🩷","🔵","🟫"];
@@ -939,7 +1152,7 @@ async function newGame(){
   isGenerating=true;
   setStatus("Generating puzzle…", false);
   const target=DIFFICULTIES[currentDifficulty];
-  const gen=await generatePuzzleAsync(target);
+  const gen=await generatePuzzleAsync(target, currentDifficulty);
   puzzle=gen.puzzle; solution=gen.solution;
   given=puzzle.map(row=>row.map(v=>v!==0));
   board=puzzle.map(row=>row.slice());
@@ -966,6 +1179,7 @@ async function newGame(){
 }
 
 function restartBoard(){
+  if(!puzzle){ newGame(); return; } // safety net: no valid puzzle to retry, start fresh instead of crashing
   // Reload the exact same puzzle/solution, just reset progress
   given=puzzle.map(row=>row.map(v=>v!==0));
   board=puzzle.map(row=>row.slice());
@@ -1010,7 +1224,7 @@ function saveState(){
     const snapshot = {
       theme: currentTheme,
       difficulty: currentDifficulty,
-      given, board, solution, notes, zenMode,
+      puzzle, given, board, solution, notes, zenMode,
       mistakes, hintsLeft, seconds, gameOver
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
@@ -1024,7 +1238,7 @@ function loadState(){
     const raw = localStorage.getItem(STORAGE_KEY);
     if(!raw) return null;
     const s = JSON.parse(raw);
-    if(!s || !s.board || !s.solution || !s.given) return null;
+    if(!s || !s.board || !s.solution || !s.given || !s.puzzle) return null;
     return s;
   }catch(e){
     storageAvailable = false;
@@ -1035,7 +1249,7 @@ function loadState(){
 function resumeFromSave(s){
   currentTheme = s.theme || "numbers";
   currentDifficulty = s.difficulty || "easy";
-  given = s.given; board = s.board; solution = s.solution;
+  given = s.given; board = s.board; solution = s.solution; puzzle = s.puzzle;
   mistakes = s.mistakes || 0;
   hintsLeft = (typeof s.hintsLeft === "number") ? s.hintsLeft : 3;
   seconds = s.seconds || 0;
@@ -1089,14 +1303,148 @@ function symbolFor(val){
   const theme=THEMES[currentTheme];
   return theme.render(theme.symbols[val-1]);
 }
+/* ---------- THEME TRANSITION ---------- */
+let themeGen = 0;
+const TT_EASE = "cubic-bezier(.22,.68,.32,1)";
+const TT_DUR_BOARD = 460;
+const TT_DUR_PAL = 360;
+
+function pairKind(oldT, newT){
+  if((oldT==="numbers"&&newT==="colors")||(oldT==="colors"&&newT==="numbers")) return "swap";
+  if(oldT==="numbers"&&newT==="hybrid") return "num2hyb";
+  if(oldT==="hybrid"&&newT==="numbers") return "hyb2num";
+  if(oldT==="colors"&&newT==="hybrid") return "col2hyb";
+  return "hyb2col";
+}
+function ttLayer(z){ const el=document.createElement("div"); el.className="tt-layer"; el.style.zIndex=String(z); return el; }
+function ttAnim(el, delay, dur, from, to, props){
+  Object.assign(el.style, from);
+  el.style.transition = props.map(p=>`${p} ${dur}ms ${TT_EASE}`).join(", ");
+  el.style.transitionDelay = delay+"ms";
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{ Object.assign(el.style, to); }));
+}
+// Builds the animated in-transition DOM for one symbol. keypad=true uses the smaller
+// fixed-size ".sw" swatch + keypad number sizing instead of the board's ".swatch".
+function buildSymbolTransition(oldTheme, newTheme, val, keypad, dur){
+  const kind=pairKind(oldTheme,newTheme);
+  const wrap=document.createElement("span");
+  wrap.className="tt-wrap";
+  const boxClass = keypad ? "sw" : "swatch";
+  const numClass = keypad ? "tt-num-keypad" : "tt-num-plain";
+  const plainColor = "#00F0FF", plainShadow = "0 0 6px rgba(0,240,255,0.55)";
+  const hybColor = "#FFFFFF", hybShadow = "none";
+
+  function fullEl(theme){
+    if(theme==="numbers"){
+      const s=document.createElement("span"); s.className=numClass; s.style.color=plainColor; s.style.textShadow=plainShadow; s.textContent=String(val); return s;
+    }
+    const sym=THEMES[theme].symbols[val-1];
+    const box=document.createElement("div"); box.className=boxClass; box.style.background=sym.c; box.innerHTML=sym.icon; return box;
+  }
+
+  let run;
+  if(kind==="swap"){
+    const oldEl=ttLayer(1), newEl=ttLayer(2);
+    oldEl.appendChild(fullEl(oldTheme));
+    newEl.appendChild(fullEl(newTheme));
+    wrap.appendChild(oldEl); wrap.appendChild(newEl);
+    run=(delay)=>{
+      ttAnim(oldEl.firstChild, delay, dur, {opacity:"1", transform:"scale(1)"}, {opacity:"0", transform:"scale(0.55)"}, ["opacity","transform"]);
+      ttAnim(newEl.firstChild, delay, dur, {opacity:"0", transform:"scale(0.55)"}, {opacity:"1", transform:"scale(1)"}, ["opacity","transform"]);
+    };
+  } else if(kind==="num2hyb" || kind==="hyb2num"){
+    const forward = kind==="num2hyb";
+    const numEl=document.createElement("span"); numEl.className=numClass; numEl.textContent=String(val);
+    const numLayer=ttLayer(2); numLayer.appendChild(numEl);
+    const boxEl=document.createElement("div"); boxEl.className=boxClass; boxEl.style.background=THEMES.hybrid.symbols[val-1].c;
+    const boxLayer=ttLayer(1); boxLayer.appendChild(boxEl);
+    wrap.appendChild(boxLayer); wrap.appendChild(numLayer);
+    run=(delay)=>{
+      if(forward){
+        ttAnim(boxEl, delay, dur, {opacity:"0", transform:"scale(0.3)"}, {opacity:"1", transform:"scale(1)"}, ["opacity","transform"]);
+        ttAnim(numEl, delay, dur, {color:plainColor, textShadow:plainShadow}, {color:hybColor, textShadow:hybShadow}, ["color"]);
+      } else {
+        ttAnim(boxEl, delay, dur, {opacity:"1", transform:"scale(1)"}, {opacity:"0", transform:"scale(0.3)"}, ["opacity","transform"]);
+        ttAnim(numEl, delay, dur, {color:hybColor, textShadow:hybShadow}, {color:plainColor, textShadow:plainShadow}, ["color"]);
+      }
+    };
+  } else { // col2hyb / hyb2col — box (same color both themes) stays put, only the icon crossfades
+    const forward = kind==="col2hyb";
+    const color = THEMES.hybrid.symbols[val-1].c;
+    const boxEl=document.createElement("div"); boxEl.className=boxClass; boxEl.style.background=color;
+    const boxLayer=ttLayer(1); boxLayer.appendChild(boxEl);
+    const oldIconHtml = forward ? THEMES.colors.symbols[val-1].icon : THEMES.hybrid.symbols[val-1].icon;
+    const newIconHtml = forward ? THEMES.hybrid.symbols[val-1].icon : THEMES.colors.symbols[val-1].icon;
+    const oldIcon=document.createElement("div"); oldIcon.className="tt-icon"; oldIcon.innerHTML=oldIconHtml;
+    const newIcon=document.createElement("div"); newIcon.className="tt-icon"; newIcon.innerHTML=newIconHtml;
+    const oldLayer=ttLayer(2); oldLayer.appendChild(oldIcon);
+    const newLayer=ttLayer(3); newLayer.appendChild(newIcon);
+    wrap.appendChild(boxLayer); wrap.appendChild(oldLayer); wrap.appendChild(newLayer);
+    run=(delay)=>{
+      ttAnim(oldIcon, delay, dur, {opacity:"1", transform:"scale(1)"}, {opacity:"0", transform:"scale(1)"}, ["opacity"]);
+      ttAnim(newIcon, delay, dur, {opacity:"0", transform:"scale(0.6)"}, {opacity:"1", transform:"scale(1)"}, ["opacity","transform"]);
+    };
+  }
+  return {wrap, run};
+}
+const ENABLE_THEME_TRANSITIONS = false; // DIAGNOSTIC: temporarily forced off to isolate the "can't enter numbers" bug
+function switchTheme(newKey){
+  if(newKey===currentTheme){ return; }
+  const myGen = ++themeGen;
+  // Always start from a guaranteed-clean instant render first, so rapid re-taps
+  // mid-transition can never leave duplicated/stuck layers behind.
+  renderBoard(); renderPalette();
+
+  if(prefersReducedMotion() || !ENABLE_THEME_TRANSITIONS){
+    currentTheme=newKey; renderThemeRow(); renderBoard(); renderPalette(); saveState();
+    return;
+  }
+  const oldTheme=currentTheme;
+  const boardEl=document.getElementById("board");
+  const runs=[];
+  for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+    const val=board[r][c];
+    if(val===0) continue; // empty cells stay stable
+    const cell=boardEl.children[r*9+c];
+    cell.innerHTML="";
+    const {wrap, run}=buildSymbolTransition(oldTheme, newKey, val, false, TT_DUR_BOARD);
+    cell.appendChild(wrap);
+    runs.push({run, delay:(r+c)*10});
+  }
+  const palEl=document.getElementById("palette");
+  const theme=THEMES[oldTheme];
+  theme.symbols.forEach((sym,i)=>{
+    const val=i+1;
+    const btn=palEl.children[i];
+    const inner=btn.querySelector(".btn-inner");
+    const mainEl=inner.firstChild;
+    const {wrap, run}=buildSymbolTransition(oldTheme, newKey, val, true, TT_DUR_PAL);
+    mainEl.replaceWith(wrap);
+    runs.push({run, delay:i*12});
+  });
+  runs.forEach(({run,delay})=>run(delay));
+  let maxDelay=0;
+  runs.forEach(({delay})=>{ if(delay>maxDelay) maxDelay=delay; });
+  const finishDur = Math.max(TT_DUR_BOARD, TT_DUR_PAL);
+  setTimeout(()=>{
+    if(myGen!==themeGen) return; // a newer switch already took over
+    currentTheme=newKey;
+    renderThemeRow(); renderBoard(); renderPalette(); saveState();
+  }, maxDelay+finishDur+40);
+}
+
 function renderThemeRow(){
   const row=document.getElementById("themeRow");
   row.innerHTML="";
   Object.keys(THEMES).forEach(key=>{
     const btn=document.createElement("button");
     btn.className="theme-btn"+(key===currentTheme?" active":"");
+    btn.dataset.key=key;
     btn.textContent=THEMES[key].label;
-    btn.onclick=()=>{ currentTheme=key; renderThemeRow(); renderBoard(); renderPalette(); saveState(); };
+    btn.onclick=()=>{
+      document.querySelectorAll("#themeRow .theme-btn").forEach(b=>b.classList.toggle("active", b.dataset.key===key));
+      switchTheme(key);
+    };
     row.appendChild(btn);
   });
 }
@@ -1140,14 +1488,14 @@ function renderPalette(){
     btn.className="sym-btn";
     const inner=document.createElement("div");
     inner.className="btn-inner";
-    const countEl=document.createElement("span");
-    countEl.className="count-text";
-    countEl.textContent=`${remaining} left`;
-    inner.appendChild(countEl);
     const mainEl=document.createElement("span");
     if(typeof sym==="object" && sym.c){ mainEl.innerHTML=`<div class="sw" style="background:${sym.c}">${sym.icon}</div>`; }
     else { mainEl.textContent=sym; mainEl.className="number-text"; }
     inner.appendChild(mainEl);
+    const countEl=document.createElement("span");
+    countEl.className="count-text";
+    countEl.textContent=`×${remaining}`;
+    inner.appendChild(countEl);
     btn.appendChild(inner);
     if(remaining<=0) btn.classList.add("completed");
     if(rapidFillMode && lockedSymbol===val) btn.classList.add("locked");
@@ -1171,6 +1519,7 @@ function onPaletteTap(v){
 }
 function replaceCell(g,r,c,v){ const copy=g.map(row=>row.slice()); copy[r][c]=v; return copy; }
 
+const ENABLE_MATCH_HIGHLIGHT = true;
 function renderBoard(){
   const boardEl=document.getElementById("board");
   boardEl.innerHTML="";
@@ -1189,7 +1538,7 @@ function renderBoard(){
         cell.innerHTML=`<div class="notes-grid">${marks}</div>`;
       }
       if(selected && selected.r===r && selected.c===c) cell.classList.add("selected");
-      else if(selectedVal!==0 && val===selectedVal) cell.classList.add("match");
+      else if(ENABLE_MATCH_HIGHLIGHT && selectedVal!==0 && val===selectedVal) cell.classList.add("match");
       else if(selected && (selected.r===r || selected.c===c || (Math.floor(selected.r/3)===Math.floor(r/3) && Math.floor(selected.c/3)===Math.floor(c/3)))) cell.classList.add("peer");
       if(val!==0 && !isValid(replaceCell(board,r,c,0), r, c, val)) cell.classList.add("error");
       cell.onclick=()=>{
@@ -1235,6 +1584,8 @@ function placeValue(v){
   const prevVal=board[r][c];
   if(prevVal===v) return;
 
+  const boxWasComplete = isBoxComplete(r,c);
+
   // Track mistakes: only count when placing a non-zero value that's wrong vs solution
   if(v!==0 && v!==solution[r][c]){
     mistakes++;
@@ -1247,6 +1598,33 @@ function placeValue(v){
   renderBoard();
   renderPalette();
   updateHud();
+
+  if(v!==0 && !prefersReducedMotion()){
+    const cellEls=document.getElementById("board").children;
+    const idx=r*9+c;
+    if(v!==solution[r][c]){
+      cellEls[idx].classList.add("wrong-shake");
+    } else {
+      cellEls[idx].classList.add("correct-pulse");
+      if(!boxWasComplete && isBoxComplete(r,c)){
+        const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
+        let stagger=0;
+        for(let i=br;i<br+3;i++) for(let j=bc;j<bc+3;j++){
+          const el=cellEls[i*9+j];
+          el.style.animationDelay = stagger+"ms";
+          el.classList.add("box-glow");
+          stagger+=25;
+        }
+        setTimeout(()=>{
+          for(let i=br;i<br+3;i++) for(let j=bc;j<bc+3;j++){
+            const el=cellEls[i*9+j];
+            el.classList.remove("box-glow");
+            el.style.animationDelay="";
+          }
+        }, 550+stagger);
+      }
+    }
+  }
 
   if(mistakes>=maxMistakes && !zenMode){
     mistakes=maxMistakes;
@@ -1345,19 +1723,37 @@ function checkWin(){
   clearInterval(timerInterval);
   vibrate([40,60,40,60,80]);
 
-  // Track consecutive Numbers-theme wins for the USP teaser banner
-  let numbersStreak=parseInt(localStorage.getItem("navasudoku_numbers_streak")||"0",10);
-  numbersStreak = (currentTheme==="numbers") ? numbersStreak+1 : 0;
-  localStorage.setItem("navasudoku_numbers_streak", String(numbersStreak));
-  document.getElementById("uspBanner").style.display = (numbersStreak>=2) ? "" : "none";
+  const finishWinFlow=()=>{
+    // Track consecutive Numbers-theme wins for the USP teaser banner
+    let numbersStreak=parseInt(localStorage.getItem("navasudoku_numbers_streak")||"0",10);
+    numbersStreak = (currentTheme==="numbers") ? numbersStreak+1 : 0;
+    localStorage.setItem("navasudoku_numbers_streak", String(numbersStreak));
+    document.getElementById("uspBanner").style.display = (numbersStreak>=2) ? "" : "none";
 
-  renderStars(computeStars());
-  spawnConfetti();
-  document.getElementById("winTime").textContent=formatTime(seconds);
-  document.getElementById("winMistakes").textContent=mistakes;
-  document.getElementById("shareText").textContent=buildShareText();
-  document.getElementById("shareStatus").textContent="";
-  document.getElementById("winModal").classList.add("show");
+    renderStars(computeStars());
+    spawnConfetti();
+    document.getElementById("winTime").textContent=formatTime(seconds);
+    document.getElementById("winMistakes").textContent=mistakes;
+    document.getElementById("shareText").textContent=buildShareText();
+    document.getElementById("shareStatus").textContent="";
+    document.getElementById("winModal").classList.add("show");
+  };
+
+  if(prefersReducedMotion()){
+    finishWinFlow();
+    return true;
+  }
+
+  const cellEls=document.getElementById("board").children;
+  let maxDelay=0;
+  for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+    const delay=(r+c)*18;
+    if(delay>maxDelay) maxDelay=delay;
+    const el=cellEls[r*9+c];
+    el.style.animationDelay=delay+"ms";
+    el.classList.add("win-glow");
+  }
+  setTimeout(finishWinFlow, maxDelay+480+60);
   return true;
 }
 
