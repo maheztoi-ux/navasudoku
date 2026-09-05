@@ -74,7 +74,7 @@
     align-items:center;
     justify-content:space-between;
     box-sizing:border-box;
-    padding:10px 12px;
+    padding:10px 6px;
     padding-bottom:max(24px, env(safe-area-inset-bottom));
     gap:0.5vh;
   }
@@ -307,7 +307,8 @@
     min-height:0;
     min-width:0;
     display:grid;
-    place-items:center;
+    align-items:start;
+    justify-items:center;
     width:100%;
     overflow:hidden;
     margin-bottom:8px;
@@ -321,7 +322,7 @@
     aspect-ratio:1/1;
     max-height:100%;
     max-width:100%;
-    margin:auto;
+    margin:0;
     background:var(--line-strong);
     gap:1px;
     border:3px solid var(--gold);
@@ -399,7 +400,7 @@
   .row-thick{ border-bottom:3px solid var(--block-line) !important; }
 
   .swatch{ width:62%; height:62%; border-radius:7px; box-shadow:0 0 0 1px rgba(244,228,166,0.4); display:flex; align-items:center; justify-content:center; color:#FFFFFF; font-weight:700; }
-  .sw{ width:26px; height:26px; border-radius:6px; box-shadow:0 0 0 1px rgba(244,228,166,0.4); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#FFFFFF; font-weight:700; font-size:0.78rem; }
+  .sw{ width:32px; height:32px; border-radius:7px; box-shadow:0 0 0 1px rgba(244,228,166,0.4); display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#FFFFFF; font-weight:700; font-size:0.88rem; }
   .sw .shape-icon{ width:60%; height:60%; }
   .shape-icon{ width:60%; height:60%; display:block; }
   .face{ font-size:1.3rem; line-height:1; }
@@ -718,6 +719,13 @@
       <div class="theme-toggle">
         <button id="vibeOffBtn">OFF</button>
         <button id="vibeOnBtn">ON</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <span>🔊 Sound</span>
+      <div class="theme-toggle">
+        <button id="soundOffBtn">OFF</button>
+        <button id="soundOnBtn">ON</button>
       </div>
     </div>
     <div class="settings-row">
@@ -1179,6 +1187,26 @@ let notes=null; // 9x9 array of 9-boolean arrays (candidate marks)
 let notesMode=false;
 let zenMode=false;
 let vibrationEnabled = (localStorage.getItem("navasudoku_vibration") ?? "off") === "on";
+let soundEnabled = (localStorage.getItem("navasudoku_sound") ?? "off") === "on";
+const SOUNDS = {
+  correct: new Audio("sounds/correct.aac"),
+  wrong: new Audio("sounds/wrong.aac"),
+  complete: new Audio("sounds/complete.aac"),
+  win: new Audio("sounds/win.aac"),
+  hint: new Audio("sounds/hint.aac"),
+  locked: new Audio("sounds/locked.aac")
+};
+Object.values(SOUNDS).forEach(a=>{ a.preload="auto"; a.volume=0.7; });
+function playSound(name){
+  if(!soundEnabled) return;
+  const base=SOUNDS[name];
+  if(!base) return;
+  try{
+    const node = base.cloneNode();
+    node.volume = base.volume;
+    node.play().catch(()=>{});
+  }catch(e){}
+}
 function vibrate(pattern){
   if(vibrationEnabled && navigator.vibrate) navigator.vibrate(pattern);
 }
@@ -1640,6 +1668,7 @@ function clearPeerNotes(r,c,v){
 
 function playLockedPulse(r,c){
   vibrate(15);
+  playSound("locked");
   if(prefersReducedMotion()) return;
   const cellEls=document.getElementById("board").children;
   const el=cellEls[r*9+c];
@@ -1674,6 +1703,7 @@ function placeValue(v){
   if(v!==0 && v!==solution[r][c]){
     mistakes++;
     vibrate(60);
+    playSound("wrong");
   }
   history.push({r,c,prevVal});
   board[r][c]=v;
@@ -1682,6 +1712,14 @@ function placeValue(v){
   renderBoard();
   renderPalette();
   updateHud();
+
+  if(v!==0 && v===solution[r][c]){
+    playSound("correct");
+    const newlyCompleted = (!boxWasComplete && isBoxComplete(r,c))
+      || (!rowWasComplete && isRowComplete(r))
+      || (!colWasComplete && isColComplete(c));
+    if(newlyCompleted) playSound("complete");
+  }
 
   if(v!==0 && !prefersReducedMotion()){
     const cellEls=document.getElementById("board").children;
@@ -1780,6 +1818,7 @@ function useHint(){
     if(!given[r][c] && board[r][c]!==solution[r][c]) candidates.push({r,c});
   }
   if(candidates.length===0){ setStatus("No cells left to hint — you've got them all!", false); return; }
+  playSound("hint");
   const pick=candidates[Math.floor(Math.random()*candidates.length)];
   history.push({r:pick.r,c:pick.c,prevVal:board[pick.r][pick.c]});
   board[pick.r][pick.c]=solution[pick.r][pick.c];
@@ -1839,6 +1878,7 @@ function checkWin(){
   gameOver=true;
   clearInterval(timerInterval);
   vibrate([40,60,40,60,80]);
+  playSound("win");
 
   const finishWinFlow=()=>{
     // Track consecutive Numbers-theme wins for the USP teaser banner
@@ -2041,6 +2081,20 @@ function setVibration(on){
 document.getElementById("vibeOffBtn").onclick=()=>setVibration(false);
 document.getElementById("vibeOnBtn").onclick=()=>setVibration(true);
 updateVibrationButtons();
+
+function updateSoundButtons(){
+  document.getElementById("soundOffBtn").classList.toggle("active", !soundEnabled);
+  document.getElementById("soundOnBtn").classList.toggle("active", soundEnabled);
+}
+function setSound(on){
+  soundEnabled=on;
+  localStorage.setItem("navasudoku_sound", on ? "on" : "off");
+  updateSoundButtons();
+  if(on) playSound("correct");
+}
+document.getElementById("soundOffBtn").onclick=()=>setSound(false);
+document.getElementById("soundOnBtn").onclick=()=>setSound(true);
+updateSoundButtons();
 document.getElementById("rapidBtn").onclick=()=>{
   rapidFillMode=!rapidFillMode;
   if(rapidFillMode && notesMode){ notesMode=false; } // mutually exclusive input modes
