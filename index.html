@@ -282,24 +282,67 @@
     margin-top:4px;
   }
 
-  .theme-row, .diff-row{
+  .diff-row{
     display:flex;
     gap:1.5vw;
     margin:0;
     flex-wrap:wrap;
     justify-content:center;
   }
+  .theme-row{
+    display:flex;
+    gap:8px;
+    margin:0;
+    width:auto;
+    max-width:100%;
+    justify-content:center;
+  }
   .theme-btn{
+    flex:0 1 auto;
+    min-width:0;
     background:var(--panel);
     border:1px solid var(--line-soft);
     color:var(--ink-dim);
-    padding:clamp(3px,0.7vh,7px) clamp(8px,2vw,14px);
-    border-radius:20px;
-    font-size:clamp(0.62rem, 1.6vh, 0.78rem);
+    padding:clamp(5px,1vh,8px) clamp(8px,2vw,12px);
+    border-radius:12px;
     cursor:pointer;
     transition:all 0.15s ease;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    text-align:left;
   }
-  .theme-btn.active{ background:var(--gold-soft); border-color:var(--gold); color:var(--gold); }
+  .theme-btn .mode-icon{
+    flex-shrink:0;
+    width:28px; height:28px;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .theme-btn .mode-text{
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    line-height:1.15;
+  }
+  .theme-btn .mode-title{
+    font-size:clamp(0.62rem, 1.6vh, 0.78rem);
+    font-weight:700;
+    color:var(--ink);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .theme-btn .mode-sub{
+    font-size:clamp(0.46rem, 1vh, 0.56rem);
+    opacity:0.75;
+    margin-top:1px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .theme-btn.active{ background:var(--gold-soft); border-color:var(--gold); box-shadow:0 0 8px rgba(212,175,55,0.3); }
+  .theme-btn.active .mode-title{ color:var(--gold); }
+  .theme-btn.active .mode-sub{ color:var(--gold); }
 
   #boardWrap{
     position:relative;
@@ -556,6 +599,19 @@
   }
   #gameOverModal.show{ display:flex; }
   #gameOverModal .win-card{ border-color:var(--error); }
+  #gameOverContinueBtn{
+    width:100%;
+    background:var(--success);
+    border:1px solid var(--success);
+    color:#fff;
+    font-weight:700;
+    padding:13px;
+    border-radius:8px;
+    font-size:0.92rem;
+    cursor:pointer;
+    margin-bottom:8px;
+    box-shadow:0 4px 16px -4px rgba(78,205,160,0.5);
+  }
   #gameOverNewBtn{
     width:100%;
     background:var(--error);
@@ -771,12 +827,12 @@
     </div>
     <div class="win-stats">
       <div class="win-stat"><b id="winTime">00:00</b><span>⏱️ Time</span></div>
-      <div class="win-stat"><b id="winMistakes">0</b><span>❌ Mistakes</span></div>
+      <div class="win-stat"><b id="winMistakes">0</b><span id="winMistakesLabel">❌ Mistakes</span></div>
     </div>
     <button id="winNextBtn">Next Puzzle</button>
     <button id="winRetryBtn">↺ Retry Puzzle</button>
     <div id="uspBanner" style="display:none;">
-      Mastered Numbers? Try Color Sudoku!
+      Mastered Classic? Try Chroma!
       <button id="uspTryBtn">Try it</button>
     </div>
     <div id="shareText"></div>
@@ -793,6 +849,7 @@
       <div class="win-stat"><b id="goTime">00:00</b><span>Time</span></div>
       <div class="win-stat"><b id="goMistakes">0/3</b><span>Mistakes</span></div>
     </div>
+    <button id="gameOverContinueBtn">▶ Continue This Puzzle</button>
     <button id="gameOverNewBtn">🔄 Start New Puzzle</button>
     <button id="gameOverRestartBtn">↺ Retry Puzzle</button>
   </div>
@@ -828,14 +885,18 @@ const SHAPE_ICONS = [
 const swatchRender = (v)=>`<div class="swatch" style="background:${v.c}">${v.icon}</div>`;
 
 const THEMES = {
-  numbers: { label:"Numbers", symbols:["1","2","3","4","5","6","7","8","9"], render:(v)=>v },
+  numbers: { label:"Numbers", title:"Classic", sub:"Numbers", symbols:["1","2","3","4","5","6","7","8","9"], render:(v)=>v },
   colors: {
     label:"Colors",
+    title:"Chroma",
+    sub:"Colors",
     symbols: COLOR_SET.map((x,i)=>({ ...x, icon: SHAPE_ICONS[i] })),
     render: swatchRender
   },
   hybrid: {
     label:"Hybrid",
+    title:"Fusion",
+    sub:"Numbers + Colors",
     symbols: COLOR_SET.map((x,i)=>({ ...x, icon: String(i+1) })),
     render: swatchRender
   }
@@ -1183,6 +1244,7 @@ let history=[]; // for undo: {r,c,prevVal}
 let mistakes=0, maxMistakes=3;
 let hintsLeft=3;
 let seconds=0, timerInterval=null, paused=false, gameOver=false;
+let continueUsed=false; // tracks the one-time "Continue This Puzzle" allowance per puzzle instance
 let notes=null; // 9x9 array of 9-boolean arrays (candidate marks)
 let notesMode=false;
 let zenMode=false;
@@ -1255,6 +1317,7 @@ async function newGame(){
   hintsLeft=3;
   seconds=0;
   gameOver=false;
+  continueUsed=false;
   paused=false;
   isGenerating=false;
   notes=freshNotes();
@@ -1284,6 +1347,7 @@ function restartBoard(){
   hintsLeft=3;
   seconds=0;
   gameOver=false;
+  continueUsed=false;
   paused=false;
   notes=freshNotes();
   notesMode=false;
@@ -1325,7 +1389,7 @@ function saveState(){
       theme: currentTheme,
       difficulty: currentDifficulty,
       puzzle, given, board, solution, notes, zenMode,
-      mistakes, hintsLeft, seconds, gameOver
+      mistakes, hintsLeft, seconds, gameOver, continueUsed
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
   }catch(e){
@@ -1354,6 +1418,7 @@ function resumeFromSave(s){
   hintsLeft = (typeof s.hintsLeft === "number") ? s.hintsLeft : 3;
   seconds = s.seconds || 0;
   gameOver = !!s.gameOver;
+  continueUsed = !!s.continueUsed;
   zenMode = !!s.zenMode;
   notes = s.notes || freshNotes();
   notesMode = false;
@@ -1374,6 +1439,12 @@ function resumeFromSave(s){
   // (resume-status message intentionally removed)
   renderBoard();
   restartTimer();
+  if(gameOver){
+    document.getElementById("goTime").textContent=formatTime(seconds);
+    document.getElementById("goMistakes").textContent=`${mistakes}/${maxMistakes}`;
+    document.getElementById("gameOverContinueBtn").style.display = continueUsed ? "none" : "";
+    document.getElementById("gameOverModal").classList.add("show");
+  }
 }
 
 function formatTime(s){
@@ -1533,6 +1604,25 @@ function switchTheme(newKey){
   }, maxDelay+finishDur+40);
 }
 
+function modeIconHtml(key){
+  if(key==="numbers"){
+    const dots=Array.from({length:9}).map(()=>`<div style="width:5px;height:5px;border-radius:1.5px;background:${COLOR_SET[1].c};"></div>`).join("");
+    return `<div class="mode-icon"><div style="display:grid;grid-template-columns:repeat(3,5px);grid-template-rows:repeat(3,5px);gap:2px;">${dots}</div></div>`;
+  }
+  if(key==="colors"){
+    const cs=COLOR_SET;
+    return `<div class="mode-icon"><div style="display:grid;grid-template-columns:repeat(2,8px);grid-template-rows:repeat(2,8px);gap:2.5px;">
+      <div style="width:8px;height:8px;border-radius:50%;background:${cs[0].c};box-shadow:0 0 0 1px rgba(244,228,166,0.4);"></div><div style="width:8px;height:8px;border-radius:50%;background:${cs[2].c};box-shadow:0 0 0 1px rgba(244,228,166,0.4);"></div>
+      <div style="width:8px;height:8px;border-radius:50%;background:${cs[5].c};box-shadow:0 0 0 1px rgba(244,228,166,0.4);"></div><div style="width:8px;height:8px;border-radius:50%;background:${cs[3].c};box-shadow:0 0 0 1px rgba(244,228,166,0.4);"></div>
+    </div></div>`;
+  }
+  // hybrid: number tile with overlapping color blend
+  return `<div class="mode-icon"><div style="position:relative;width:24px;height:24px;">
+    <div style="width:13px;height:13px;border-radius:50%;background:${COLOR_SET[6].c};position:absolute;right:-1px;top:-1px;opacity:0.9;z-index:1;"></div>
+    <div style="width:11px;height:11px;border-radius:50%;background:${COLOR_SET[3].c};position:absolute;right:0px;bottom:-1px;opacity:0.9;z-index:1;"></div>
+    <div style="width:15px;height:15px;border-radius:5px;background:${COLOR_SET[1].c};color:#fff;font-weight:700;font-size:0.55rem;display:flex;align-items:center;justify-content:center;position:absolute;left:0;top:4px;z-index:2;box-shadow:0 1px 4px rgba(0,0,0,0.35);">9</div>
+  </div></div>`;
+}
 function renderThemeRow(){
   const row=document.getElementById("themeRow");
   row.innerHTML="";
@@ -1540,7 +1630,7 @@ function renderThemeRow(){
     const btn=document.createElement("button");
     btn.className="theme-btn"+(key===currentTheme?" active":"");
     btn.dataset.key=key;
-    btn.textContent=THEMES[key].label;
+    btn.innerHTML=`${modeIconHtml(key)}<span class="mode-text"><span class="mode-title">${THEMES[key].title}</span><span class="mode-sub">${THEMES[key].sub}</span></span>`;
     btn.onclick=()=>{
       document.querySelectorAll("#themeRow .theme-btn").forEach(b=>b.classList.toggle("active", b.dataset.key===key));
       switchTheme(key);
@@ -1795,6 +1885,7 @@ function triggerGameOver(){
   clearInterval(timerInterval);
   document.getElementById("goTime").textContent=formatTime(seconds);
   document.getElementById("goMistakes").textContent=`${mistakes}/${maxMistakes}`;
+  document.getElementById("gameOverContinueBtn").style.display = continueUsed ? "none" : "";
   document.getElementById("gameOverModal").classList.add("show");
   saveState();
 }
@@ -1817,7 +1908,7 @@ function useHint(){
   for(let r=0;r<9;r++) for(let c=0;c<9;c++){
     if(!given[r][c] && board[r][c]!==solution[r][c]) candidates.push({r,c});
   }
-  if(candidates.length===0){ setStatus("No cells left to hint — you've got them all!", false); return; }
+  if(candidates.length===0){ setStatus("No cells left to hint — you've got them all!", false, 3000); return; }
   playSound("hint");
   const pick=candidates[Math.floor(Math.random()*candidates.length)];
   history.push({r:pick.r,c:pick.c,prevVal:board[pick.r][pick.c]});
@@ -1830,7 +1921,7 @@ function useHint(){
   cellEls[idx].classList.add("hint-glow");
   renderPalette();
   updateHud();
-  setStatus(`Hint used — filled in the correct symbol. ${hintsLeft} hint${hintsLeft===1?"":"s"} left.`, false);
+  setStatus(`Hint used — filled in the correct symbol. ${hintsLeft} hint${hintsLeft===1?"":"s"} left.`, false, 3000);
   checkWin();
   saveState();
 }
@@ -1891,6 +1982,7 @@ function checkWin(){
     spawnConfetti();
     document.getElementById("winTime").textContent=formatTime(seconds);
     document.getElementById("winMistakes").textContent=mistakes;
+    document.getElementById("winMistakesLabel").textContent = `❌ Mistake${mistakes===1?"":"s"}`;
     document.getElementById("shareText").textContent=buildShareText();
     document.getElementById("shareStatus").textContent="";
     document.getElementById("winModal").classList.add("show");
@@ -1914,10 +2006,21 @@ function checkWin(){
   return true;
 }
 
-function setStatus(msg, warn){
+let statusClearToken=0;
+function setStatus(msg, warn, autoClearMs){
   const el=document.getElementById("status");
   el.textContent=msg;
   el.className = warn ? "warnText" : "";
+  statusClearToken++;
+  if(autoClearMs){
+    const myToken=statusClearToken;
+    setTimeout(()=>{
+      if(statusClearToken===myToken){
+        el.textContent="";
+        el.className="";
+      }
+    }, autoClearMs);
+  }
 }
 
 /* ---------- SETTINGS MODAL ---------- */
@@ -1995,6 +2098,16 @@ document.getElementById("uspTryBtn").onclick=()=>{
   document.getElementById("winModal").classList.remove("show");
   newGame();
 };
+document.getElementById("gameOverContinueBtn").onclick=()=>{
+  continueUsed=true;
+  mistakes=0;
+  gameOver=false;
+  document.getElementById("gameOverModal").classList.remove("show");
+  updateHud();
+  restartTimer();
+  setStatus("Continuing — mistakes reset. Make them count!", false, 3000);
+  saveState();
+};
 document.getElementById("gameOverNewBtn").onclick=()=>{
   document.getElementById("gameOverModal").classList.remove("show");
   newGame();
@@ -2023,7 +2136,7 @@ document.getElementById("notesBtn").onclick=()=>{
   if(notesMode && rapidFillMode){ rapidFillMode=false; lockedSymbol=null; } // mutually exclusive input modes
   updateModeButtons();
   renderPalette();
-  setStatus(notesMode ? "Notes mode on — tap numbers to mark candidates." : "Notes mode off.", false);
+  setStatus(notesMode ? "Notes mode on — tap numbers to mark candidates." : "Notes mode off.", false, 3000);
 };
 function setZenMode(on){
   if(zenMode===on) return;
@@ -2101,7 +2214,7 @@ document.getElementById("rapidBtn").onclick=()=>{
   lockedSymbol=null;
   updateModeButtons();
   renderPalette();
-  setStatus(rapidFillMode ? "Rapid Fill on — pick a symbol, then tap cells to fill." : "Rapid Fill off.", false);
+  setStatus(rapidFillMode ? "Rapid Fill on — pick a symbol, then tap cells to fill." : "Rapid Fill off.", false, 3000);
 };
 document.getElementById("shareBtn").onclick=async ()=>{
   const text=buildShareText();
