@@ -520,15 +520,38 @@
   #status{ margin:0; font-size:clamp(0.6rem, 1.5vh, 0.8rem); color:var(--ink-dim); min-height:0; text-align:center; }
   #status.warnText{ color:var(--error); }
 
-  .controls{ display:flex; gap:1.5vw; margin:0; flex-wrap:wrap; justify-content:center; }
+  .controls{ display:flex; gap:6px; margin:0; width:100%; max-width:400px; }
   .ctrl-btn{
+    flex:1 1 0;
+    min-width:0;
     background:var(--panel);
     border:1px solid var(--line-soft);
     color:var(--ink);
-    padding:clamp(4px,0.8vh,7px) clamp(10px,2.6vw,16px);
-    border-radius:8px;
-    font-size:clamp(0.62rem, 1.5vh, 0.78rem);
+    padding:clamp(6px,1.1vh,10px) 4px;
+    border-radius:12px;
+    font-size:clamp(0.58rem, 1.4vh, 0.7rem);
     cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:2px;
+    position:relative;
+  }
+  .ctrl-btn .ctrl-icon{ font-size:clamp(0.95rem, 2.2vh, 1.2rem); line-height:1; }
+  .ctrl-btn .ctrl-label{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+  .ctrl-btn .ctrl-badge{
+    position:absolute;
+    top:-6px; right:-6px;
+    background:var(--gold);
+    color:var(--panel);
+    font-weight:700;
+    font-size:0.62rem;
+    min-width:16px;
+    height:16px;
+    border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    padding:0 3px;
+    box-shadow:0 1px 4px rgba(0,0,0,0.3);
   }
   @media (hover:hover) and (pointer:fine){
     .ctrl-btn:hover{ border-color:var(--gold); }
@@ -744,12 +767,10 @@
   <div id="palette"></div>
   <div id="status"></div>
   <div class="controls">
-    <button class="ctrl-btn" id="notesBtn">✏️ Notes</button>
-    <button class="ctrl-btn" id="rapidBtn">👆 Rapid Fill</button>
-  </div>
-  <div class="controls">
-    <button class="ctrl-btn" id="undoBtn">↩ Undo</button>
-    <button class="ctrl-btn" id="hintBtn">💡 Hint</button>
+    <button class="ctrl-btn" id="notesBtn"><span class="ctrl-icon">✏️</span><span class="ctrl-label">Notes</span></button>
+    <button class="ctrl-btn" id="undoBtn"><span class="ctrl-icon">↩</span><span class="ctrl-label">Undo</span></button>
+    <button class="ctrl-btn" id="rapidBtn"><span class="ctrl-icon">👆</span><span class="ctrl-label">Rapid Fill</span></button>
+    <button class="ctrl-btn" id="hintBtn"><span class="ctrl-icon">💡</span><span class="ctrl-label">Hint</span><span class="ctrl-badge" id="hintBadge">3</span></button>
   </div>
 </div>
 
@@ -1458,6 +1479,7 @@ function updateHud(){
   document.getElementById("mistakeDisplay").textContent = zenMode ? `${mistakes}/∞` : `${mistakes}/${maxMistakes}`;
   document.getElementById("mistakeItem").classList.toggle("warn", mistakes>0 && !zenMode);
   document.getElementById("hintDisplay").textContent=hintsLeft;
+  document.getElementById("hintBadge").textContent=hintsLeft;
   document.getElementById("undoBtn").disabled = history.length===0;
   document.getElementById("hintBtn").disabled = hintsLeft<=0;
 }
