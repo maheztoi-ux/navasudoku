@@ -722,28 +722,45 @@
     cursor:pointer;
     margin-top:8px;
   }
-  #uspBanner{
-    margin-top:14px;
-    padding:10px 12px;
-    background:var(--gold-soft);
-    border:1px solid var(--gold);
-    border-radius:10px;
-    font-size:0.76rem;
-    color:var(--gold);
-    text-align:center;
+  #tryAnotherSection{
+    margin-top:16px;
   }
-  #uspBanner button{
-    display:block;
-    margin:6px auto 0;
-    background:var(--gold);
-    color:var(--panel);
-    border:none;
-    padding:5px 14px;
-    border-radius:14px;
+  #tryAnotherSection .divider-label{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color:var(--gold);
     font-size:0.72rem;
     font-weight:600;
-    cursor:pointer;
+    margin-bottom:8px;
   }
+  #tryAnotherSection .divider-label::before, #tryAnotherSection .divider-label::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  #tryAnotherGrid{
+    display:flex;
+    gap:8px;
+  }
+  .try-mode-card{
+    flex:1 1 0;
+    min-width:0;
+    background:var(--panel-alt);
+    border:1px solid var(--gold);
+    border-radius:10px;
+    padding:10px 6px;
+    text-align:center;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:4px;
+  }
+  .try-mode-card .mode-icon{ width:28px; height:28px; display:flex; align-items:center; justify-content:center; position:relative; margin:0 auto; }
+  .try-mode-card .try-title{ font-size:0.78rem; font-weight:700; color:var(--ink); }
+  .try-mode-card .try-sub{ font-size:0.6rem; color:var(--ink-dim); line-height:1.2; }
 </style>
 </head>
 <body>
@@ -842,7 +859,7 @@
 <div id="winModal">
   <div class="win-card">
     <div class="confetti-layer" id="confettiLayer"></div>
-    <h2>Puzzle Solved!</h2>
+    <h2 id="winTitle">Puzzle Solved!</h2>
     <div class="star-rating" id="starRating">
       <span class="star">★</span><span class="star">★</span><span class="star">★</span>
     </div>
@@ -852,9 +869,9 @@
     </div>
     <button id="winNextBtn">Next Puzzle</button>
     <button id="winRetryBtn">↺ Retry Puzzle</button>
-    <div id="uspBanner" style="display:none;">
-      Mastered Classic? Try Chroma!
-      <button id="uspTryBtn">Try it</button>
+    <div id="tryAnotherSection" style="display:none;">
+      <div class="divider-label"><span>Try Another Mode</span></div>
+      <div id="tryAnotherGrid"></div>
     </div>
     <div id="shareText"></div>
     <button class="ctrl-btn" id="shareBtn">📋 Copy Result</button>
@@ -906,11 +923,12 @@ const SHAPE_ICONS = [
 const swatchRender = (v)=>`<div class="swatch" style="background:${v.c}">${v.icon}</div>`;
 
 const THEMES = {
-  numbers: { label:"Numbers", title:"Classic", sub:"Numbers", symbols:["1","2","3","4","5","6","7","8","9"], render:(v)=>v },
+  numbers: { label:"Numbers", title:"Classic", sub:"Numbers", tagline:"The original sudoku.", symbols:["1","2","3","4","5","6","7","8","9"], render:(v)=>v },
   colors: {
     label:"Colors",
     title:"Chroma",
     sub:"Colors",
+    tagline:"Same logic. New colors.",
     symbols: COLOR_SET.map((x,i)=>({ ...x, icon: SHAPE_ICONS[i] })),
     render: swatchRender
   },
@@ -918,6 +936,7 @@ const THEMES = {
     label:"Hybrid",
     title:"Fusion",
     sub:"Numbers + Colors",
+    tagline:"Numbers meet colors.",
     symbols: COLOR_SET.map((x,i)=>({ ...x, icon: String(i+1) })),
     render: swatchRender
   }
@@ -1955,9 +1974,9 @@ function buildShareText(){
 }
 
 const STAR_THRESHOLDS = {
-  easy:   { threeMinSec: 180,  twoMinSec: 420,  twoMaxMistakes: 2 },
-  medium: { threeMinSec: 360,  twoMinSec: 720,  twoMaxMistakes: 2 },
-  hard:   { threeMinSec: 600,  twoMinSec: 1080, twoMaxMistakes: 2 }
+  easy:   { threeMinSec: 180,  twoMinSec: 900,  twoMaxMistakes: 2 },
+  medium: { threeMinSec: 360,  twoMinSec: 1800, twoMaxMistakes: 2 },
+  hard:   { threeMinSec: 600,  twoMinSec: 3600, twoMaxMistakes: 2 }
 };
 function computeStars(){
   const t = STAR_THRESHOLDS[currentDifficulty] || STAR_THRESHOLDS.easy;
@@ -1984,6 +2003,16 @@ function spawnConfetti(){
     layer.appendChild(p);
   }
 }
+function getWinTitle(){
+  const hintsUsed = 3 - hintsLeft;
+  const t = STAR_THRESHOLDS[currentDifficulty] || STAR_THRESHOLDS.easy;
+  const isFast = seconds <= t.threeMinSec;
+  if(mistakes===0 && hintsUsed===0) return "Flawless! 🏆";
+  if(mistakes===0) return "No Mistakes! ✨";
+  if(isFast) return "Lightning Fast! ⚡";
+  if(mistakes<=1) return "Great Job! 👍";
+  return "Puzzle Solved!";
+}
 function checkWin(){
   for(let r=0;r<9;r++) for(let c=0;c<9;c++){
     if(board[r][c]!==solution[r][c]) return false;
@@ -1994,14 +2023,33 @@ function checkWin(){
   playSound("win");
 
   const finishWinFlow=()=>{
-    // Track consecutive Numbers-theme wins for the USP teaser banner
-    let numbersStreak=parseInt(localStorage.getItem("navasudoku_numbers_streak")||"0",10);
-    numbersStreak = (currentTheme==="numbers") ? numbersStreak+1 : 0;
-    localStorage.setItem("navasudoku_numbers_streak", String(numbersStreak));
-    document.getElementById("uspBanner").style.display = (numbersStreak>=2) ? "" : "none";
+    // Track which modes have been won at least once, to power the "Try Another Mode" prompt
+    let modesPlayed={};
+    try{ modesPlayed=JSON.parse(localStorage.getItem("navasudoku_modes_played")||"{}"); }catch(e){ modesPlayed={}; }
+    modesPlayed[currentTheme]=true;
+    localStorage.setItem("navasudoku_modes_played", JSON.stringify(modesPlayed));
+    const untriedModes=Object.keys(THEMES).filter(k=>!modesPlayed[k]);
+    const tryGrid=document.getElementById("tryAnotherGrid");
+    tryGrid.innerHTML="";
+    if(untriedModes.length>0){
+      untriedModes.forEach(key=>{
+        const card=document.createElement("div");
+        card.className="try-mode-card";
+        card.innerHTML=`${modeIconHtml(key)}<div class="try-title">Try ${THEMES[key].title}!</div><div class="try-sub">${THEMES[key].tagline}</div>`;
+        card.onclick=()=>{
+          currentTheme=key;
+          renderThemeRow();
+          document.getElementById("winModal").classList.remove("show");
+          newGame();
+        };
+        tryGrid.appendChild(card);
+      });
+    }
+    document.getElementById("tryAnotherSection").style.display = untriedModes.length>0 ? "" : "none";
 
     renderStars(computeStars());
     spawnConfetti();
+    document.getElementById("winTitle").textContent=getWinTitle();
     document.getElementById("winTime").textContent=formatTime(seconds);
     document.getElementById("winMistakes").textContent=mistakes;
     document.getElementById("winMistakesLabel").textContent = `❌ Mistake${mistakes===1?"":"s"}`;
@@ -2114,20 +2162,24 @@ document.getElementById("winRetryBtn").onclick=()=>{
   document.getElementById("winModal").classList.remove("show");
   restartBoard();
 };
-document.getElementById("uspTryBtn").onclick=()=>{
-  currentTheme="colors";
-  renderThemeRow();
-  document.getElementById("winModal").classList.remove("show");
-  newGame();
-};
 document.getElementById("gameOverContinueBtn").onclick=()=>{
   continueUsed=true;
   mistakes=0;
   gameOver=false;
+  // clear any incorrect entries so the player isn't left with stale wrong values after mistakes are forgiven
+  for(let r=0;r<9;r++){
+    for(let c=0;c<9;c++){
+      if(!given[r][c] && board[r][c]!==0 && board[r][c]!==solution[r][c]){
+        board[r][c]=0;
+      }
+    }
+  }
   document.getElementById("gameOverModal").classList.remove("show");
+  renderBoard();
+  renderPalette();
   updateHud();
   restartTimer();
-  setStatus("Continuing — mistakes reset. Make them count!", false, 3000);
+  setStatus("Continuing — wrong entries cleared, mistakes reset.", false, 3000);
   saveState();
 };
 document.getElementById("gameOverNewBtn").onclick=()=>{
