@@ -1292,7 +1292,7 @@ let selected=null;
 let history=[]; // for undo: {r,c,prevVal}
 let mistakes=0, maxMistakes=3;
 let hintsLeft=3;
-let seconds=0, timerInterval=null, paused=false, gameOver=false;
+let seconds=0, timerInterval=null, paused=false, gameOver=false, solved=false;
 let continueUsed=false; // tracks the one-time "Continue This Puzzle" allowance per puzzle instance
 let notes=null; // 9x9 array of 9-boolean arrays (candidate marks)
 let notesMode=false;
@@ -1366,6 +1366,7 @@ async function newGame(){
   hintsLeft=3;
   seconds=0;
   gameOver=false;
+  solved=false;
   continueUsed=false;
   paused=false;
   isGenerating=false;
@@ -1396,6 +1397,7 @@ function restartBoard(){
   hintsLeft=3;
   seconds=0;
   gameOver=false;
+  solved=false;
   continueUsed=false;
   paused=false;
   notes=freshNotes();
@@ -1438,7 +1440,7 @@ function saveState(){
       theme: currentTheme,
       difficulty: currentDifficulty,
       puzzle, given, board, solution, notes, zenMode,
-      mistakes, hintsLeft, seconds, gameOver, continueUsed
+      mistakes, hintsLeft, seconds, gameOver, solved, continueUsed
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
   }catch(e){
@@ -1467,6 +1469,7 @@ function resumeFromSave(s){
   hintsLeft = (typeof s.hintsLeft === "number") ? s.hintsLeft : 3;
   seconds = s.seconds || 0;
   gameOver = !!s.gameOver;
+  solved = !!s.solved;
   continueUsed = !!s.continueUsed;
   zenMode = !!s.zenMode;
   notes = s.notes || freshNotes();
@@ -1488,7 +1491,11 @@ function resumeFromSave(s){
   // (resume-status message intentionally removed)
   renderBoard();
   restartTimer();
-  if(gameOver){
+  if(solved){
+    // Puzzle was already solved before the app was backgrounded — show the
+    // win modal again instead of the mistake-limit Game Over modal.
+    showWinModal(true);
+  }else if(gameOver){
     document.getElementById("goTime").textContent=formatTime(seconds);
     document.getElementById("goMistakes").textContent=`${mistakes}/${maxMistakes}`;
     document.getElementById("gameOverContinueBtn").style.display = continueUsed ? "none" : "";
@@ -2022,53 +2029,57 @@ function getWinTitle(){
   if(mistakes<=1) return "Great Job! 👍";
   return "Puzzle Solved!";
 }
+// Populates and shows the win modal. Used both right after solving a puzzle
+// and when resuming a session that was already solved before the app was
+// backgrounded (see resumeFromSave). skipConfetti avoids re-firing confetti
+// on a plain resume.
+function showWinModal(skipConfetti){
+  // Track which modes have been won at least once, to power the "Try Another Mode" prompt
+  let modesPlayed={};
+  try{ modesPlayed=JSON.parse(localStorage.getItem("navasudoku_modes_played")||"{}"); }catch(e){ modesPlayed={}; }
+  modesPlayed[currentTheme]=true;
+  localStorage.setItem("navasudoku_modes_played", JSON.stringify(modesPlayed));
+  const untriedModes=Object.keys(THEMES).filter(k=>!modesPlayed[k]);
+  const tryGrid=document.getElementById("tryAnotherGrid");
+  tryGrid.innerHTML="";
+  if(untriedModes.length>0){
+    untriedModes.forEach(key=>{
+      const card=document.createElement("div");
+      card.className="try-mode-card";
+      card.innerHTML=`${modeIconHtml(key)}<div class="try-title">Try ${THEMES[key].title}!</div><div class="try-sub">${THEMES[key].tagline}</div>`;
+      card.onclick=()=>{
+        currentTheme=key;
+        renderThemeRow();
+        document.getElementById("winModal").classList.remove("show");
+        newGame();
+      };
+      tryGrid.appendChild(card);
+    });
+  }
+  document.getElementById("tryAnotherSection").style.display = untriedModes.length>0 ? "" : "none";
+
+  renderStars(computeStars());
+  if(!skipConfetti) spawnConfetti();
+  document.getElementById("winTitle").textContent=getWinTitle();
+  document.getElementById("winTime").textContent=formatTime(seconds);
+  document.getElementById("winMistakes").textContent=mistakes;
+  document.getElementById("winMistakesLabel").textContent = `❌ Mistake${mistakes===1?"":"s"}`;
+  document.getElementById("shareText").textContent=buildShareText();
+  document.getElementById("shareStatus").textContent="";
+  document.getElementById("winModal").classList.add("show");
+}
 function checkWin(){
   for(let r=0;r<9;r++) for(let c=0;c<9;c++){
     if(board[r][c]!==solution[r][c]) return false;
   }
   gameOver=true;
+  solved=true;
   clearInterval(timerInterval);
   vibrate([40,60,40,60,80]);
   playSound("win");
 
-  const finishWinFlow=()=>{
-    // Track which modes have been won at least once, to power the "Try Another Mode" prompt
-    let modesPlayed={};
-    try{ modesPlayed=JSON.parse(localStorage.getItem("navasudoku_modes_played")||"{}"); }catch(e){ modesPlayed={}; }
-    modesPlayed[currentTheme]=true;
-    localStorage.setItem("navasudoku_modes_played", JSON.stringify(modesPlayed));
-    const untriedModes=Object.keys(THEMES).filter(k=>!modesPlayed[k]);
-    const tryGrid=document.getElementById("tryAnotherGrid");
-    tryGrid.innerHTML="";
-    if(untriedModes.length>0){
-      untriedModes.forEach(key=>{
-        const card=document.createElement("div");
-        card.className="try-mode-card";
-        card.innerHTML=`${modeIconHtml(key)}<div class="try-title">Try ${THEMES[key].title}!</div><div class="try-sub">${THEMES[key].tagline}</div>`;
-        card.onclick=()=>{
-          currentTheme=key;
-          renderThemeRow();
-          document.getElementById("winModal").classList.remove("show");
-          newGame();
-        };
-        tryGrid.appendChild(card);
-      });
-    }
-    document.getElementById("tryAnotherSection").style.display = untriedModes.length>0 ? "" : "none";
-
-    renderStars(computeStars());
-    spawnConfetti();
-    document.getElementById("winTitle").textContent=getWinTitle();
-    document.getElementById("winTime").textContent=formatTime(seconds);
-    document.getElementById("winMistakes").textContent=mistakes;
-    document.getElementById("winMistakesLabel").textContent = `❌ Mistake${mistakes===1?"":"s"}`;
-    document.getElementById("shareText").textContent=buildShareText();
-    document.getElementById("shareStatus").textContent="";
-    document.getElementById("winModal").classList.add("show");
-  };
-
   if(prefersReducedMotion()){
-    finishWinFlow();
+    showWinModal(false);
     return true;
   }
 
@@ -2081,7 +2092,7 @@ function checkWin(){
     el.style.animationDelay=delay+"ms";
     el.classList.add("win-glow");
   }
-  setTimeout(finishWinFlow, maxDelay+480+60);
+  setTimeout(()=>showWinModal(false), maxDelay+480+60);
   return true;
 }
 
@@ -2226,7 +2237,7 @@ function setZenMode(on){
   zenMode=on;
   updateModeButtons();
   updateHud();
-  setStatus(zenMode ? "Zen mode on — no timer pressure, no mistake limit." : "Zen mode off.", false);
+  setStatus(zenMode ? "Zen mode on — no timer pressure, no mistake limit." : "Zen mode off.", false, 3000);
   saveState();
   if(!zenMode && mistakes>=maxMistakes && !gameOver){
     document.getElementById("settingsModal").classList.remove("show");
