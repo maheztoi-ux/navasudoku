@@ -1,8 +1,14 @@
-[{
-      "relation": ["delegate_permission/common.handle_all_urls"],
-      "target": {
-        "namespace": "android_app",
-        "package_name": "io.github.maheztoi_ux.twa",
-        "sha256_cert_fingerprints": ["82:6C:C4:C8:F4:5B:F5:23:A7:50:73:BD:6C:E0:B6:7C:6A:28:CD:7B:7C:75:23:02:45:CC:2C:52:7B:3C:0C:44"]
-      }
-    }]
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.sanewegames.neosudoku",
+      "sha256_cert_fingerprints": [
+        "CA:53:4A:BA:87:C9:20:FF:D2:4E:4B:76:74:9B:95:E5:39:7D:03:BF:8C:EA:D5:4C:2E:89:CE:66:02:D9:F6:00"
+      ]
+    }
+  }
+]
