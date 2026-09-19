@@ -398,6 +398,37 @@
     0%,100%{ box-shadow: inset 0 0 0 2px var(--success); }
     50%{ box-shadow: inset 0 0 0 2px transparent; }
   }
+
+  /* ---- Hint explanation: highlighted unit + floating card (no layout shift) ---- */
+  .cell.hint-unit:not(.selected){ background:rgba(212,175,55,0.20) !important; }
+  html[data-theme="light"] .cell.hint-unit:not(.selected){ background:rgba(168,121,12,0.20) !important; }
+  #hintCard{
+    display:none;
+    position:fixed;
+    left:0; right:0; margin:0 auto;
+    width:calc(100% - 12px);
+    max-width:400px;
+    top:0;
+    z-index:35;
+    background:var(--panel);
+    border:1.5px solid var(--gold);
+    border-radius:12px;
+    padding:7px 11px 8px;
+    box-shadow:0 8px 24px -8px rgba(0,0,0,0.6);
+    color:var(--ink);
+    cursor:pointer;
+  }
+  #hintCard.show{ display:block; animation:hintCardIn 0.22s ease-out; }
+  @keyframes hintCardIn{ from{ opacity:0; transform:translateY(-6px); } to{ opacity:1; transform:none; } }
+  #hintCard .hc-head{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:2px; }
+  #hintCard .hc-title{ font-weight:700; font-size:0.85rem; color:var(--gold); }
+  #hintCard .hc-left{ font-size:0.66rem; color:var(--ink-dim); white-space:nowrap; }
+  #hintCard .hc-body{ font-size:clamp(0.68rem, 1.75vh, 0.8rem); line-height:1.32; color:var(--ink); }
+  body.hint-open #themeRow{ visibility:hidden; }  /* hide the mode buttons behind the card (keeps layout) */
+  #hintCard.compact{ padding:5px 9px 6px; }
+  #hintCard.compact .hc-title{ font-size:0.78rem; }
+  #hintCard.compact .hc-body{ font-size:0.64rem; line-height:1.24; }
+  @media (prefers-reduced-motion: reduce){ #hintCard.show{ animation:none; } }
   .cell.correct-pulse{ animation: cellCorrectPulse 380ms ease; }
   @keyframes cellCorrectPulse{
     0%{ transform:scale(1); box-shadow: inset 0 0 0 0 rgba(78,205,160,0); }
@@ -574,7 +605,15 @@
     line-height:1;
   }
 
-  #shareBtn{
+  #shareBtnRow{
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    gap:10px;
+    width:fit-content;
+    margin:8px auto 0;
+  }
+  #shareBtn, #shareNativeBtn{
     display:flex;
     flex-direction:row;
     align-items:center;
@@ -582,7 +621,6 @@
     gap:6px;
     width:auto;
     flex:none;
-    margin-top:8px;
   }
   #shareText{
     font-family: monospace;
@@ -801,6 +839,11 @@
   </div>
 </div>
 
+<div id="hintCard" role="status" aria-live="polite">
+  <div class="hc-head"><span class="hc-title" id="hcTitle"></span><span class="hc-left" id="hcLeft"></span></div>
+  <div class="hc-body" id="hcBody"></div>
+</div>
+
 <div id="settingsModal">
   <div class="settings-card">
     <h3>Settings</h3>
@@ -884,7 +927,10 @@
       <div id="tryAnotherGrid"></div>
     </div>
     <div id="shareText"></div>
-    <button class="ctrl-btn" id="shareBtn">📋 Copy Result</button>
+    <div id="shareBtnRow">
+      <button class="ctrl-btn" id="shareBtn">📋 Copy</button>
+      <button class="ctrl-btn" id="shareNativeBtn">📤 Share</button>
+    </div>
     <div id="shareStatus"></div>
   </div>
 </div>
@@ -1290,6 +1336,8 @@ const DIFFICULTIES={ easy:40, medium:32, hard:26 };
 let currentDifficulty="easy";
 let puzzle, solution, given, board;
 let selected=null;
+let hintCtx=null;        // {set:Set<cellIndex>} cells to tint while a hint explanation is showing
+let hintCardTimer=null;
 let history=[]; // for undo: {r,c,prevVal}
 let mistakes=0, maxMistakes=3;
 let hintsLeft=3;
@@ -1382,6 +1430,7 @@ async function newGame(){
   updateModeButtons();
   renderPalette();
   setStatus("", false);
+  clearHintExplain();
   renderBoard();
   restartTimer();
   saveState();
@@ -1413,6 +1462,7 @@ function restartBoard(){
   updateModeButtons();
   renderPalette();
   setStatus("", false);
+  clearHintExplain();
   renderBoard();
   restartTimer();
   saveState();
@@ -1789,8 +1839,10 @@ function renderBoard(){
       else if(ENABLE_MATCH_HIGHLIGHT && selectedVal!==0 && val===selectedVal) cell.classList.add("match");
       else if(selected && (selected.r===r || selected.c===c || (Math.floor(selected.r/3)===Math.floor(r/3) && Math.floor(selected.c/3)===Math.floor(c/3)))) cell.classList.add("peer");
       if(val!==0 && !isValid(replaceCell(board,r,c,0), r, c, val)) cell.classList.add("error");
+      if(hintCtx && hintCtx.set.has(r*9+c)) cell.classList.add("hint-unit");
       cell.onclick=()=>{
         if(gameOver || paused) return;
+        clearHintExplain();
         selected={r,c};
         if(rapidFillMode && lockedSymbol!==null && !given[r][c]){
           placeValue(lockedSymbol);
@@ -1826,6 +1878,7 @@ function playLockedPulse(r,c){
 
 function placeValue(v){
   if(gameOver || paused) return;
+  clearHintExplain();
   if(!selected){ setStatus("Pick a cell first.", true); return; }
   const {r,c}=selected;
   if(given[r][c]){ playLockedPulse(r,c); return; }
@@ -1950,6 +2003,7 @@ function triggerGameOver(){
 
 function undo(){
   if(gameOver || paused) return;
+  clearHintExplain();
   if(history.length===0) return;
   const last=history.pop();
   board[last.r][last.c]=last.prevVal;
@@ -1959,28 +2013,158 @@ function undo(){
   saveState();
 }
 
+/* ---------- HINT WITH TECHNIQUE EXPLANATION ---------- */
+// Unit indexes in ALL_UNITS: 0-8 rows, 9-17 columns, 18-26 boxes.
+function unitTypeOf(ui){ return ui<9 ? "row" : ui<18 ? "col" : "box"; }
+const HINT_COLOR_NAMES = ["red","blue","yellow","green","orange","purple","pink","light blue","brown"];
+const HINT_SHAPE_NAMES = ["triangle","plus","star","diamond","square","circle","hexagon","heart","drop"];
+// How a symbol is named in hint text for the current mode (plain words, so it also reads well for colour-blind players)
+function hintSymbolText(v){
+  if(currentTheme==="numbers") return String(v);
+  if(currentTheme==="colors") return `the ${HINT_COLOR_NAMES[v-1]} ${HINT_SHAPE_NAMES[v-1]}`;
+  return `the ${HINT_COLOR_NAMES[v-1]} ${v}`; // hybrid: colour + number
+}
+// bd = board where wrong entries are treated as empty (so every filled cell is correct).
+// Returns every basic-technique step available: one "full" / "hidden" / "naked" entry per cell per kind.
+function collectHintSteps(bd){
+  const cand = candidatesGrid(bd);
+  const seen = new Set(), out = [];
+  const add = (r,c,v,kind,ui)=>{
+    const key = kind+":"+(r*9+c);
+    if(seen.has(key)) return;
+    seen.add(key);
+    out.push({r,c,v,kind,rank: kind==="full" ? 0 : 1, ui});
+  };
+  ALL_UNITS.forEach((unit,ui)=>{
+    const empties = unit.filter(rc=>bd[rc[0]][rc[1]]===0);
+    if(empties.length===1) add(empties[0][0], empties[0][1], solution[empties[0][0]][empties[0][1]], "full", ui);
+    for(let n=1;n<=9;n++){
+      const bit=1<<(n-1);
+      const spots = empties.filter(rc=>cand[rc[0]][rc[1]] & bit);
+      if(spots.length===1) add(spots[0][0], spots[0][1], n, "hidden", ui);
+    }
+  });
+  for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+    if(bd[r][c]===0 && popcount(cand[r][c])===1) add(r,c,bitToNum(cand[r][c]),"naked",-1);
+  }
+  // Safety net: a logic step must agree with the stored solution
+  return out.filter(st=>st.v===solution[st.r][st.c]);
+}
+// Simplest tier first ("Last Cell"), then hidden/naked singles mixed so players see both techniques.
+function pickFrom(list){
+  const best = Math.min(...list.map(st=>st.rank));
+  const pool = list.filter(st=>st.rank===best);
+  return pool[Math.floor(Math.random()*pool.length)];
+}
+function pickHintStep(bd){
+  const steps = collectHintSteps(bd);
+  if(!steps.length) return null;
+  if(selected){
+    const mine = steps.filter(st=>st.r===selected.r && st.c===selected.c);
+    if(mine.length) return pickFrom(mine); // player picked a cell — explain that one when possible
+  }
+  return pickFrom(steps);
+}
+function describeHintStep(st){
+  const S = hintSymbolText(st.v);
+  if(st.kind==="full"){
+    const u = unitTypeOf(st.ui)==="col" ? "column" : unitTypeOf(st.ui);
+    return { title:"Last Cell", body:`This ${u} has just one empty cell left. The only symbol it's missing is ${S}, so it goes here.` };
+  }
+  if(st.kind==="hidden"){
+    const t = unitTypeOf(st.ui);
+    const u = t==="col" ? "column" : t;
+    const others = t==="box" ? "row or column" : t==="row" ? "column or box" : "row or box";
+    return { title:"Hidden Single", body:`In this ${u}, ${S} fits in only one cell. Every other empty cell is blocked by the same symbol in its ${others} (green outlines).` };
+  }
+  return { title:"Naked Single", body:`This cell's row, column and box already contain every other symbol. Only ${S} is left, so it goes here.` };
+}
+function hintUnitCells(st){
+  const set = new Set();
+  const addUnit = ui=>ALL_UNITS[ui].forEach(rc=>set.add(rc[0]*9+rc[1]));
+  if(st.kind==="naked"){ addUnit(st.r); addUnit(9+st.c); addUnit(18+Math.floor(st.r/3)*3+Math.floor(st.c/3)); }
+  else addUnit(st.ui);
+  return set;
+}
+function showHintCard(title, body){
+  const card = document.getElementById("hintCard");
+  document.getElementById("hcTitle").textContent = "💡 " + title;
+  document.getElementById("hcLeft").textContent = `${hintsLeft} hint${hintsLeft===1?"":"s"} left`;
+  document.getElementById("hcBody").textContent = body;
+  card.classList.add("show");
+  document.body.classList.add("hint-open");
+  // Float over the mode selector / gap above the board, never over the grid (no layout shift)
+  // and never under the settings gear (start below it; if space is tight, narrow the card instead)
+  card.style.width=""; card.style.left=""; card.style.right=""; card.style.margin=""; card.classList.remove("compact");
+  const tr = document.getElementById("themeRow").getBoundingClientRect();
+  const br = document.getElementById("board").getBoundingClientRect();
+  const gr = document.getElementById("settingsBtn").getBoundingClientRect();
+  let h = card.offsetHeight;
+  const clearTop = Math.max(tr.top, gr.bottom + 4);
+  if(h <= br.top - 4 - clearTop){
+    card.style.top = clearTop + "px";
+  } else {
+    card.classList.add("compact");            // 1st fallback: tighter text, still full width
+    h = card.offsetHeight;
+    if(h <= br.top - 4 - clearTop){
+      card.style.top = clearTop + "px";
+    } else {                                  // 2nd fallback: slide up and stop short of the gear
+      let top = Math.max(2, br.top - 4 - h);
+      if(top < gr.bottom + 4){
+        card.style.width = Math.max(200, gr.left - 12) + "px";
+        card.style.left = "6px"; card.style.right = "auto"; card.style.margin = "0";
+        h = card.offsetHeight;
+        top = Math.max(2, br.top - 4 - h);
+      }
+      card.style.top = top + "px";
+    }
+  }
+  if(hintCardTimer) clearTimeout(hintCardTimer);
+  hintCardTimer = setTimeout(clearHintExplain, 10000);
+}
+function clearHintExplain(){
+  hintCtx = null;
+  if(hintCardTimer){ clearTimeout(hintCardTimer); hintCardTimer=null; }
+  const card = document.getElementById("hintCard");
+  if(card) card.classList.remove("show");
+  document.body.classList.remove("hint-open");
+  document.querySelectorAll("#board .cell.hint-unit").forEach(el=>el.classList.remove("hint-unit"));
+}
+
 function useHint(){
   if(hintsLeft<=0 || gameOver || paused) return;
-  // find an empty or incorrect cell, fill with correct value
-  const candidates=[];
+  const remaining=[];
   for(let r=0;r<9;r++) for(let c=0;c<9;c++){
-    if(!given[r][c] && board[r][c]!==solution[r][c]) candidates.push({r,c});
+    if(!given[r][c] && board[r][c]!==solution[r][c]) remaining.push({r,c});
   }
-  if(candidates.length===0){ setStatus("No cells left to hint — you've got them all!", false, 3000); return; }
+  if(remaining.length===0){ setStatus("No cells left to hint — you've got them all!", false, 3000); return; }
+
+  // Treat wrong entries as empty so the logic only ever reasons from correct cells
+  const clean = board.map((row,r)=>row.map((v,c)=>(v!==0 && v===solution[r][c]) ? v : 0));
+  const step = pickHintStep(clean);
+  let pick, info;
+  if(step){
+    pick = {r:step.r, c:step.c};
+    info = describeHintStep(step);
+    hintCtx = { set: hintUnitCells(step) };
+  } else {
+    pick = remaining[Math.floor(Math.random()*remaining.length)];
+    info = { title:"Advanced Step", body:"No basic single is available here, so this one needs a harder technique (like pairs). A cell was filled for you. Tip: use Notes to track candidates." };
+    hintCtx = null;
+  }
+
   playSound("hint");
-  const pick=candidates[Math.floor(Math.random()*candidates.length)];
   history.push({r:pick.r,c:pick.c,prevVal:board[pick.r][pick.c]});
   board[pick.r][pick.c]=solution[pick.r][pick.c];
   hintsLeft--;
   selected=pick;
   renderBoard();
   const cellEls=document.getElementById("board").children;
-  const idx=pick.r*9+pick.c;
-  cellEls[idx].classList.add("hint-glow");
+  cellEls[pick.r*9+pick.c].classList.add("hint-glow");
   renderPalette();
   updateHud();
-  setStatus(`Hint used — filled in the correct symbol. ${hintsLeft} hint${hintsLeft===1?"":"s"} left.`, false, 3000);
-  checkWin();
+  showHintCard(info.title, info.body);
+  if(checkWin()) clearHintExplain();
   saveState();
 }
 
@@ -2213,8 +2397,10 @@ document.getElementById("gameOverRestartBtn").onclick=()=>{
 };
 document.getElementById("undoBtn").onclick=undo;
 document.getElementById("hintBtn").onclick=useHint;
+document.getElementById("hintCard").onclick=()=>clearHintExplain();
 document.getElementById("pauseBtn").onclick=()=>{
   if(gameOver) return;
+  clearHintExplain();
   paused=!paused;
   document.getElementById("pauseOverlay").classList.toggle("show", paused);
   document.getElementById("pauseBtn").textContent = paused ? "Resume" : "Pause";
@@ -2329,6 +2515,28 @@ document.getElementById("shareBtn").onclick=async ()=>{
     }
   }
 };
+
+const shareNativeBtn=document.getElementById("shareNativeBtn");
+if(navigator.share){
+  shareNativeBtn.onclick=async ()=>{
+    const text=buildShareText();
+    // Only pass a url to the native share sheet if it's a real http(s) link —
+    // some contexts (e.g. a locally-opened file) resolve to a non-web URI
+    // like content:// or file://, which can crash the share sheet.
+    const shareData = /^https?:\/\//i.test(SHARE_URL)
+      ? { title:"Neo Sudoku", text, url:SHARE_URL }
+      : { title:"Neo Sudoku", text };
+    try{
+      await navigator.share(shareData);
+    }catch(e){
+      // user cancelled the native share sheet — no error message needed
+    }
+  };
+}else{
+  // Progressive enhancement: hide the native-share button on browsers that
+  // don't support the Web Share API. "Copy" already covers this case.
+  shareNativeBtn.style.display="none";
+}
 
 document.getElementById("shareSettingsBtn").onclick=async ()=>{
   const inviteText="Come play Neo Sudoku with me! 🧩";
