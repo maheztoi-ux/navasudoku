@@ -2685,4 +2685,90 @@ document.getElementById("shareBtn").onclick=async ()=>{
   const text=buildShareText();
   try{
     await navigator.clipboard.writeText(text);
-    document.getElem
+    document.getElementById("shareStatus").textContent="Copied to clipboard!";
+  }catch(e){
+    try{
+      const ta=document.createElement("textarea");
+      ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
+      document.body.appendChild(ta); ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      document.getElementById("shareStatus").textContent="Copied to clipboard!";
+    }catch(e2){
+      document.getElementById("shareStatus").textContent="Couldn't auto-copy — long-press the text above to copy manually.";
+    }
+  }
+};
+
+const shareNativeBtn=document.getElementById("shareNativeBtn");
+if(navigator.share){
+  shareNativeBtn.onclick=async ()=>{
+    const text=buildShareText();
+    // Only pass a url to the native share sheet if it's a real http(s) link —
+    // some contexts (e.g. a locally-opened file) resolve to a non-web URI
+    // like content:// or file://, which can crash the share sheet.
+    const shareData = /^https?:\/\//i.test(SHARE_URL)
+      ? { title:"Neo Sudoku", text, url:SHARE_URL }
+      : { title:"Neo Sudoku", text };
+    try{
+      await navigator.share(shareData);
+    }catch(e){
+      // user cancelled the native share sheet — no error message needed
+    }
+  };
+}else{
+  // Progressive enhancement: hide the native-share button on browsers that
+  // don't support the Web Share API. "Copy" already covers this case.
+  shareNativeBtn.style.display="none";
+}
+
+document.getElementById("shareSettingsBtn").onclick=async ()=>{
+  const inviteText="Come play Neo Sudoku with me! 🧩";
+  const statusEl=document.getElementById("shareSettingsStatus");
+  if(navigator.share){
+    try{
+      await navigator.share({ title:"Neo Sudoku", text:inviteText, url:SHARE_URL });
+    }catch(e){
+      // user cancelled the share sheet — no error message needed
+    }
+    return;
+  }
+  const fallbackText=`${inviteText} ${SHARE_URL}`;
+  try{
+    await navigator.clipboard.writeText(fallbackText);
+    statusEl.textContent="Link copied!";
+  }catch(e){
+    try{
+      const ta=document.createElement("textarea");
+      ta.value=fallbackText; ta.style.position="fixed"; ta.style.opacity="0";
+      document.body.appendChild(ta); ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      statusEl.textContent="Link copied!";
+    }catch(e2){
+      statusEl.textContent="Couldn't auto-copy the link.";
+    }
+  }
+};
+
+/* ---------- INIT ---------- */
+document.addEventListener("visibilitychange", ()=>{
+  if(document.hidden) saveState(); // Android can kill the process any time it's backgrounded
+});
+
+const savedGame = loadState();
+if(savedGame){
+  resumeFromSave(savedGame);
+} else {
+  renderThemeRow();
+  renderDiffRow();
+  newGame();
+}
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
