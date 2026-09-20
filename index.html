@@ -55,7 +55,7 @@
     text-shadow:none;
     font-weight:700;
   }
-  html[data-theme="light"] #closeSettingsBtn{
+  html[data-theme="light"] #closeSettingsBtn, html[data-theme="light"] #closeStatsBtn{
     border-color:var(--gold);
     color:var(--gold);
   }
@@ -190,7 +190,7 @@
     cursor:pointer;
   }
   .theme-toggle button.active{ background:var(--gold); color:var(--panel); font-weight:700; }
-  #closeSettingsBtn{
+  #closeSettingsBtn, #closeStatsBtn{
     width:100%;
     margin-top:16px;
     background:transparent;
@@ -425,6 +425,18 @@
   #hintCard .hc-left{ font-size:0.66rem; color:var(--ink-dim); white-space:nowrap; }
   #hintCard .hc-body{ font-size:clamp(0.68rem, 1.75vh, 0.8rem); line-height:1.32; color:var(--ink); }
   body.hint-open #themeRow{ visibility:hidden; }  /* hide the mode buttons behind the card (keeps layout) */
+  /* ---- Mode selector: action-triggered dimming (never hidden, stays tappable) ---- */
+  #themeRow{ transition:filter 0.3s ease; --dim-active:0.7; --dim-other:0.5; }
+  html[data-theme="light"] #themeRow{ --dim-active:0.8; --dim-other:0.62; }   /* light theme text needs a bit more */
+  #themeRow .theme-btn{ transition:all 0.15s ease, opacity 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+  #themeRow.mode-dimmed{ filter:saturate(0.6); }
+  #themeRow.mode-dimmed .theme-btn{ opacity:var(--dim-other); }
+  #themeRow.mode-dimmed .theme-btn.active{
+    opacity:var(--dim-active);
+    border-color:var(--gold);
+    border-color:color-mix(in srgb, var(--gold) 60%, transparent);
+    box-shadow:0 0 3px rgba(212,175,55,0.12);
+  }
   #hintCard.compact{ padding:5px 9px 6px; }
   #hintCard.compact .hc-title{ font-size:0.78rem; }
   #hintCard.compact .hc-body{ font-size:0.64rem; line-height:1.24; }
@@ -569,6 +581,9 @@
     position:relative;
   }
   .ctrl-btn .ctrl-icon{ font-size:clamp(0.95rem, 2.2vh, 1.2rem); line-height:1; }
+  /* Undo icon: flat yellow circular arrow drawn in SVG so its colour matches the other three on every phone */
+  .ctrl-btn .undo-svg{ display:block; width:1.2em; height:1.2em; margin:-0.1em 0; }
+  html[data-theme="light"] .ctrl-btn .undo-svg{ filter:drop-shadow(0 0 0.6px rgba(170,110,0,0.75)); }
   .ctrl-btn .ctrl-label{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
   .ctrl-btn .ctrl-badge{
     position:absolute;
@@ -770,6 +785,47 @@
     cursor:pointer;
     margin-top:8px;
   }
+  /* ---- Stats: win-screen lines, settings button, stats modal ---- */
+  .win-best{ text-align:center; font-size:0.8rem; color:var(--ink-dim); margin:-6px 0 4px; }
+  .win-best:empty{ display:none; }
+  .win-best.hl{ color:var(--gold); font-weight:700; text-shadow:0 0 10px rgba(212,175,55,0.5); }
+  #winStreak{ color:var(--gold); }
+  #statsSettingsBtn{
+    width:100%;
+    background:var(--panel-alt);
+    border:1px solid var(--gold);
+    color:var(--gold);
+    padding:9px;
+    border-radius:8px;
+    font-size:0.8rem;
+    font-weight:600;
+    cursor:pointer;
+    margin-top:8px;
+  }
+  #statsModal{
+    position:fixed; inset:0;
+    background:rgba(10,6,20,0.72);
+    display:none;
+    align-items:center; justify-content:center;
+    z-index:65;
+    padding:20px;
+  }
+  #statsModal.show{ display:flex; }
+  #statsModal .settings-card{ max-height:calc(100dvh - 40px); overflow-y:auto; }
+  .stats-tiles{ display:flex; gap:8px; margin:0 0 14px; }
+  .stat-tile{
+    flex:1;
+    background:var(--panel-alt);
+    border:1px solid var(--line-soft);
+    border-radius:10px;
+    padding:10px 4px;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .stat-tile b{ font-size:1.35rem; color:var(--gold); line-height:1.1; }
+  .stat-tile span{ font-size:0.6rem; color:var(--ink-dim); text-transform:uppercase; letter-spacing:0.06em; text-align:center; margin-top:3px; }
+  .stats-sub{ font-size:0.7rem; color:var(--gold); font-weight:600; text-align:center; text-transform:uppercase; letter-spacing:0.08em; margin:2px 0 0; }
+  .stat-val{ font-size:0.9rem; color:var(--ink); font-variant-numeric:tabular-nums; }
+  .stat-val small{ color:var(--ink-dim); font-size:0.7rem; margin-left:4px; }
   #tryAnotherSection{
     margin-top:16px;
   }
@@ -833,7 +889,7 @@
   <div id="status"></div>
   <div class="controls">
     <button class="ctrl-btn" id="notesBtn"><span class="ctrl-icon">✏️</span><span class="ctrl-label">Notes</span></button>
-    <button class="ctrl-btn" id="undoBtn"><span class="ctrl-icon">↩</span><span class="ctrl-label">Undo</span></button>
+    <button class="ctrl-btn" id="undoBtn"><span class="ctrl-icon"><svg class="undo-svg" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="undoGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE03A"/><stop offset="1" stop-color="#FFB300"/></linearGradient></defs><path d="M8 18.93A8 8 0 1 0 6.34 6.34" fill="none" stroke="url(#undoGrad)" stroke-width="3.6" stroke-linecap="round"/><path d="M9.31 8.47 3.23 9.45 4.21 3.37Z" fill="url(#undoGrad)" stroke="url(#undoGrad)" stroke-width="1.6" stroke-linejoin="round"/></svg></span><span class="ctrl-label">Undo</span></button>
     <button class="ctrl-btn" id="rapidBtn"><span class="ctrl-icon">👆</span><span class="ctrl-label">Rapid Fill</span></button>
     <button class="ctrl-btn" id="hintBtn"><span class="ctrl-icon">💡</span><span class="ctrl-label">Hint</span><span class="ctrl-badge" id="hintBadge">3</span></button>
   </div>
@@ -884,12 +940,29 @@
       <div class="theme-toggle" id="diffRow"></div>
     </div>
     <button id="newGameSettingsBtn">🔄 New Puzzle</button>
+    <button id="statsSettingsBtn">📊 Stats &amp; Best Times</button>
     <button id="shareSettingsBtn">
       <span class="share-main">🔗 Share Neo Sudoku</span>
       <span class="share-sub">Invite your friends to play!</span>
     </button>
     <div id="shareSettingsStatus"></div>
     <button id="closeSettingsBtn">Close</button>
+  </div>
+</div>
+
+<div id="statsModal">
+  <div class="settings-card">
+    <h3>📊 Your Stats</h3>
+    <div class="stats-tiles">
+      <div class="stat-tile"><b id="stWins">0</b><span>Games won</span></div>
+      <div class="stat-tile"><b id="stStreak">0</b><span>🔥 Day streak</span></div>
+      <div class="stat-tile"><b id="stBestStreak">0</b><span>Best streak</span></div>
+    </div>
+    <div class="stats-sub">Best times</div>
+    <div class="settings-row"><span>Easy</span><div class="stat-val"><b id="stBest_easy">—</b><small id="stWins_easy">0 wins</small></div></div>
+    <div class="settings-row"><span>Medium</span><div class="stat-val"><b id="stBest_medium">—</b><small id="stWins_medium">0 wins</small></div></div>
+    <div class="settings-row"><span>Hard</span><div class="stat-val"><b id="stBest_hard">—</b><small id="stWins_hard">0 wins</small></div></div>
+    <button id="closeStatsBtn">Close</button>
   </div>
 </div>
 
@@ -920,6 +993,8 @@
       <div class="win-stat"><b id="winTime">00:00</b><span>⏱️ Time</span></div>
       <div class="win-stat"><b id="winMistakes">0</b><span id="winMistakesLabel">❌ Mistakes</span></div>
     </div>
+    <div class="win-best" id="winBest"></div>
+    <div class="win-best" id="winStreak"></div>
     <button id="winNextBtn">Next Puzzle</button>
     <button id="winRetryBtn">↺ Retry Puzzle</button>
     <div id="tryAnotherSection" style="display:none;">
@@ -1342,6 +1417,8 @@ let history=[]; // for undo: {r,c,prevVal}
 let mistakes=0, maxMistakes=3;
 let hintsLeft=3;
 let seconds=0, timerInterval=null, paused=false, gameOver=false, solved=false;
+let retried=false;      // true once this puzzle was replayed after a win — replays never count toward stats
+let lastWinNote=null;   // {best, streak, newBest} text for the win screen
 let continueUsed=false; // tracks the one-time "Continue This Puzzle" allowance per puzzle instance
 let notes=null; // 9x9 array of 9-boolean arrays (candidate marks)
 let notesMode=false;
@@ -1417,6 +1494,8 @@ async function newGame(){
   gameOver=false;
   solved=false;
   continueUsed=false;
+  retried=false;
+  lastWinNote=null;
   paused=false;
   isGenerating=false;
   notes=freshNotes();
@@ -1431,6 +1510,7 @@ async function newGame(){
   renderPalette();
   setStatus("", false);
   clearHintExplain();
+  restoreModeSelector();
   renderBoard();
   restartTimer();
   saveState();
@@ -1447,6 +1527,8 @@ function restartBoard(){
   hintsLeft=3;
   seconds=0;
   gameOver=false;
+  retried = retried || solved;
+  lastWinNote=null;
   solved=false;
   continueUsed=false;
   paused=false;
@@ -1463,6 +1545,7 @@ function restartBoard(){
   renderPalette();
   setStatus("", false);
   clearHintExplain();
+  restoreModeSelector();
   renderBoard();
   restartTimer();
   saveState();
@@ -1491,7 +1574,7 @@ function saveState(){
       theme: currentTheme,
       difficulty: currentDifficulty,
       puzzle, given, board, solution, notes, zenMode,
-      mistakes, hintsLeft, seconds, gameOver, solved, continueUsed
+      mistakes, hintsLeft, seconds, gameOver, solved, continueUsed, retried
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
   }catch(e){
@@ -1522,6 +1605,7 @@ function resumeFromSave(s){
   gameOver = !!s.gameOver;
   solved = !!s.solved;
   continueUsed = !!s.continueUsed;
+  retried = !!s.retried;
   zenMode = !!s.zenMode;
   notes = s.notes || freshNotes();
   notesMode = false;
@@ -1838,7 +1922,9 @@ function renderBoard(){
       if(selected && selected.r===r && selected.c===c) cell.classList.add("selected");
       else if(ENABLE_MATCH_HIGHLIGHT && selectedVal!==0 && val===selectedVal) cell.classList.add("match");
       else if(selected && (selected.r===r || selected.c===c || (Math.floor(selected.r/3)===Math.floor(r/3) && Math.floor(selected.c/3)===Math.floor(c/3)))) cell.classList.add("peer");
-      if(val!==0 && !isValid(replaceCell(board,r,c,0), r, c, val)) cell.classList.add("error");
+      // Persistent red = any entry that doesn't match the solution (same rule as the mistake counter);
+      // cleared as soon as the cell is changed, erased, undone or hinted.
+      if(val!==0 && solution && solution[r] && val!==solution[r][c]) cell.classList.add("error");
       if(hintCtx && hintCtx.set.has(r*9+c)) cell.classList.add("hint-unit");
       cell.onclick=()=>{
         if(gameOver || paused) return;
@@ -2204,6 +2290,84 @@ function spawnConfetti(){
     layer.appendChild(p);
   }
 }
+/* ---------- STATS: wins, best times, day streak (localStorage only) ---------- */
+const STATS_KEY = "navasudoku_stats_v1";
+const STATS_BEST_REQUIRES_NO_HINTS = true; // set to false if wins that used hints should also be allowed to set a best time
+function emptyStats(){
+  return { wins:{easy:0,medium:0,hard:0}, best:{easy:null,medium:null,hard:null}, streak:0, bestStreak:0, lastWinDay:null };
+}
+function loadStats(){
+  const e = emptyStats();
+  try{
+    const raw = localStorage.getItem(STATS_KEY);
+    if(!raw) return e;
+    const x = JSON.parse(raw);
+    return {
+      wins:{...e.wins, ...(x.wins||{})},
+      best:{...e.best, ...(x.best||{})},
+      streak:(x.streak|0), bestStreak:(x.bestStreak|0), lastWinDay:x.lastWinDay||null
+    };
+  }catch(err){ return e; }
+}
+function saveStats(st){ try{ localStorage.setItem(STATS_KEY, JSON.stringify(st)); }catch(err){} }
+function localDayKey(d){
+  d = d || new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function yesterdayKey(){ const d=new Date(); d.setDate(d.getDate()-1); return localDayKey(d); }
+// A streak only counts while it's still alive: won today or yesterday
+function currentStreak(st){
+  return (st.lastWinDay===localDayKey() || st.lastWinDay===yesterdayKey()) ? st.streak : 0;
+}
+function recordWin(){
+  lastWinNote = null;
+  if(retried){ lastWinNote = {best:"Replay — not counted in stats", streak:"", newBest:false}; return; }
+  const st = loadStats();
+  const diff = currentDifficulty;
+  st.wins[diff] = (st.wins[diff]||0) + 1;
+
+  const today = localDayKey();
+  if(st.lastWinDay!==today){
+    st.streak = (st.lastWinDay===yesterdayKey()) ? st.streak+1 : 1;
+    st.lastWinDay = today;
+  }
+  st.bestStreak = Math.max(st.bestStreak, st.streak);
+
+  const hintsUsed = 3 - hintsLeft;
+  const noHintOk = !(STATS_BEST_REQUIRES_NO_HINTS && hintsUsed>0);
+  const eligible = !zenMode && noHintOk;
+  const prev = st.best[diff];
+  let bestLine, newBest=false;
+  if(eligible){
+    if(prev==null || seconds<prev){
+      st.best[diff] = seconds; newBest = true;
+      bestLine = prev==null ? "🏅 New best time!" : `🏅 New best! (was ${formatTime(prev)})`;
+    } else {
+      bestLine = `Best: ${formatTime(prev)}`;
+    }
+  } else {
+    bestLine = (prev!=null ? `Best: ${formatTime(prev)} · ` : "") + (zenMode ? "Zen wins don't set records" : "hint used, so no record");
+  }
+  saveStats(st);
+  const streakNow = currentStreak(st);
+  lastWinNote = { best:bestLine, streak: streakNow>=2 ? `🔥 ${streakNow}-day streak` : "", newBest };
+}
+function openStats(){
+  const st = loadStats();
+  const total = st.wins.easy + st.wins.medium + st.wins.hard;
+  document.getElementById("stWins").textContent = total;
+  document.getElementById("stStreak").textContent = currentStreak(st);
+  document.getElementById("stBestStreak").textContent = st.bestStreak;
+  ["easy","medium","hard"].forEach(d=>{
+    document.getElementById("stBest_"+d).textContent = st.best[d]==null ? "—" : formatTime(st.best[d]);
+    document.getElementById("stWins_"+d).textContent = `${st.wins[d]} win${st.wins[d]===1?"":"s"}`;
+  });
+  document.getElementById("statsModal").classList.add("show");
+}
+document.getElementById("statsSettingsBtn").onclick = openStats;
+document.getElementById("closeStatsBtn").onclick = ()=>document.getElementById("statsModal").classList.remove("show");
+document.getElementById("statsModal").addEventListener("click",(e)=>{ if(e.target.id==="statsModal") document.getElementById("statsModal").classList.remove("show"); });
+
 function getWinTitle(){
   const hintsUsed = 3 - hintsLeft;
   const t = STAR_THRESHOLDS[currentDifficulty] || STAR_THRESHOLDS.easy;
@@ -2248,6 +2412,15 @@ function showWinModal(skipConfetti){
   document.getElementById("winTitle").textContent=getWinTitle();
   document.getElementById("winTime").textContent=formatTime(seconds);
   document.getElementById("winMistakes").textContent=mistakes;
+  const winBestEl=document.getElementById("winBest"), winStreakEl=document.getElementById("winStreak");
+  if(lastWinNote){
+    winBestEl.textContent=lastWinNote.best; winStreakEl.textContent=lastWinNote.streak;
+    winBestEl.classList.toggle("hl", !!lastWinNote.newBest);
+  } else { // e.g. resumed an already-solved session: just show the current record
+    const b=loadStats().best[currentDifficulty];
+    winBestEl.textContent = b==null ? "" : `Best: ${formatTime(b)}`; winStreakEl.textContent="";
+    winBestEl.classList.remove("hl");
+  }
   document.getElementById("winMistakesLabel").textContent = `❌ Mistake${mistakes===1?"":"s"}`;
   document.getElementById("shareText").textContent=buildShareText();
   document.getElementById("shareStatus").textContent="";
@@ -2260,6 +2433,7 @@ function checkWin(){
   gameOver=true;
   solved=true;
   clearInterval(timerInterval);
+  recordWin();
   vibrate([40,60,40,60,80]);
   playSound("win");
 
@@ -2397,6 +2571,16 @@ document.getElementById("gameOverRestartBtn").onclick=()=>{
 };
 document.getElementById("undoBtn").onclick=undo;
 document.getElementById("hintBtn").onclick=useHint;
+
+/* ---------- MODE SELECTOR: action-triggered dimming ----------
+   Dim (to ~55%) on the first gameplay action: grid tap, keypad tap or Hint tap.
+   Restore to 100% only on a genuine tap inside the selector itself (and on New Puzzle / Retry). */
+function dimModeSelector(){ const r=document.getElementById("themeRow"); if(r) r.classList.add("mode-dimmed"); }
+function restoreModeSelector(){ const r=document.getElementById("themeRow"); if(r) r.classList.remove("mode-dimmed"); }
+["board","palette","hintBtn"].forEach(id=>{
+  document.getElementById(id).addEventListener("pointerdown", dimModeSelector, {passive:true});
+});
+document.getElementById("themeRow").addEventListener("pointerdown", restoreModeSelector, {passive:true});
 document.getElementById("hintCard").onclick=()=>clearHintExplain();
 document.getElementById("pauseBtn").onclick=()=>{
   if(gameOver) return;
@@ -2501,90 +2685,4 @@ document.getElementById("shareBtn").onclick=async ()=>{
   const text=buildShareText();
   try{
     await navigator.clipboard.writeText(text);
-    document.getElementById("shareStatus").textContent="Copied to clipboard!";
-  }catch(e){
-    try{
-      const ta=document.createElement("textarea");
-      ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
-      document.body.appendChild(ta); ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-      document.getElementById("shareStatus").textContent="Copied to clipboard!";
-    }catch(e2){
-      document.getElementById("shareStatus").textContent="Couldn't auto-copy — long-press the text above to copy manually.";
-    }
-  }
-};
-
-const shareNativeBtn=document.getElementById("shareNativeBtn");
-if(navigator.share){
-  shareNativeBtn.onclick=async ()=>{
-    const text=buildShareText();
-    // Only pass a url to the native share sheet if it's a real http(s) link —
-    // some contexts (e.g. a locally-opened file) resolve to a non-web URI
-    // like content:// or file://, which can crash the share sheet.
-    const shareData = /^https?:\/\//i.test(SHARE_URL)
-      ? { title:"Neo Sudoku", text, url:SHARE_URL }
-      : { title:"Neo Sudoku", text };
-    try{
-      await navigator.share(shareData);
-    }catch(e){
-      // user cancelled the native share sheet — no error message needed
-    }
-  };
-}else{
-  // Progressive enhancement: hide the native-share button on browsers that
-  // don't support the Web Share API. "Copy" already covers this case.
-  shareNativeBtn.style.display="none";
-}
-
-document.getElementById("shareSettingsBtn").onclick=async ()=>{
-  const inviteText="Come play Neo Sudoku with me! 🧩";
-  const statusEl=document.getElementById("shareSettingsStatus");
-  if(navigator.share){
-    try{
-      await navigator.share({ title:"Neo Sudoku", text:inviteText, url:SHARE_URL });
-    }catch(e){
-      // user cancelled the share sheet — no error message needed
-    }
-    return;
-  }
-  const fallbackText=`${inviteText} ${SHARE_URL}`;
-  try{
-    await navigator.clipboard.writeText(fallbackText);
-    statusEl.textContent="Link copied!";
-  }catch(e){
-    try{
-      const ta=document.createElement("textarea");
-      ta.value=fallbackText; ta.style.position="fixed"; ta.style.opacity="0";
-      document.body.appendChild(ta); ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-      statusEl.textContent="Link copied!";
-    }catch(e2){
-      statusEl.textContent="Couldn't auto-copy the link.";
-    }
-  }
-};
-
-/* ---------- INIT ---------- */
-document.addEventListener("visibilitychange", ()=>{
-  if(document.hidden) saveState(); // Android can kill the process any time it's backgrounded
-});
-
-const savedGame = loadState();
-if(savedGame){
-  resumeFromSave(savedGame);
-} else {
-  renderThemeRow();
-  renderDiffRow();
-  newGame();
-}
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch(()=>{});
-  });
-}
-</script>
-</body>
-</html>
+    document.getElem
