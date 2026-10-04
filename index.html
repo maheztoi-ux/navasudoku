@@ -87,7 +87,6 @@
     width:100%;
     gap:8px;
   }
-  /* Top HUD: timer, mistakes, hints */
   #hud{
     display:flex;
     gap:2.5vw;
@@ -232,7 +231,6 @@
   }
   .theme-toggle button.active{ background:var(--gold); color:var(--panel); font-weight:700; }
 
-  /* ---- Action rows: How to play / New Puzzle / Stats / Share — one consistent style ---- */
   .settings-action{
     width:100%;
     display:flex;
@@ -314,7 +312,6 @@
   }
   #confirmCancelBtn{ background:transparent; border:1px solid var(--line-soft); color:var(--ink-dim); }
   #confirmYesBtn{ background:var(--error); border:1px solid var(--error); color:#fff; font-weight:600; }
-
 
   .diff-row{
     display:flex;
@@ -433,7 +430,6 @@
     50%{ box-shadow: inset 0 0 0 2px transparent; }
   }
 
-  /* ---- Hint explanation: highlighted unit + floating card (no layout shift) ---- */
   .cell.hint-unit:not(.selected){ background:rgba(212,175,55,0.20) !important; }
   html[data-theme="light"] .cell.hint-unit:not(.selected){ background:rgba(168,121,12,0.20) !important; }
   #hintCard{
@@ -458,13 +454,11 @@
   #hintCard .hc-title{ font-weight:700; font-size:0.85rem; color:var(--gold); }
   #hintCard .hc-left{ font-size:0.66rem; color:var(--ink-dim); white-space:nowrap; }
   #hintCard .hc-body{ font-size:clamp(0.68rem, 1.75vh, 0.8rem); line-height:1.32; color:var(--ink); }
-  body.hint-open #themeRow{ visibility:hidden; }  /* hide the mode buttons behind the card (keeps layout) */
-  /* ---- Mode selector: action-triggered dimming (never hidden, stays tappable) ---- */
+  body.hint-open #themeRow{ visibility:hidden; }
   #themeRow{ transition:filter 0.3s ease; --dim-active:0.7; --dim-other:0.5; }
-  html[data-theme="light"] #themeRow{ --dim-active:0.8; --dim-other:0.62; }   /* light theme text needs a bit more */
+  html[data-theme="light"] #themeRow{ --dim-active:0.8; --dim-other:0.62; }
   #themeRow .theme-btn{ transition:all 0.15s ease, opacity 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
   #themeRow.mode-dimmed{ filter:saturate(0.6); }
-  /* ---- Smart Nudge: brief pulse on a single "last empty cell", shown after the player idles ---- */
   @keyframes nudgePulse{
     0%,100%{ box-shadow: inset 0 0 0 2px rgba(212,175,55,0.15); background-color: rgba(212,175,55,0.05); }
     50%{ box-shadow: inset 0 0 0 3px rgba(212,175,55,0.9); background-color: rgba(212,175,55,0.22); }
@@ -532,7 +526,6 @@
   .shape-icon{ width:60%; height:60%; display:block; }
   .face{ font-size:1.3rem; line-height:1; }
 
-  /* Theme-switch transition layers */
   .tt-wrap{ position:relative; width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
   .tt-layer{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none; }
   .tt-icon{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
@@ -542,7 +535,6 @@
     .tt-layer, .tt-num-plain, .tt-num-keypad{ transition:none !important; }
   }
 
-  /* Pause overlay */
   #pauseOverlay{
     position:absolute; inset:0;
     background:rgba(21,14,40,0.92);
@@ -628,7 +620,6 @@
     position:relative;
   }
   .ctrl-btn .ctrl-icon{ font-size:clamp(0.95rem, 2.2vh, 1.2rem); line-height:1; }
-  /* Undo icon: flat yellow circular arrow drawn in SVG so its colour matches the other three on every phone */
   .ctrl-btn .undo-svg{ display:block; width:1.2em; height:1.2em; margin:-0.1em 0; }
   html[data-theme="light"] .ctrl-btn .undo-svg{ filter:drop-shadow(0 0 0.6px rgba(170,110,0,0.75)); }
   .ctrl-btn .ctrl-label{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
@@ -704,7 +695,6 @@
     margin-top:6px;
   }
 
-  /* Win modal */
   #winModal{
     position:fixed; inset:0;
     background:rgba(10,6,20,0.72);
@@ -832,7 +822,6 @@
     cursor:pointer;
     margin-top:8px;
   }
-  /* ---- Stats: win-screen lines, settings button, stats modal ---- */
   .win-best{ text-align:center; font-size:0.8rem; color:var(--ink-dim); margin:-6px 0 4px; }
   .win-best:empty{ display:none; }
   .win-best.hl{ color:var(--gold); font-weight:700; text-shadow:0 0 10px rgba(212,175,55,0.5); }
@@ -861,7 +850,6 @@
   .stats-sub{ font-size:0.7rem; color:var(--gold); font-weight:600; text-align:center; text-transform:uppercase; letter-spacing:0.08em; margin:2px 0 0; }
   .stat-val{ font-size:0.9rem; color:var(--ink); font-variant-numeric:tabular-nums; }
   .stat-val small{ color:var(--ink-dim); font-size:0.7rem; margin-left:4px; }
-  /* ---- How to play: first-run tutorial (spotlight + card) ---- */
   #howto{ position:fixed; inset:0; z-index:90; display:none; overflow:hidden; touch-action:none; }
   #howto.show{ display:block; }
   #howtoSpot{
@@ -954,7 +942,7 @@
     <div class="po-title">Game Paused</div>
     <div class="po-sub">Take a break 😊</div>
     <div class="po-resume">▶ Resume</div>
-    <button class="po-settings" id="pauseSettingsBtn" type="button">⚙️ Settings</button>
+    <button class="po-settings" id="pauseSettingsBtn" type="button">⚙️️ Settings</button>
   </div>
 </div>
 
@@ -997,3759 +985,777 @@
         <button id="lightThemeBtn">Light</button>
         <button id="darkThemeBtn">Dark</button>
       </div>
-    </div>  hintsLeft=3;
-  seconds=0; paused=false; gameOver=false; solved=false;
-  retried=false;
-  lastWinNote=null;
-  continueUsed=false;
-  notes=freshNotes();
-  notesMode=false;
-  rapidFillMode=false;
-  lockedSymbol=null;
+    </div>
+    <div class="settings-row">
+      <span class="settings-label"><svg class="set-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20C5 10 11 4 20 4c0 9-6 15-15 16Z"/><path d="M7.5 17.5C11 13.5 14 10 17 6.5"/></svg> Zen Mode</span>
+      <div class="theme-toggle">
+        <button id="zenOffBtn">OFF</button>
+        <button id="zenOnBtn">ON</button>
+      </div>
+    </div>
+    <div class="settings-row" style="display:none;">
+      <span>Vibration</span>
+      <div class="theme-toggle">
+        <button id="vibeOffBtn">OFF</button>
+        <button id="vibeOnBtn">ON</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label"><svg class="set-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.2L12 18V6L7.2 9.5Z"/><path d="M15.5 9.5a4 4 0 0 1 0 5.6"/><path d="M18 7a7.8 7.8 0 0 1 0 10.6"/></svg> Sound</span>
+      <div class="theme-toggle">
+        <button id="soundOffBtn">OFF</button>
+        <button id="soundOnBtn">ON</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <span class="settings-label"><svg class="set-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2"/><circle cx="12" cy="12" r="3"/></svg> Smart Nudge</span>
+      <div class="theme-toggle">
+        <button id="nudgeOffBtn">OFF</button>
+        <button id="nudgeOnBtn">ON</button>
+      </div>
+    </div>
+    <div class="settings-subtext">Softly lights up a cell when you're stuck</div>
 
-  document.getElementById("hintBadge").textContent=hintsLeft;
-  document.getElementById("hintDisplay").textContent=hintsLeft;
-  document.getElementById("mistakeDisplay").textContent=`${mistakes}/${maxMistakes}`;
-  document.getElementById("mistakeItem").classList.remove("warn");
+    <div class="settings-section-label">Puzzle</div>
+    <div class="settings-row">
+      <span class="settings-label"><svg class="set-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 18v-3"/><path d="M11 18V9"/><path d="M18 18V5"/></svg> Difficulty</span>
+      <div class="theme-toggle" id="diffRow"></div>
+    </div>
 
-  renderThemeSelector();
-  renderBoard();
-  renderPalette();
-  updateControls();
+    <div class="settings-divider"></div>
 
-  isGenerating=false;
-  setStatus(THEMES[currentTheme].tagline, false);
-  startTimer();
-  scheduleNudge();
+    <button class="settings-action" id="howtoSettingsBtn">
+      <span class="action-icon"><svg class="set-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.2.9-1.2 1.9v.4"/><circle cx="12" cy="16.6" r="0.2" fill="currentColor" stroke-width="2.4"/></svg></span>
+      <span class="action-text"><span class="action-main">How to play</span><span class="action-sub">Learn the three game modes</span></span>
+    </button>
+    <button class="settings-action" id="newGameSettingsBtn">
+      <span class="action-icon"><svg class="set-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 13.66-5.66L20 8"/><path d="M20 4v4h-4"/><path d="M20 12a8 8 0 0 1-13.66 5.66L4 16"/><path d="M4 20v-4h4"/></svg></span>
+      <span class="action-text"><span class="action-main">New Puzzle</span></span>
+    </button>
+    <button class="settings-action" id="statsSettingsBtn">
+      <span class="action-icon"><svg class="set-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20h18"/><rect x="5.5" y="13" width="3" height="7" rx="0.8"/><rect x="10.5" y="8" width="3" height="12" rx="0.8"/><rect x="15.5" y="4" width="3" height="16" rx="0.8"/></svg></span>
+      <span class="action-text"><span class="action-main">Stats &amp; Best Times</span></span>
+    </button>
+    <button class="settings-action" id="shareSettingsBtn">
+      <span class="action-icon"><svg class="set-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 12a4 4 0 0 1 4-4h1.5a4 4 0 1 1 0 8H15"/><path d="M14 12a4 4 0 0 1-4 4H8.5a4 4 0 1 1 0-8H10"/></svg></span>
+      <span class="action-text"><span class="action-main">Share Neo Sudoku</span><span class="action-sub">Invite your friends to play!</span></span>
+    </button>
+    <div id="shareSettingsStatus"></div>
+
+    <button id="closeSettingsBtn">Close</button>
+  </div>
+</div>
+
+<div id="statsModal">
+  <div class="settings-card">
+    <h3>📊 Your Stats</h3>
+    <div class="stats-tiles">
+      <div class="stat-tile"><b id="stWins">0</b><span>Games won</span></div>
+      <div class="stat-tile"><b id="stStreak">0</b><span>🔥 Day streak</span></div>
+      <div class="stat-tile"><b id="stBestStreak">0</b><span>Best streak</span></div>
+    </div>
+    <div class="stats-sub">Best times</div>
+    <div class="settings-row"><span>Easy</span><div class="stat-val"><b id="stBest_easy">—</b><small id="stWins_easy">0 wins</small></div></div>
+    <div class="settings-row"><span>Medium</span><div class="stat-val"><b id="stBest_medium">—</b><small id="stWins_medium">0 wins</small></div></div>
+    <div class="settings-row"><span>Hard</span><div class="stat-val"><b id="stBest_hard">—</b><small id="stWins_hard">0 wins</small></div></div>
+    <button id="closeStatsBtn">Close</button>
+  </div>
+</div>
+
+<div id="confirmOverlay">
+  <div class="confirm-card">
+    <h2 id="confirmHeading" style="display:none; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-weight:700; color:var(--error); margin:0 0 6px; font-size:1.5rem;">Game Over</h2>
+    <p id="confirmMessage">Start New Puzzle?<br>Your current puzzle progress will be lost.</p>
+    <div class="win-stats" id="confirmStats" style="display:none;">
+      <div class="win-stat"><b id="confirmStatTime">00:00</b><span>Time</span></div>
+      <div class="win-stat"><b id="confirmStatMistakes">0/3</b><span>Mistakes</span></div>
+    </div>
+    <div class="confirm-actions">
+      <button id="confirmCancelBtn">Cancel</button>
+      <button id="confirmYesBtn">New Puzzle</button>
+    </div>
+    <button id="confirmRestartBtn" style="display:none;">↺ Retry Puzzle</button>
+  </div>
+</div>
+
+<div id="winModal">
+  <div class="win-card">
+    <div class="confetti-layer" id="confettiLayer"></div>
+    <h2 id="winTitle">Puzzle Solved!</h2>
+    <div class="star-rating" id="starRating">
+      <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+    </div>
+    <div class="win-stats">
+      <div class="win-stat"><b id="winTime">00:00</b><span>⏱️ Time</span></div>
+      <div class="win-stat"><b id="winMistakes">0</b><span id="winMistakesLabel">❌ Mistakes</span></div>
+    </div>
+    <div class="win-best" id="winBest"></div>
+    <div class="win-best" id="winStreak"></div>
+    <button id="winNextBtn">Next Puzzle</button>
+    <button id="winRetryBtn">↺ Retry Puzzle</button>
+    <div id="tryAnotherSection" style="display:none;">
+      <div class="divider-label"><span>Try Another Mode</span></div>
+      <div id="tryAnotherGrid"></div>
+    </div>
+    <div id="shareText"></div>
+    <div id="shareBtnRow">
+      <button class="ctrl-btn" id="shareBtn">📋 Copy</button>
+      <button class="ctrl-btn" id="shareNativeBtn">📤 Share</button>
+    </div>
+    <div id="shareStatus"></div>
+  </div>
+</div>
+
+<div id="gameOverModal">
+  <div class="win-card">
+    <h2 style="color:var(--error);">Game Over</h2>
+    <p style="margin:0 0 12px; font-size:0.85rem; color:var(--ink-dim);">You've made too many mistakes for this puzzle.</p>
+    <div class="win-stats">
+      <div class="win-stat"><b id="goTime">00:00</b><span>Time</span></div>
+      <div class="win-stat"><b id="goMistakes">0/3</b><span>Mistakes</span></div>
+    </div>
+    <button id="gameOverContinueBtn">▶ Continue This Puzzle</button>
+    <button id="gameOverNewBtn">🔄 Start New Puzzle</button>
+    <button id="gameOverRestartBtn">↺ Retry Puzzle</button>
+  </div>
+</div>
+
+<script>
+/* ---------- THEMES ---------- */
+const COLOR_SET = [
+  {c:"#DC143C", ic:"#fff"},
+  {c:"#1565D8", ic:"#fff"},
+  {c:"#FFD500", ic:"#1B1230"},
+  {c:"#50C878", ic:"#0E3320"},
+  {c:"#FF8C00", ic:"#fff"},
+  {c:"#7A1FC9", ic:"#fff"},
+  {c:"#FF69B4", ic:"#5C0033"},
+  {c:"#38B6FF", ic:"#fff"},
+  {c:"#8B4A1F", ic:"#fff"}
+];
+function svgIcon(inner){
+  return `<svg class="shape-icon" viewBox="0 0 24 24" fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
 }
+const SHAPE_ICONS = [
+  svgIcon('<path d="M12 3L21 20H3Z"/>'),                                                          // 1. Bold Triangle
+  svgIcon('<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6Z"/>'),                                            // 2. Solid Plus/Cross
+  svgIcon('<path d="M12 2l2.39 7.26H22l-6.19 4.5 2.36 7.24L12 16.5l-6.17 4.5 2.36-7.24L2 9.26h7.61z"/>'), // 3. 5-Point Star
+  svgIcon('<path d="M12 2L22 12L12 22L2 12Z"/>'),                                                  // 4. Sharp Diamond
+  svgIcon('<path d="M4 4h16v16H4Z"/>'),                                                            // 5. Centered Square
+  svgIcon('<circle cx="12" cy="12" r="9"/>'),                                                      // 6. Perfect Circle
+  svgIcon('<path d="M17 3H7L2 12L7 21H17L22 12Z"/>'),                                              // 7. Flat-topped Hexagon
+  svgIcon('<path d="M12 21s-8-4.6-8-11a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 6.4-8 11-8 11Z"/>'),           // 8. Smooth Heart
+  svgIcon('<path d="M12 2C12 2 4 12 4 16a8 8 0 1 0 16 0C20 12 12 2 12 2Z"/>')                       // 9. Water Drop
+];
+const swatchRender = (v)=>`<div class="swatch" style="background:${v.c}">${v.icon}</div>`;
 
-function startTimer(){
-  clearInterval(timerInterval);
-  if(paused || solved || gameOver) return;
-  timerInterval=setInterval(()=>{
-    if(!paused && !solved && !gameOver){
-      seconds++;
-      updateTimer();
-    }
-  },1000);
-  updateTimer();
-}
-
-function stopTimer(){
-  clearInterval(timerInterval);
-  timerInterval=null;
-}
-
-function updateTimer(){
-  const m=String(Math.floor(seconds/60)).padStart(2,"0");
-  const s=String(seconds%60).padStart(2,"0");
-  document.getElementById("timerDisplay").textContent=`${m}:${s}`;
-}
-
-function setStatus(msg, warn=false){
-  const el=document.getElementById("status");
-  el.textContent=msg||"";
-  el.classList.toggle("warnText",!!warn);
-}
-
-function formatTime(totalSeconds){
-  const m=String(Math.floor(totalSeconds/60)).padStart(2,"0");
-  const s=String(totalSeconds%60).padStart(2,"0");
-  return `${m}:${s}`;
-}
-
-/* ---------- THEME / MODE SELECTOR ---------- */
-function renderThemeSelector(){
-  const row=document.getElementById("themeRow");
-  row.innerHTML="";
-  Object.entries(THEMES).forEach(([key,t])=>{
-    const btn=document.createElement("button");
-    btn.className="theme-btn"+(key===currentTheme?" active":"");
-    btn.dataset.mode=key;
-    btn.innerHTML=`
-      <span class="mode-icon" id="modeIcon-${key}"></span>
-      <span class="mode-text">
-        <span class="mode-title">${t.title}</span>
-        <span class="mode-sub">${t.sub}</span>
-      </span>
-    `;
-    btn.addEventListener("click",()=>switchTheme(key));
-    row.appendChild(btn);
-    renderModeIcon(key);
-  });
-}
-
-function renderModeIcon(key){
-  const el=document.getElementById(`modeIcon-${key}`);
-  if(!el) return;
-  if(key==="numbers"){
-    el.innerHTML=`<span style="font-size:1.25rem;font-weight:700;color:var(--gold);">9</span>`;
-  }else if(key==="colors"){
-    el.innerHTML=`
-      <span style="width:11px;height:11px;border-radius:50%;background:#DC143C;position:absolute;left:2px;top:2px;"></span>
-      <span style="width:11px;height:11px;border-radius:50%;background:#1565D8;position:absolute;right:2px;top:2px;"></span>
-      <span style="width:11px;height:11px;border-radius:50%;background:#50C878;position:absolute;left:2px;bottom:2px;"></span>
-      <span style="width:11px;height:11px;border-radius:50%;background:#FF8C00;position:absolute;right:2px;bottom:2px;"></span>
-    `;
-  }else{
-    el.innerHTML=`
-      <span style="font-size:1rem;font-weight:700;color:#00F0FF;position:absolute;left:1px;top:4px;">9</span>
-      <span style="width:17px;height:17px;border-radius:5px;background:#DC143C;position:absolute;right:0;bottom:2px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.55rem;font-weight:700;">1</span>
-    `;
+const THEMES = {
+  numbers: { label:"Numbers", title:"Classic", sub:"Numbers", tagline:"The original sudoku.", symbols:["1","2","3","4","5","6","7","8","9"], render:(v)=>v },
+  colors: {
+    label:"Colors",
+    title:"Chroma",
+    sub:"Colors",
+    tagline:"Same logic. New colors.",
+    symbols: COLOR_SET.map((x,i)=>({ ...x, icon: SHAPE_ICONS[i] })),
+    render: swatchRender
+  },
+  hybrid: {
+    label:"Hybrid",
+    title:"Fusion",
+    sub:"Numbers + Colors",
+    tagline:"Numbers meet colors.",
+    symbols: COLOR_SET.map((x,i)=>({ ...x, icon: String(i+1) })),
+    render: swatchRender
   }
-}
+};
+let currentTheme = "numbers";
 
-function switchTheme(key){
-  if(key===currentTheme) return;
-  currentTheme=key;
-  selected=null;
-  rapidFillMode=false;
-  lockedSymbol=null;
-  notesMode=false;
-  clearHintCard();
-  renderThemeSelector();
-  renderBoard();
-  renderPalette();
-  updateControls();
-  setStatus(THEMES[currentTheme].tagline, false);
-  scheduleNudge();
-  saveGameState();
-}
+/* ---------- SUDOKU ENGINE ---------- */
+function emptyGrid(){ return Array.from({length:9}, () => Array(9).fill(0)); }
 
-/* ---------- BOARD RENDERING ---------- */
-function renderBoard(){
-  const boardEl=document.getElementById("board");
-  boardEl.innerHTML="";
-  if(!board) return;
-
-  for(let r=0;r<9;r++){
-    for(let c=0;c<9;c++){
-      const idx=r*9+c;
-      const cell=document.createElement("div");
-      cell.className="cell";
-      cell.dataset.r=r;
-      cell.dataset.c=c;
-      cell.dataset.idx=idx;
-
-      if(given[r][c]) cell.classList.add("given");
-      if(selected && selected.r===r && selected.c===c) cell.classList.add("selected");
-
-      if(selected){
-        const sr=selected.r, sc=selected.c;
-        if(r===sr || c===sc || (Math.floor(r/3)===Math.floor(sr/3) && Math.floor(c/3)===Math.floor(sc/3))){
-          if(!(r===sr && c===sc)) cell.classList.add("peer");
-        }
-        const selectedVal=board[sr][sc];
-        if(selectedVal!==0 && board[r][c]===selectedVal){
-          cell.classList.add("match");
-        }
-      }
-
-      if(board[r][c]!==0){
-        const val=board[r][c];
-        if(currentTheme==="numbers"){
-          cell.textContent=String(val);
-        }else{
-          const sym=THEMES[currentTheme].symbols[val-1];
-          cell.innerHTML=THEMES[currentTheme].render(sym);
-        }
-      }else if(notes && notes[r][c]){
-        const grid=document.createElement("div");
-        grid.className="notes-grid";
-        for(let n=1;n<=9;n++){
-          const sp=document.createElement("span");
-          if(notes[r][c][n-1]) sp.textContent=n;
-          grid.appendChild(sp);
-        }
-        cell.appendChild(grid);
-      }
-
-      if(board[r][c]!==0 && board[r][c]!==solution[r][c]){
-        cell.classList.add("error");
-      }
-
-      if(c===2 || c===5) cell.style.borderRight="3px solid var(--block-line)";
-      if(c===8) cell.style.borderRight="none";
-      if(r===2 || r===5) cell.classList.add("row-thick");
-
-      cell.addEventListener("click",()=>selectCell(r,c));
-      boardEl.appendChild(cell);
-    }
-  }
-
-  applyHintHighlight();
-}
-
-function selectCell(r,c){
-  if(paused || solved) return;
-  if(gameOver) return;
-
-  selected={r,c};
-
-  if(hintCtx){
-    clearHintCard();
-  }
-
-  if(rapidFillMode && board[r][c]===0){
-    handleRapidFillCell(r,c);
-    return;
-  }
-
-  renderBoard();
-  renderPalette();
-  updateControls();
-  scheduleNudge();
-}
-
-function getSelectedValue(){
-  if(!selected || !board) return 0;
-  return board[selected.r][selected.c] || 0;
-}
-
-/* ---------- PALETTE ---------- */
-function renderPalette(){
-  const palette=document.getElementById("palette");
-  palette.innerHTML="";
-  const theme=THEMES[currentTheme];
-
-  theme.symbols.forEach((sym,i)=>{
-    const val=i+1;
-    const btn=document.createElement("button");
-    btn.className="sym-btn";
-    btn.dataset.val=val;
-
-    const count=getRemainingCount(val);
-
-    if(count===0) btn.classList.add("completed");
-    if(lockedSymbol===i) btn.classList.add("locked");
-
-    if(currentTheme==="numbers"){
-      btn.innerHTML=`
-        <span class="btn-inner">
-          <span class="number-text">${val}</span>
-          <span class="count-text">${count}</span>
-        </span>
-      `;
-    }else{
-      btn.innerHTML=`
-        <span class="btn-inner">
-          <span class="sw" style="background:${sym.c}">${sym.icon}</span>
-          <span class="count-text">${count}</span>
-        </span>
-      `;
-    }
-
-    btn.addEventListener("click",()=>handlePalette(val-1));
-    palette.appendChild(btn);
-  });
-
-  const erase=document.createElement("button");
-  erase.className="sym-btn erase";
-  erase.innerHTML=`<span class="btn-inner"><span>⌫</span><span class="count-text">Erase</span></span>`;
-  erase.addEventListener("click",()=>eraseSelected());
-  palette.appendChild(erase);
-}
-
-function getRemainingCount(val){
-  let count=0;
-  for(let r=0;r<9;r++){
-    for(let c=0;c<9;c++){
-      if(solution && solution[r][c]===val && board[r][c]===0) count++;
-    }
-  }
-  return count;
-}
-
-function handlePalette(index){
-  if(paused || solved || gameOver) return;
-  if(!selected){
-    setStatus("Select a cell first.", true);
-    return;
-  }
-
-  const val=index+1;
-
-  if(given[selected.r][selected.c]){
-    pulseLockedCell(selected.r,selected.c);
-    return;
-  }
-
-  if(notesMode){
-    toggleNote(selected.r,selected.c,val);
-    return;
-  }
-
-  if(rapidFillMode){
-    lockedSymbol=index;
-    fillAllMatching(val);
-    return;
-  }
-
-  placeValue(selected.r,selected.c,val);
-}
-
-function placeValue(r,c,val){
-  if(given[r][c]) return;
-
-  const prev=board[r][c];
-
-  if(prev===val){
-    return;
-  }
-
-  if(val!==solution[r][c]){
-    mistakes++;
-    updateMistakes();
-    board[r][c]=val;
-    history.push({r,c,prevVal:prev});
-
-    playSound("wrong");
-    vibrate(50);
-
-    renderBoard();
-    renderPalette();
-    updateControls();
-
-    const el=getCellEl(r,c);
-    if(el){
-      el.classList.remove("wrong-shake");
-      void el.offsetWidth;
-      el.classList.add("wrong-shake");
-    }
-
-    if(mistakes>=maxMistakes && !zenMode){
-      gameOver=true;
-      stopTimer();
-      showGameOver();
-    }else{
-      setStatus(`Wrong! ${maxMistakes-mistakes} mistake${maxMistakes-mistakes===1?"":"s"} left.`,true);
-    }
-    return;
-  }
-
-  board[r][c]=val;
-  history.push({r,c,prevVal:prev});
-
-  playSound("correct");
-  vibrate(20);
-
-  removePeerNotes(r,c,val);
-  renderBoard();
-  renderPalette();
-  updateControls();
-
-  const el=getCellEl(r,c);
-  if(el){
-    el.classList.remove("correct-pulse");
-    void el.offsetWidth;
-    el.classList.add("correct-pulse");
-  }
-
-  if(isRowComplete(r)){
-    glowUnit("row",r);
-  }
-  if(isColComplete(c)){
-    glowUnit("col",c);
-  }
-  if(isBoxComplete(r,c)){
-    glowBox(r,c);
-    playSound("complete");
-  }
-
-  if(checkSolved()){
-    handleWin();
-  }else{
-    setStatus(THEMES[currentTheme].tagline,false);
-  }
-
-  scheduleNudge();
-}
-
-function eraseSelected(){
-  if(paused || solved || gameOver) return;
-  if(!selected) return;
-  const {r,c}=selected;
-
-  if(given[r][c]){
-    pulseLockedCell(r,c);
-    return;
-  }
-
-  if(board[r][c]===0 && notes[r][c].every(Boolean)===false){
-    notes[r][c]=Array(9).fill(false);
-    renderBoard();
-    updateControls();
-    return;
-  }
-
-  const prev=board[r][c];
-  if(prev===0) return;
-
-  board[r][c]=0;
-  history.push({r,c,prevVal:prev});
-
-  renderBoard();
-  renderPalette();
-  updateControls();
-  setStatus("Cleared.",false);
-  scheduleNudge();
-}
-
-function toggleNote(r,c,val){
-  if(given[r][c] || board[r][c]!==0) return;
-  notes[r][c][val-1]=!notes[r][c][val-1];
-  renderBoard();
-  updateControls();
-  scheduleNudge();
-}
-
-function removePeerNotes(r,c,val){
+function isValid(grid, r, c, val){
   for(let i=0;i<9;i++){
-    notes[r][i][val-1]=false;
-    notes[i][c][val-1]=false;
+    if(grid[r][i]===val) return false;
+    if(grid[i][c]===val) return false;
   }
   const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
-  for(let i=br;i<br+3;i++){
-    for(let j=bc;j<bc+3;j++){
-      notes[i][j][val-1]=false;
-    }
+  for(let i=0;i<3;i++) for(let j=0;j<3;j++){
+    if(grid[br+i][bc+j]===val) return false;
   }
+  return true;
 }
-
-function updateMistakes(){
-  document.getElementById("mistakeDisplay").textContent=`${mistakes}/${maxMistakes}`;
-  document.getElementById("mistakeItem").classList.toggle("warn",mistakes>0);
-}
-
-function getCellEl(r,c){
-  return document.querySelector(`#board .cell[data-r="${r}"][data-c="${c}"]`);
-}
-
-function pulseLockedCell(r,c){
-  const el=getCellEl(r,c);
-  if(!el) return;
-  el.classList.remove("locked-pulse");
-  void el.offsetWidth;
-  el.classList.add("locked-pulse");
-  playSound("locked");
-  vibrate(20);
-}
-
-function glowUnit(type,index){
-  if(prefersReducedMotion()) return;
-  if(type==="row"){
-    for(let c=0;c<9;c++){
-      const el=getCellEl(index,c);
-      if(el){
-        el.classList.remove("row-glow");
-        void el.offsetWidth;
-        el.classList.add("row-glow");
-      }
-    }
-  }else{
-    for(let r=0;r<9;r++){
-      const el=getCellEl(r,index);
-      if(el){
-        el.classList.remove("col-glow");
-        void el.offsetWidth;
-        el.classList.add("col-glow");
-      }
-    }
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
   }
+  return arr;
 }
-
-function glowBox(r,c){
-  if(prefersReducedMotion()) return;
-  const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
-  for(let i=br;i<br+3;i++){
-    for(let j=bc;j<bc+3;j++){
-      const el=getCellEl(i,j);
-      if(el){
-        el.classList.remove("box-glow");
-        void el.offsetWidth;
-        el.classList.add("box-glow");
+function fillGrid(grid){
+  for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+    if(grid[r][c]===0){
+      const nums=shuffle([1,2,3,4,5,6,7,8,9]);
+      for(const n of nums){
+        if(isValid(grid,r,c,n)){
+          grid[r][c]=n;
+          if(fillGrid(grid)) return true;
+          grid[r][c]=0;
+        }
       }
-    }
-  }
-}
-
-function checkSolved(){
-  for(let r=0;r<9;r++){
-    for(let c=0;c<9;c++){
-      if(board[r][c]!==solution[r][c]) return false;
+      return false;
     }
   }
   return true;
 }
-
-/* ---------- RAPID FILL ---------- */
-function fillAllMatching(val){
-  if(!selected) return;
-
-  let filled=0;
-
-  for(let r=0;r<9;r++){
-    for(let c=0;c<9;c++){
-      if(board[r][c]===0 && !given[r][c] && solution[r][c]===val){
-        board[r][c]=val;
-        history.push({r,c,prevVal:0});
-        removePeerNotes(r,c,val);
-        filled++;
-      }
-    }
-  }
-
-  if(filled>0){
-    playSound("correct");
-    vibrate([20,30,20]);
-    renderBoard();
-    renderPalette();
-    updateControls();
-
-    if(checkSolved()){
-      handleWin();
-    }else{
-      setStatus(`${filled} ${THEMES[currentTheme].label.toLowerCase()} filled.`,false);
-    }
-  }
-
-  scheduleNudge();
-}
-
-function handleRapidFillCell(r,c){
-  if(lockedSymbol===null){
-    setStatus("Choose a symbol first.",true);
-    return;
-  }
-
-  const val=lockedSymbol+1;
-
-  if(solution[r][c]===val && board[r][c]===0){
-    placeValue(r,c,val);
-  }else{
-    pulseLockedCell(r,c);
-    setStatus("That symbol doesn't belong here.",true);
-  }
-}
-
-/* ---------- CONTROLS ---------- */
-function updateControls(){
-  const notesBtn=document.getElementById("notesBtn");
-  const rapidBtn=document.getElementById("rapidBtn");
-  const undoBtn=document.getElementById("undoBtn");
-  const hintBtn=document.getElementById("hintBtn");
-
-  notesBtn.classList.toggle("active",notesMode);
-  rapidBtn.classList.toggle("active",rapidFillMode);
-
-  undoBtn.disabled=history.length===0 || paused || solved || gameOver;
-  hintBtn.disabled=hintsLeft<=0 || paused || solved || gameOver;
-
-  document.getElementById("hintBadge").textContent=hintsLeft;
-  document.getElementById("hintDisplay").textContent=hintsLeft;
-}
-
-document.getElementById("notesBtn").addEventListener("click",()=>{
-  if(paused || solved || gameOver) return;
-  notesMode=!notesMode;
-  if(notesMode) rapidFillMode=false;
-  updateControls();
-  setStatus(notesMode?"Notes mode ON":"Notes mode OFF",false);
-});
-
-document.getElementById("rapidBtn").addEventListener("click",()=>{
-  if(paused || solved || gameOver) return;
-  rapidFillMode=!rapidFillMode;
-  notesMode=false;
-  if(!rapidFillMode) lockedSymbol=null;
-  updateControls();
-  renderPalette();
-  setStatus(rapidFillMode?"Rapid Fill ON — choose a symbol.":"Rapid Fill OFF",false);
-});
-
-document.getElementById("undoBtn").addEventListener("click",undoMove);
-
-function undoMove(){
-  if(paused || solved || gameOver || history.length===0) return;
-
-  const move=history.pop();
-  board[move.r][move.c]=move.prevVal;
-
-  renderBoard();
-  renderPalette();
-  updateControls();
-  setStatus("Move undone.",false);
-  scheduleNudge();
-}
-
-/* ---------- HINTS ---------- */
-function getHint(){
-  if(paused || solved || gameOver || hintsLeft<=0) return;
-
-  let target=null;
-
-  // First try a simple naked single.
-  const cand=candidatesGrid(board);
-  for(let r=0;r<9 && !target;r++){
-    for(let c=0;c<9;c++){
-      if(board[r][c]===0 && popcount(cand[r][c])===1){
-        target={r,c,val:bitToNum(cand[r][c]),type:"single"};
-        break;
-      }
-    }
-  }
-
-  // Then try a hidden single.
-  if(!target){
-    for(const unit of ALL_UNITS){
-      for(let n=1;n<=9;n++){
-        const bit=1<<(n-1);
-        let found=null,count=0;
-        for(const rc of unit){
-          const r=rc[0],c=rc[1];
-          if(board[r][c]===0 && (cand[r][c]&bit)){
-            count++;
-            found={r,c};
+function countSolutions(grid, limit=2){
+  let count=0;
+  function solve(g){
+    if(count>=limit) return;
+    for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+      if(g[r][c]===0){
+        for(let n=1;n<=9;n++){
+          if(isValid(g,r,c,n)){
+            g[r][c]=n; solve(g); g[r][c]=0;
+            if(count>=limit) return;
           }
         }
-        if(count===1){
-          target={r:found.r,c:found.c,val:n,type:"hidden"};
-          break;
-        }
-      }
-      if(target) break;
-    }
-  }
-
-  // Fallback: pick the empty cell with the fewest candidates.
-  if(!target){
-    let best=null;
-    for(let r=0;r<9;r++){
-      for(let c=0;c<9;c++){
-        if(board[r][c]===0){
-          const pc=popcount(cand[r][c]);
-          if(pc>0 && (!best || pc<best.count)){
-            best={r,c,val:solution[r][c],count:pc};
-          }
-        }
+        return;
       }
     }
-    if(best){
-      target={r:best.r,c:best.c,val:best.val,type:"fallback"};
-    }
+    count++;
   }
-
-  if(!target) return;
-
-  hintsLeft--;
-  document.getElementById("hintBadge").textContent=hintsLeft;
-  document.getElementById("hintDisplay").textContent=hintsLeft;
-
-  selected={r:target.r,c:target.c};
-
-  const unit=new Set();
-  for(let i=0;i<9;i++){
-    unit.add(target.r*9+i);
-    unit.add(i*9+target.c);
-  }
-  const br=Math.floor(target.r/3)*3, bc=Math.floor(target.c/3)*3;
-  for(let r=br;r<br+3;r++){
-    for(let c=bc;c<bc+3;c++) unit.add(r*9+c);
-  }
-
-  hintCtx={set:unit};
-  renderBoard();
-  renderPalette();
-
-  const rowName=`Row ${target.r+1}`;
-  const colName=`Column ${target.c+1}`;
-  let title="Hint";
-  let body="";
-
-  if(target.type==="single"){
-    title="Naked Single";
-    body=`R${target.r+1}C${target.c+1} can only be ${target.val}.`;
-  }else if(target.type==="hidden"){
-    title="Hidden Single";
-    body=`In ${rowName} / ${colName} and its box, ${target.val} has only one possible place: R${target.r+1}C${target.c+1}.`;
-  }else{
-    title="Good Move";
-    body=`Try ${target.val} at R${target.r+1}C${target.c+1}.`;
-  }
-
-  document.getElementById("hcTitle").textContent=title;
-  document.getElementById("hcLeft").textContent=`${hintsLeft} left`;
-  document.getElementById("hcBody").textContent=body;
-
-  const card=document.getElementById("hintCard");
-  card.classList.remove("compact");
-  card.classList.add("show");
-
-  positionHintCard();
-  playSound("hint");
-  vibrate(25);
-
-  const el=getCellEl(target.r,target.c);
-  if(el){
-    el.classList.add("hint-glow");
-  }
-
-  clearTimeout(hintCardTimer);
-  hintCardTimer=setTimeout(()=>clearHintCard(),6500);
+  solve(grid.map(row=>row.slice()));
+  return count;
 }
-
-function applyHintHighlight(){
-  if(!hintCtx) return;
-  document.querySelectorAll("#board .cell").forEach(el=>{
-    const idx=Number(el.dataset.idx);
-    el.classList.toggle("hint-unit",hintCtx.set.has(idx));
-  });
+function candidatesGrid(g){
+  const cand=[];
+  for(let r=0;r<9;r++){ cand.push(new Array(9).fill(0)); }
+  for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+    if(g[r][c]!==0) continue;
+    let mask=0;
+    for(let n=1;n<=9;n++){ if(isValid(g,r,c,n)) mask |= (1<<(n-1)); }
+    cand[r][c]=mask;
+  }
+  return cand;
 }
-
-function clearHintCard(){
-  hintCtx=null;
-  clearTimeout(hintCardTimer);
-  hintCardTimer=null;
-  const card=document.getElementById("hintCard");
-  card.classList.remove("show");
-  document.body.classList.remove("hint-open");
-  renderBoard();
+function popcount(mask){ let cnt=0; while(mask){ mask &= mask-1; cnt++; } return cnt; }
+function bitToNum(mask){ for(let n=1;n<=9;n++){ if(mask & (1<<(n-1))) return n; } return 0; }
+function buildUnits(){
+  const units=[];
+  for(let r=0;r<9;r++){ const u=[]; for(let c=0;c<9;c++) u.push([r,c]); units.push(u); }
+  for(let c=0;c<9;c++){ const u=[]; for(let r=0;r<9;r++) u.push([r,c]); units.push(u); }
+  for(let br=0;br<3;br++) for(let bc=0;bc<3;bc++){
+    const u=[]; for(let r=br*3;r<br*3+3;r++) for(let c=bc*3;c<bc*3+3;c++) u.push([r,c]);
+    units.push(u);
+  }
+  return units;
 }
+const ALL_UNITS = buildUnits();
 
-function positionHintCard(){
-  const card=document.getElementById("hintCard");
-  if(!card.classList.contains("show")) return;
+function humanSolve(grid, level){
+  const g = grid.map(row=>row.slice());
+  let changed=true;
+  while(changed){
+    changed=false;
+    let cand = candidatesGrid(g);
 
-  const header=document.getElementById("appHeader");
-  const rect=header.getBoundingClientRect();
-  const top=Math.max(6,rect.bottom+5);
-  card.style.top=`${top}px`;
-}
-
-document.getElementById("hintBtn").addEventListener("click",getHint);
-document.getElementById("hintCard").addEventListener("click",clearHintCard);
-
-window.addEventListener("resize",()=>{
-  positionHintCard();
-  positionHowtoCard();
-});
-
-/* ---------- SMART NUDGE ---------- */
-let nudgeTimer=null;
-
-function scheduleNudge(){
-  clearTimeout(nudgeTimer);
-  document.querySelectorAll(".nudge-cell").forEach(el=>el.classList.remove("nudge-cell"));
-
-  if(!nudgeEnabled || paused || solved || gameOver) return;
-
-  nudgeTimer=setTimeout(()=>{
-    if(!nudgeEnabled || paused || solved || gameOver) return;
-
-    let target=null;
-
-    // Pick the last empty cell in reading order that has a single candidate.
-    const cand=candidatesGrid(board);
-    for(let r=0;r<9 && !target;r++){
-      for(let c=0;c<9;c++){
-        if(board[r][c]===0 && popcount(cand[r][c])===1){
-          target={r,c};
-        }
-      }
-    }
-
-    // Otherwise pick an empty cell with the fewest candidates.
-    if(!target){
-      let best=null;
-      for(let r=0;r<9;r++){
-        for(let c=0;c<9;c++){
-          if(board[r][c]===0){
-            const pc=popcount(cand[r][c]);
-            if(pc>0 && (!best || pc<best.pc)){
-              best={r,c,pc};
+    if(level==="medium"){
+      for(const unit of ALL_UNITS){
+        const pairCells = unit.filter(function(rc){ return g[rc[0]][rc[1]]===0 && popcount(cand[rc[0]][rc[1]])===2; });
+        for(let i=0;i<pairCells.length;i++){
+          for(let j=i+1;j<pairCells.length;j++){
+            const a=pairCells[i], b=pairCells[j];
+            const maskA=cand[a[0]][a[1]], maskB=cand[b[0]][b[1]];
+            if(maskA===maskB){
+              for(const rc of unit){
+                if((rc[0]===a[0]&&rc[1]===a[1])||(rc[0]===b[0]&&rc[1]===b[1])) continue;
+                if(cand[rc[0]][rc[1]] & maskA) cand[rc[0]][rc[1]] &= ~maskA;
+              }
             }
           }
         }
       }
-      if(best) target={r:best.r,c:best.c};
     }
 
-    if(target){
-      const el=getCellEl(target.r,target.c);
-      if(el){
-        el.classList.add("nudge-cell");
-        setTimeout(()=>el.classList.remove("nudge-cell"),2600);
+    for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+      if(g[r][c]===0 && popcount(cand[r][c])===1){
+        g[r][c]=bitToNum(cand[r][c]);
+        changed=true;
       }
     }
-  },6500);
-}
+    if(changed) continue;
 
-/* ---------- WIN / GAME OVER ---------- */
-function handleWin(){
-  if(solved) return;
-  solved=true;
-  stopTimer();
-  clearTimeout(nudgeTimer);
-
-  for(let r=0;r<9;r++){
-    for(let c=0;c<9;c++){
-      const el=getCellEl(r,c);
-      if(el){
-        el.classList.remove("win-glow");
-        setTimeout(()=>{
-          el.classList.add("win-glow");
-        },(r*9+c)*12);
+    for(const unit of ALL_UNITS){
+      for(let n=1;n<=9;n++){
+        const bit=1<<(n-1);
+        let foundCell=null, count=0;
+        for(const rc of unit){
+          if(g[rc[0]][rc[1]]===0 && (cand[rc[0]][rc[1]] & bit)){ count++; foundCell=rc; }
+        }
+        if(count===1 && g[foundCell[0]][foundCell[1]]===0){
+          g[foundCell[0]][foundCell[1]]=n;
+          changed=true;
+        }
       }
     }
   }
-
-  playSound("win");
-  vibrate([40,50,80]);
-
-  const stars=calculateStars();
-  renderWinModal(stars);
-  saveStats();
+  for(let r=0;r<9;r++) for(let c=0;c<9;c++) if(g[r][c]===0) return false;
+  return true;
 }
-
-function calculateStars(){
-  if(zenMode) return 3;
-  if(mistakes===0) return seconds<=120 ? 3 : 2;
-  if(mistakes===1) return 2;
-  return 1;
-}
-
-function renderWinModal(stars){
-  document.getElementById("winTime").textContent=formatTime(seconds);
-  document.getElementById("winMistakes").textContent=mistakes;
-
-  const rating=document.getElementById("starRating");
-  [...rating.querySelectorAll(".star")].forEach((el,i)=>{
-    el.classList.toggle("filled",i<stars);
-  });
-
-  const stats=getStats();
-  const diffStats=stats.difficulties[currentDifficulty];
-  const best=diffStats.best;
-
-  const bestEl=document.getElementById("winBest");
-  if(best!==null && seconds<=best){
-    bestEl.textContent="🏆 New Best Time!";
-    bestEl.classList.add("hl");
-  }else if(best!==null){
-    bestEl.textContent=`Best: ${formatTime(best)}`;
-    bestEl.classList.remove("hl");
-  }else{
-    bestEl.textContent="";
+function generatePuzzle(givensTarget, level){
+  const solution=emptyGrid();
+  fillGrid(solution);
+  const puzzle=solution.map(row=>row.slice());
+  const cells=shuffle([...Array(81).keys()]);
+  let removed=0;
+  const toRemove=81-givensTarget;
+  const checkTechnique = (level==="easy" || level==="medium");
+  for(const idx of cells){
+    if(removed>=toRemove) break;
+    const r=Math.floor(idx/9), c=idx%9;
+    const backup=puzzle[r][c];
+    if(backup===0) continue;
+    puzzle[r][c]=0;
+    let ok = countSolutions(puzzle,2)===1;
+    if(ok && checkTechnique){ ok = humanSolve(puzzle, level); }
+    if(!ok){ puzzle[r][c]=backup; } else { removed++; }
   }
-
-  const streak=getCurrentStreak();
-  document.getElementById("winStreak").textContent=`🔥 ${streak} day streak`;
-
-  document.getElementById("winModal").classList.add("show");
-  spawnConfetti();
+  return { puzzle, solution };
 }
 
-function spawnConfetti(){
-  const layer=document.getElementById("confettiLayer");
-  layer.innerHTML="";
-  const colors=["#D4AF37","#4ECDA0","#38B6FF","#FF69B4","#DC143C","#7A1FC9"];
-
-  for(let i=0;i<30;i++){
-    const p=document.createElement("div");
-    p.className="confetti-piece";
-    p.style.left=`${Math.random()*100}%`;
-    p.style.background=colors[Math.floor(Math.random()*colors.length)];
-    p.style.transform=`rotate(${Math.random()*180}deg)`;
-    p.style.animationDelay=`${Math.random()*0.6}s`;
-    layer.appendChild(p);
+/* ---------- WEB WORKER (generation off the main thread) ---------- */
+const WORKER_SRC = `
+  function isValid(grid, r, c, val){
+    for(let i=0;i<9;i++){
+      if(grid[r][i]===val) return false;
+      if(grid[i][c]===val) return false;
+    }
+    const br=Math.floor(r/3)*3, bc=Math.floor(c/3)*3;
+    for(let i=0;i<3;i++) for(let j=0;j<3;j++){
+      if(grid[br+i][bc+j]===val) return false;
+    }
+    return true;
   }
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]]=[arr[j],arr[i]];
+    }
+    return arr;
+  }
+  function emptyGrid(){ return Array.from({length:9}, () => Array(9).fill(0)); }
+  function fillGrid(grid){
+    for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+      if(grid[r][c]===0){
+        const nums=shuffle([1,2,3,4,5,6,7,8,9]);
+        for(const n of nums){
+          if(isValid(grid,r,c,n)){
+            grid[r][c]=n;
+            if(fillGrid(grid)) return true;
+            grid[r][c]=0;
+          }
+        }
+        return false;
+      }
+    }
+    return true;
+  }
+  function countSolutions(grid, limit){
+    let count=0;
+    function solve(g){
+      if(count>=limit) return;
+      for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+        if(g[r][c]===0){
+          for(let n=1;n<=9;n++){
+            if(isValid(g,r,c,n)){
+              g[r][c]=n; solve(g); g[r][c]=0;
+              if(count>=limit) return;
+            }
+          }
+          return;
+        }
+      }
+      count++;
+    }
+    solve(grid.map(row=>row.slice()));
+    return count;
+  }
+  function candidatesGrid(g){
+    const cand=[];
+    for(let r=0;r<9;r++){ cand.push(new Array(9).fill(0)); }
+    for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+      if(g[r][c]!==0) continue;
+      let mask=0;
+      for(let n=1;n<=9;n++){ if(isValid(g,r,c,n)) mask |= (1<<(n-1)); }
+      cand[r][c]=mask;
+    }
+    return cand;
+  }
+  function popcount(mask){ let cnt=0; while(mask){ mask &= mask-1; cnt++; } return cnt; }
+  function bitToNum(mask){ for(let n=1;n<=9;n++){ if(mask & (1<<(n-1))) return n; } return 0; }
+  function buildUnits(){
+    const units=[];
+    for(let r=0;r<9;r++){ const u=[]; for(let c=0;c<9;c++) u.push([r,c]); units.push(u); }
+    for(let c=0;c<9;c++){ const u=[]; for(let r=0;r<9;r++) u.push([r,c]); units.push(u); }
+    for(let br=0;br<3;br++) for(let bc=0;bc<3;bc++){
+      const u=[]; for(let r=br*3;r<br*3+3;r++) for(let c=bc*3;c<bc*3+3;c++) u.push([r,c]);
+      units.push(u);
+    }
+    return units;
+  }
+  const ALL_UNITS = buildUnits();
+  function humanSolve(grid, level){
+    const g = grid.map(row=>row.slice());
+    let changed=true;
+    while(changed){
+      changed=false;
+      let cand = candidatesGrid(g);
+
+      if(level==="medium"){
+        for(const unit of ALL_UNITS){
+          const pairCells = unit.filter(function(rc){ return g[rc[0]][rc[1]]===0 && popcount(cand[rc[0]][rc[1]])===2; });
+          for(let i=0;i<pairCells.length;i++){
+            for(let j=i+1;j<pairCells.length;j++){
+              const a=pairCells[i], b=pairCells[j];
+              const maskA=cand[a[0]][a[1]], maskB=cand[b[0]][b[1]];
+              if(maskA===maskB){
+                for(const rc of unit){
+                  if((rc[0]===a[0]&&rc[1]===a[1])||(rc[0]===b[0]&&rc[1]===b[1])) continue;
+                  if(cand[rc[0]][rc[1]] & maskA) cand[rc[0]][rc[1]] &= ~maskA;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      for(let r=0;r<9;r++) for(let c=0;c<9;c++){
+        if(g[r][c]===0 && popcount(cand[r][c])===1){
+          g[r][c]=bitToNum(cand[r][c]);
+          changed=true;
+        }
+      }
+      if(changed) continue;
+
+      for(const unit of ALL_UNITS){
+        for(let n=1;n<=9;n++){
+          const bit=1<<(n-1);
+          let foundCell=null, count=0;
+          for(const rc of unit){
+            if(g[rc[0]][rc[1]]===0 && (cand[rc[0]][rc[1]] & bit)){ count++; foundCell=rc; }
+          }
+          if(count===1 && g[foundCell[0]][foundCell[1]]===0){
+            g[foundCell[0]][foundCell[1]]=n;
+            changed=true;
+          }
+        }
+      }
+    }
+    for(let r=0;r<9;r++) for(let c=0;c<9;c++) if(g[r][c]===0) return false;
+    return true;
+  }
+  function generatePuzzle(givensTarget, level){
+    const solution=emptyGrid();
+    fillGrid(solution);
+    const puzzle=solution.map(row=>row.slice());
+    const cells=shuffle([...Array(81).keys()]);
+    let removed=0;
+    const toRemove=81-givensTarget;
+    const checkTechnique = (level==="easy" || level==="medium");
+    for(const idx of cells){
+      if(removed>=toRemove) break;
+      const r=Math.floor(idx/9), c=idx%9;
+      const backup=puzzle[r][c];
+      if(backup===0) continue;
+      puzzle[r][c]=0;
+      let ok = countSolutions(puzzle,2)===1;
+      if(ok && checkTechnique){ ok = humanSolve(puzzle, level); }
+      if(!ok){ puzzle[r][c]=backup; } else { removed++; }
+    }
+    return { puzzle, solution };
+  }
+  self.onmessage = function(e){
+    const result = generatePuzzle(e.data.target, e.data.level);
+    self.postMessage(result);
+  };
+`;
+let sudokuWorker = null;
+let workerAvailable = true;
+try{
+  const blob = new Blob([WORKER_SRC], { type: "application/javascript" });
+  sudokuWorker = new Worker(URL.createObjectURL(blob));
+}catch(e){
+  workerAvailable = false;
 }
 
-function closeWinModal(){
-  document.getElementById("winModal").classList.remove("show");
+function generatePuzzleAsync(target, level){
+  if(workerAvailable && sudokuWorker){
+    return new Promise((resolve)=>{
+      sudokuWorker.onmessage = (e)=> resolve(e.data);
+      sudokuWorker.postMessage({ target, level });
+    });
+  }
+  return Promise.resolve(generatePuzzle(target, level));
 }
 
-document.getElementById("winNextBtn").addEventListener("click",async()=>{
-  closeWinModal();
-  await newGame();
-});
+/* ---------- GAME STATE ---------- */
+const DIFFICULTIES={ easy:40, medium:32, hard:26 };
+let currentDifficulty="easy";
+let puzzle, solution, given, board;
+let selected=null;
+let history=[];
+let mistakes=0, maxMistakes=3;
+let hintsLeft=3;
+let seconds=0, timerInterval=null, paused=false, gameOver=false, solved=false;
+let retried=false;
+let continueUsed=false;
+let notes=null;
+let notesMode=false;
+let zenMode=false;
+let nudgeEnabled = (localStorage.getItem("navasudoku_smartnudge") ?? "on") === "on";
+let vibrationEnabled = (localStorage.getItem("navasudoku_vibration") ?? "off") === "on";
+let soundEnabled = (localStorage.getItem("navasudoku_sound") ?? "off") === "on";
 
-document.getElementById("winRetryBtn").addEventListener("click",()=>{
-  closeWinModal();
-  retryCurrentPuzzle();
-});
+let rapidFillMode=false;
+let lockedSymbol=null;
+function freshNotes(){ return Array.from({length:9}, ()=>Array.from({length:9}, ()=>Array(9).fill(false))); }
 
-function retryCurrentPuzzle(){
+let isGenerating=false;
+
+function setStatus(msg, isWarn){
+  const el = document.getElementById("status");
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.toggle("warnText", !!isWarn);
+}
+
+function clearHintExplain(){}
+function restoreModeSelector(){}
+function resetNudgeActivity(){}
+
+async function newGame(){
+  if(isGenerating) return;
+  isGenerating=true;
+  setStatus("Generating puzzle…", false);
+  const target=DIFFICULTIES[currentDifficulty];
+  const gen=await generatePuzzleAsync(target, currentDifficulty);
+  puzzle=gen.puzzle; solution=gen.solution;
+  given=puzzle.map(row=>row.map(v=>v!==0));
   board=puzzle.map(row=>row.slice());
   selected=null;
   history=[];
   mistakes=0;
   hintsLeft=3;
   seconds=0;
-  paused=false;
   gameOver=false;
   solved=false;
-  retried=true;
   continueUsed=false;
+  retried=false;
+  paused=false;
+  isGenerating=false;
   notes=freshNotes();
   notesMode=false;
   rapidFillMode=false;
   lockedSymbol=null;
-
-  document.getElementById("hintBadge").textContent=hintsLeft;
-  document.getElementById("hintDisplay").textContent=hintsLeft;
-  updateMistakes();
-  renderBoard();
-  renderPalette();
-  updateControls();
-  startTimer();
-  setStatus(THEMES[currentTheme].tagline,false);
-  scheduleNudge();
-}
-
-function showGameOver(){
-  document.getElementById("goTime").textContent=formatTime(seconds);
-  document.getElementById("goMistakes").textContent=`${mistakes}/${maxMistakes}`;
-  document.getElementById("gameOverModal").classList.add("show");
-}
-
-document.getElementById("gameOverContinueBtn").addEventListener("click",()=>{
-  if(continueUsed){
-    document.getElementById("gameOverModal").classList.remove("show");
-    return;
-  }
-  continueUsed=true;
-  gameOver=false;
-  mistakes=maxMistakes;
-  document.getElementById("gameOverModal").classList.remove("show");
-  startTimer();
-  updateControls();
-  setStatus("Continue mode: no more mistakes allowed.",true);
-});
-
-document.getElementById("gameOverNewBtn").addEventListener("click",async()=>{
-  document.getElementById("gameOverModal").classList.remove("show");
-  await newGame();
-});
-
-document.getElementById("gameOverRestartBtn").addEventListener("click",()=>{
-  document.getElementById("gameOverModal").classList.remove("show");
-  retryCurrentPuzzle();
-});
-
-/* ---------- STATS ---------- */
-const STATS_KEY="navasudoku_stats_v2";
-
-function defaultStats(){
-  return {
-    wins:0,
-    streak:0,
-    bestStreak:0,
-    lastWinDate:null,
-    difficulties:{
-      easy:{wins:0,best:null},
-      medium:{wins:0,best:null},
-      hard:{wins:0,best:null}
-    }
-  };
-}
-
-function getStats(){
-  try{
-    const raw=localStorage.getItem(STATS_KEY);
-    if(!raw) return defaultStats();
-    const parsed=JSON.parse(raw);
-    const base=defaultStats();
-    return {
-      ...base,
-      ...parsed,
-      difficulties:{
-        ...base.difficulties,
-        ...(parsed.difficulties||{})
-      }
-    };
-  }catch(e){
-    return defaultStats();
-  }
-}
-
-function saveStats(){
-  if(retried) return;
-
-  const stats=getStats();
-  stats.wins++;
-
-  const ds=stats.difficulties[currentDifficulty];
-  ds.wins++;
-  if(ds.best===null || seconds<ds.best){
-    ds.best=seconds;
-  }
-
-  const today=new Date();
-  const dateKey=today.toISOString().slice(0,10);
-
-  if(stats.lastWinDate){
-    const prev=new Date(stats.lastWinDate+"T00:00:00");
-    const curr=new Date(dateKey+"T00:00:00");
-    const diff=Math.round((curr-prev)/86400000);
-
-    if(diff===1){
-      stats.streak++;
-    }else if(diff>1){
-      stats.streak=1;
-    }
-  }else{
-    stats.streak=1;
-  }
-
-  if(stats.streak>stats.bestStreak) stats.bestStreak=stats.streak;
-  stats.lastWinDate=dateKey;
-
-  localStorage.setItem(STATS_KEY,JSON.stringify(stats));
-}
-
-function getCurrentStreak(){
-  return getStats().streak || 0;
-}
-
-function renderStats(){
-  const stats=getStats();
-
-  document.getElementById("stWins").textContent=stats.wins;
-  document.getElementById("stStreak").textContent=stats.streak;
-  document.getElementById("stBestStreak").textContent=stats.bestStreak;
-
-  ["easy","medium","hard"].forEach(diff=>{
-    const d=stats.difficulties[diff];
-    document.getElementById(`stBest_${diff}`).textContent=d.best===null?"—":formatTime(d.best);
-    document.getElementById(`stWins_${diff}`).textContent=`${d.wins} win${d.wins===1?"":"s"}`;
-  });
-}
-
-document.getElementById("statsSettingsBtn").addEventListener("click",()=>{
-  document.getElementById("settingsModal").classList.remove("show");
-  renderStats();
-  document.getElementById("statsModal").classList.add("show");
-});
-
-document.getElementById("closeStatsBtn").addEventListener("click",()=>{
-  document.getElementById("statsModal").classList.remove("show");
-});
-
-/* ---------- SETTINGS ---------- */
-function setTheme(theme){
-  document.documentElement.dataset.theme=theme;
-  localStorage.setItem("navasudoku_theme",theme);
-  document.getElementById("lightThemeBtn").classList.toggle("active",theme==="light");
-  document.getElementById("darkThemeBtn").classList.toggle("active",theme==="dark");
-}
-
-function setZenMode(on){
-  zenMode=on;
-  localStorage.setItem("navasudoku_zen",on?"on":"off");
-  document.getElementById("zenOffBtn").classList.toggle("active",!on);
-  document.getElementById("zenOnBtn").classList.toggle("active",on);
-
-  if(on){
-    document.getElementById("mistakeItem").style.display="none";
-  }else{
-    document.getElementById("mistakeItem").style.display="";
-  }
-}
-
-function setSound(on){
-  soundEnabled=on;
-  localStorage.setItem("navasudoku_sound",on?"on":"off");
-  document.getElementById("soundOffBtn").classList.toggle("active",!on);
-  document.getElementById("soundOnBtn").classList.toggle("active",on);
-}
-
-function setNudge(on){
-  nudgeEnabled=on;
-  localStorage.setItem("navasudoku_smartnudge",on?"on":"off");
-  document.getElementById("nudgeOffBtn").classList.toggle("active",!on);
-  document.getElementById("nudgeOnBtn").classList.toggle("active",on);
-  if(on) scheduleNudge();
-  else{
-    clearTimeout(nudgeTimer);
-    document.querySelectorAll(".nudge-cell").forEach(el=>el.classList.remove("nudge-cell"));
-  }
-}
-
-document.getElementById("lightThemeBtn").addEventListener("click",()=>setTheme("light"));
-document.getElementById("darkThemeBtn").addEventListener("click",()=>setTheme("dark"));
-document.getElementById("zenOffBtn").addEventListener("click",()=>setZenMode(false));
-document.getElementById("zenOnBtn").addEventListener("click",()=>setZenMode(true));
-document.getElementById("soundOffBtn").addEventListener("click",()=>setSound(false));
-document.getElementById("soundOnBtn").addEventListener("click",()=>setSound(true));
-document.getElementById("nudgeOffBtn").addEventListener("click",()=>setNudge(false));
-document.getElementById("nudgeOnBtn").addEventListener("click",()=>setNudge(true));
-
-document.getElementById("settingsBtn").addEventListener("click",()=>{
-  paused=false;
   document.getElementById("pauseOverlay").classList.remove("show");
-  document.getElementById("settingsModal").classList.add("show");
-  syncSettingsUI();
-});
-
-document.getElementById("closeSettingsBtn").addEventListener("click",()=>{
-  document.getElementById("settingsModal").classList.remove("show");
-});
-
-function syncSettingsUI(){
-  const theme=localStorage.getItem("navasudoku_theme")||"dark";
-  setTheme(theme);
-  setZenMode(zenMode);
-  setSound(soundEnabled);
-  setNudge(nudgeEnabled);
-  renderDifficultyButtons();
-}
-
-function renderDifficultyButtons(){
-  const row=document.getElementById("diffRow");
-  row.innerHTML="";
-  ["easy","medium","hard"].forEach(diff=>{
-    const btn=document.createElement("button");
-    btn.textContent=diff[0].toUpperCase()+diff.slice(1);
-    btn.className=currentDifficulty===diff?"active":"";
-    btn.addEventListener("click",()=>{
-      if(currentDifficulty===diff) return;
-      currentDifficulty=diff;
-      renderDifficultyButtons();
-    });
-    row.appendChild(btn);
-  });
-}
-
-/* ---------- NEW GAME CONFIRM ---------- */
-document.getElementById("newGameSettingsBtn").addEventListener("click",()=>{
-  const btn=document.getElementById("newGameSettingsBtn");
-
-  if(!btn.classList.contains("confirming")){
-    btn.classList.add("confirming");
-    setTimeout(()=>btn.classList.remove("confirming"),1800);
-    document.getElementById("confirmMessage").innerHTML="Start a New Puzzle?<br>Your current progress will be lost.";
-    document.getElementById("confirmHeading").style.display="none";
-    document.getElementById("confirmStats").style.display="none";
-    document.getElementById("confirmRestartBtn").style.display="none";
-    document.getElementById("confirmOverlay").classList.add("show");
-  }
-});
-
-document.getElementById("confirmCancelBtn").addEventListener("click",()=>{
-  document.getElementById("confirmOverlay").classList.remove("show");
-});
-
-document.getElementById("confirmYesBtn").addEventListener("click",async()=>{
-  document.getElementById("confirmOverlay").classList.remove("show");
-  document.getElementById("settingsModal").classList.remove("show");
-  await newGame();
-});
-
-/* ---------- PAUSE ---------- */
-document.getElementById("pauseBtn").addEventListener("click",()=>{
-  if(solved || gameOver) return;
-
-  paused=!paused;
-  document.getElementById("pauseOverlay").classList.toggle("show",paused);
-
-  if(paused){
-    stopTimer();
-    clearTimeout(nudgeTimer);
-  }else{
-    startTimer();
-    scheduleNudge();
-  }
-});
-
-document.getElementById("pauseOverlay").addEventListener("click",(e)=>{
-  if(e.target.closest("#pauseSettingsBtn")) return;
-  if(paused){
-    paused=false;
-    document.getElementById("pauseOverlay").classList.remove("show");
-    startTimer();
-    scheduleNudge();
-  }
-});
-
-document.getElementById("pauseSettingsBtn").addEventListener("click",()=>{
-  document.getElementById("pauseOverlay").classList.remove("show");
-  paused=false;
-  document.getElementById("settingsModal").classList.add("show");
-  syncSettingsUI();
-});
-
-/* ---------- HOW TO PLAY ---------- */
-const HOWTO_STEPS=[
-  {
-    target:"#themeRow",
-    title:"Choose Your Mode",
-    body:"Play classic Numbers, colorful Chroma, or the unique Fusion mode combining numbers and colors."
-  },
-  {
-    target:"#board",
-    title:"Fill the Grid",
-    body:"Each number or symbol must appear exactly once in every row, column, and 3×3 box."
-  },
-  {
-    target:"#palette",
-    title:"Pick a Symbol",
-    body:"Tap a symbol from the keypad, then tap an empty cell to place it."
-  },
-  {
-    target:"#notesBtn",
-    title:"Use Notes",
-    body:"Turn on Notes to mark possible candidates without committing to an answer."
-  },
-  {
-    target:"#hintBtn",
-    title:"Need a Nudge?",
-    body:"Use a Hint when you're stuck. It highlights the area and explains a useful next move."
-  }
-];
-
-let howtoStep=0;
-
-function startHowTo(){
-  howtoStep=0;
-  document.getElementById("howto").classList.add("show");
-  renderHowToStep();
-}
-
-function endHowTo(){
-  document.getElementById("howto").classList.remove("show");
-  localStorage.setItem("navasudoku_howto_seen","1");
-}
-
-function renderHowToStep(){
-  const step=HOWTO_STEPS[howtoStep];
-  document.getElementById("howtoTitle").textContent=step.title;
-  document.getElementById("howtoBody").textContent=step.body;
-
-  const dots=document.getElementById("howtoDots");
-  dots.innerHTML="";
-  HOWTO_STEPS.forEach((_,i)=>{
-    const d=document.createElement("span");
-    if(i===howtoStep) d.classList.add("on");
-    dots.appendChild(d);
-  });
-
-  document.getElementById("howtoNext").textContent=howtoStep===HOWTO_STEPS.length-1?"Done":"Next";
-
-  const target=document.querySelector(step.target);
-  const spot=document.getElementById("howtoSpot");
-  if(target){
-    const r=target.getBoundingClientRect();
-    spot.style.left=`${r.left-5}px`;
-    spot.style.top=`${r.top-5}px`;
-    spot.style.width=`${r.width+10}px`;
-    spot.style.height=`${r.height+10}px`;
-  }
-
-  positionHowtoCard();
-}
-
-function positionHowtoCard(){
-  if(!document.getElementById("howto").classList.contains("show")) return;
-
-  const card=document.getElementById("howtoCard");
-  const target=document.querySelector(HOWTO_STEPS[howtoStep].target);
-  if(!target) return;
-
-  const r=target.getBoundingClientRect();
-  const cardH=card.offsetHeight||150;
-  const gap=14;
-
-  let top;
-
-  if(r.bottom+gap+cardH<window.innerHeight){
-    top=r.bottom+gap;
-  }else{
-    top=Math.max(12,r.top-gap-cardH);
-  }
-
-  card.style.top=`${top}px`;
-}
-
-document.getElementById("howtoNext").addEventListener("click",()=>{
-  if(howtoStep>=HOWTO_STEPS.length-1){
-    endHowTo();
-    return;
-  }
-  howtoStep++;
-  renderHowToStep();
-});
-
-document.getElementById("howtoSkip").addEventListener("click",endHowTo);
-
-document.getElementById("howtoSettingsBtn").addEventListener("click",()=>{
-  document.getElementById("settingsModal").classList.remove("show");
-  startHowTo();
-});
-
-/* ---------- SHARE ---------- */
-function getShareText(){
-  const mode=THEMES[currentTheme];
-  return `🧩 Neo Sudoku — ${mode.title}\n${mode.tagline}\n\nCan you solve it?`;
-}
-
-async function shareGame(){
-  const text=getShareText();
-
-  if(navigator.share){
-    try{
-      await navigator.share({
-        title:"Neo Sudoku",
-        text,
-        url:location.href
-      });
-      return;
-    }catch(e){}
-  }
-
-  try{
-    await navigator.clipboard.writeText(`${text}\n${location.href}`);
-    document.getElementById("shareSettingsStatus").textContent="Copied!";
-    setTimeout(()=>document.getElementById("shareSettingsStatus").textContent="",1800);
-  }catch(e){}
-}
-
-document.getElementById("shareSettingsBtn").addEventListener("click",shareGame);
-
-document.getElementById("shareBtn").addEventListener("click",async()=>{
-  try{
-    await navigator.clipboard.writeText(getShareText());
-    document.getElementById("shareStatus").textContent="Copied!";
-    setTimeout(()=>document.getElementById("shareStatus").textContent="",1500);
-  }catch(e){
-    document.getElementById("shareStatus").textContent="Copy failed";
-  }
-});
-
-document.getElementById("shareNativeBtn").addEventListener("click",shareGame);
-
-/* ---------- PERSISTENCE ---------- */
-const SAVE_KEY="navasudoku_save_v2";
-
-function saveGameState(){
-  try{
-    if(!board || !solution || !puzzle) return;
-
-    const data={
-      currentTheme,
-      currentDifficulty,
-      puzzle,
-      solution,
-      given,
-      board,
-      selected,
-      history,
-      mistakes,
-      hintsLeft,
-      seconds,
-      paused,
-      gameOver,
-      solved,
-      retried,
-      continueUsed,
-      notes,
-      notesMode,
-      rapidFillMode,
-      lockedSymbol
-    };
-
-    localStorage.setItem(SAVE_KEY,JSON.stringify(data));
-  }catch(e){}
-}
-
-function loadGameState(){
-  try{
-    const raw=localStorage.getItem(SAVE_KEY);
-    if(!raw) return false;
-
-    const data=JSON.parse(raw);
-
-    if(!data || !data.puzzle || !data.solution || !data.board) return false;
-
-    currentTheme=data.currentTheme||"numbers";
-    currentDifficulty=data.currentDifficulty||"easy";
-    puzzle=data.puzzle;
-    solution=data.solution;
-    given=data.given || puzzle.map(row=>row.map(v=>v!==0));
-    board=data.board;
-    selected=data.selected||null;
-    history=data.history||[];
-    mistakes=data.mistakes||0;
-    hintsLeft=data.hintsLeft??3;
-    seconds=data.seconds||0;
-    paused=!!data.paused;
-    gameOver=!!data.gameOver;
-    solved=!!data.solved;
-    retried=!!data.retried;
-    continueUsed=!!data.continueUsed;
-    notes=data.notes||freshNotes();
-    notesMode=!!data.notesMode;
-    rapidFillMode=!!data.rapidFillMode;
-    lockedSymbol=data.lockedSymbol??null;
-
-    if(solved){
-      paused=false;
-      gameOver=false;
-    }
-
-    return true;
-  }catch(e){
-    return false;
-  }
-}
-
-/* Save state on important lifecycle events */
-window.addEventListener("beforeunload",saveGameState);
-document.addEventListener("visibilitychange",()=>{
-  if(document.visibilityState==="hidden") saveGameState();
-});
-
-/* ---------- KEYBOARD INPUT ---------- */
-document.addEventListener("keydown",(e)=>{
-  if(paused || solved || gameOver) return;
-
-  if(e.key>="1" && e.key<="9"){
-    handlePalette(Number(e.key)-1);
-    return;
-  }
-
-  if(e.key==="Backspace" || e.key==="Delete"){
-    eraseSelected();
-    return;
-  }
-
-  if(e.key==="n" || e.key==="N"){
-    document.getElementById("notesBtn").click();
-    return;
-  }
-
-  if(e.key==="h" || e.key==="H"){
-    getHint();
-    return;
-  }
-
-  if(e.key==="z" && (e.ctrlKey || e.metaKey)){
-    e.preventDefault();
-    undoMove();
-    return;
-  }
-
-  if(!selected) return;
-
-  let r=selected.r,c=selected.c;
-
-  if(e.key==="ArrowUp") r=(r+8)%9;
-  else if(e.key==="ArrowDown") r=(r+1)%9;
-  else if(e.key==="ArrowLeft") c=(c+8)%9;
-  else if(e.key==="ArrowRight") c=(c+1)%9;
-  else return;
-
-  e.preventDefault();
-  selectCell(r,c);
-});
-
-/* ---------- INITIALIZATION ---------- */
-function init(){
-  const savedTheme=localStorage.getItem("navasudoku_theme")||"dark";
-  setTheme(savedTheme);
-
-  zenMode=(localStorage.getItem("navasudoku_zen")||"off")==="on";
-  setZenMode(zenMode);
-
-  setSound(soundEnabled);
-  setNudge(nudgeEnabled);
-
-  renderDifficultyButtons();
-
-  const loaded=loadGameState();
-
-  if(loaded){
-    renderThemeSelector();
-    renderBoard();
-    renderPalette();
-    updateControls();
-    updateMistakes();
-    updateTimer();
-
-    if(paused){
-      document.getElementById("pauseOverlay").classList.add("show");
-      stopTimer();
-    }else if(!solved && !gameOver){
-      startTimer();
-      scheduleNudge();
-    }
-
-    if(solved){
-      renderWinModal(calculateStars());
-    }
-
-    if(gameOver){
-      showGameOver();
-    }
-  }else{
-    newGame();
-  }
-
-  if(!localStorage.getItem("navasudoku_howto_seen")){
-    setTimeout(()=>startHowTo(),500);
-  }
-}
-
-init();
-</script>
-</body>
-</html>  document.getElementById("gameOverModal").classList.add("show");
-  saveState();
-}
-
-function checkWin(){
-  if(!board || !solution) return false;
-  for(let r=0;r<9;r++){
-    for(let c=0;c<9;c++){
-      if(board[r][c]!==solution[r][c]) return false;
-    }
-  }
-  solved=true;
-  clearInterval(timerInterval);
-  document.getElementById("timerDisplay").textContent = zenMode ? "Zen" : formatTime(seconds);
-  saveState();
-  showWinModal(false);
-  return true;
-}
-
-function showWinModal(fromResume){
-  const modal=document.getElementById("winModal");
-  const title=document.getElementById("winTitle");
-  const bestEl=document.getElementById("winBest");
-  const streakEl=document.getElementById("winStreak");
-
-  title.textContent="Puzzle Solved!";
-
-  const stats=getStats();
-  const d=stats.difficulties[currentDifficulty];
-  const previousBest=d.best;
-
-  let newBest=false;
-
-  if(!fromResume && !retried){
-    if(previousBest===null || seconds<previousBest){
-      d.best=seconds;
-      d.wins++;
-      stats.wins++;
-      newBest=true;
-    }else{
-      d.wins++;
-      stats.wins++;
-    }
-
-    updateStreak(stats);
-    localStorage.setItem(STATS_KEY,JSON.stringify(stats));
-  }
-
-  if(d.best!==null){
-    bestEl.textContent=newBest ? "🏆 New Best Time!" : `Best: ${formatTime(d.best)}`;
-    bestEl.classList.toggle("hl",newBest);
-  }else{
-    bestEl.textContent="";
-    bestEl.classList.remove("hl");
-  }
-
-  streakEl.textContent=`🔥 ${stats.streak} day streak`;
-
-  document.getElementById("winTime").textContent=formatTime(seconds);
-  document.getElementById("winMistakes").textContent=mistakes;
-
-  const stars=calculateStars();
-  const starsEl=document.getElementById("starRating");
-  [...starsEl.querySelectorAll(".star")].forEach((s,i)=>{
-    s.classList.toggle("filled",i<stars);
-  });
-
-  modal.classList.add("show");
-
-  if(!fromResume){
-    spawnConfetti();
-  }
-
-  updateTryAnotherModes();
-}
-
-function updateStreak(stats){
-  const today=new Date();
-  const todayKey=today.toISOString().slice(0,10);
-
-  if(stats.lastWinDate===todayKey){
-    return;
-  }
-
-  if(stats.lastWinDate){
-    const prev=new Date(stats.lastWinDate+"T00:00:00");
-    const curr=new Date(todayKey+"T00:00:00");
-    const diff=Math.round((curr-prev)/86400000);
-
-    if(diff===1){
-      stats.streak++;
-    }else if(diff>1){
-      stats.streak=1;
-    }
-  }else{
-    stats.streak=1;
-  }
-
-  if(stats.streak>stats.bestStreak){
-    stats.bestStreak=stats.streak;
-  }
-
-  stats.lastWinDate=todayKey;
-}
-
-function calculateStars(){
-  if(zenMode) return 3;
-  if(mistakes===0){
-    if(seconds<=120) return 3;
-    return 2;
-  }
-  if(mistakes===1) return 2;
-  return 1;
-}
-
-function spawnConfetti(){
-  const layer=document.getElementById("confettiLayer");
-  if(!layer) return;
-  layer.innerHTML="";
-
-  if(prefersReducedMotion()) return;
-
-  const colors=[
-    "#D4AF37","#4ECDA0","#38B6FF",
-    "#FF69B4","#DC143C","#7A1FC9",
-    "#FFD500","#50C878"
-  ];
-
-  for(let i=0;i<34;i++){
-    const p=document.createElement("div");
-    p.className="confetti-piece";
-    p.style.left=`${Math.random()*100}%`;
-    p.style.background=colors[Math.floor(Math.random()*colors.length)];
-    p.style.animationDelay=`${Math.random()*0.65}s`;
-    p.style.transform=`rotate(${Math.random()*360}deg)`;
-    layer.appendChild(p);
-  }
-}
-
-function updateTryAnotherModes(){
-  const section=document.getElementById("tryAnotherSection");
-  const grid=document.getElementById("tryAnotherGrid");
-  if(!section || !grid) return;
-
-  grid.innerHTML="";
-
-  Object.keys(THEMES).forEach(key=>{
-    if(key===currentTheme) return;
-
-    const card=document.createElement("div");
-    card.className="try-mode-card";
-    card.innerHTML=`
-      ${modeIconHtml(key)}
-      <div class="try-title">${THEMES[key].title}</div>
-      <div class="try-sub">${THEMES[key].sub}</div>
-    `;
-
-    card.onclick=()=>{
-      currentTheme=key;
-      document.getElementById("winModal").classList.remove("show");
-      renderThemeRow();
-      newGame();
-    };
-
-    grid.appendChild(card);
-  });
-
-  section.style.display=grid.children.length ? "" : "none";
-}
-
-document.getElementById("winNextBtn").onclick=()=>{
   document.getElementById("winModal").classList.remove("show");
-  newGame();
-};
-
-document.getElementById("winRetryBtn").onclick=()=>{
-  document.getElementById("winModal").classList.remove("show");
-  restartBoard();
-};
-
-document.getElementById("gameOverContinueBtn").onclick=()=>{
-  if(continueUsed){
-    document.getElementById("gameOverModal").classList.remove("show");
-    return;
-  }
-
-  continueUsed=true;
-  gameOver=false;
-  mistakes=maxMistakes;
-
   document.getElementById("gameOverModal").classList.remove("show");
-  document.getElementById("mistakeDisplay").textContent=zenMode ? `${mistakes}/∞` : `${mistakes}/${maxMistakes}`;
-
-  restartTimer();
-  saveState();
-};
-
-document.getElementById("gameOverNewBtn").onclick=()=>{
-  document.getElementById("gameOverModal").classList.remove("show");
-  newGame();
-};
-
-document.getElementById("gameOverRestartBtn").onclick=()=>{
-  document.getElementById("gameOverModal").classList.remove("show");
-  restartBoard();
-};
-
-/* ---------- UNDO ---------- */
-document.getElementById("undoBtn").onclick=()=>{
-  if(gameOver || paused || solved) return;
-
-  clearHintExplain();
-
-  if(!history.length){
-    setStatus("Nothing to undo.",true);
-    return;
-  }
-
-  const move=history.pop();
-  board[move.r][move.c]=move.prevVal;
-
-  if(move.prevVal===0){
-    notes[move.r][move.c]=Array(9).fill(false);
-  }
-
-  selected={r:move.r,c:move.c};
-
-  renderBoard();
+  updateHud();
+  updateModeButtons();
   renderPalette();
-  updateHud();
-  setStatus("Move undone.",false);
-  saveState();
-  resetNudgeActivity();
-};
-
-/* ---------- HINT SYSTEM ---------- */
-function buildCandidates(){
-  return candidatesGrid(board);
-}
-
-function findNakedSingle(cand){
-  for(let r=0;r<9;r++){
-    for(let c=0;c<9;c++){
-      if(board[r][c]===0 && popcount(cand[r][c])===1){
-        return {
-          r,c,
-          val:bitToNum(cand[r][c]),
-          technique:"Naked Single"
-        };
-      }
-    }
-  }
-  return null;
-}
-
-function findHiddenSingle(cand){
-  const units=ALL_UNITS;
-
-  for(const unit of units){
-    for(let n=1;n<=9;n++){
-      const bit=1<<(n-1);
-      let found=null;
-      let count=0;
-
-      for(const [r,c] of unit){
-        if(board[r][c]===0 && (cand[r][c]&bit)){
-          count++;
-          found={r,c};
-        }
-      }
-
-      if(count===1 && found){
-        return {
-          r:found.r,
-          c:found.c,
-          val:n,
-          technique:"Hidden Single"
-        };
-      }
-    }
-  }
-
-  return null;
-}
-
-function findHintTarget(){
-  const cand=buildCandidates();
-
-  let target=findNakedSingle(cand);
-  if(target) return target;
-
-  target=findHiddenSingle(cand);
-  if(target) return target;
-
-  let best=null;
-
-  for(let r=0;r<9;r++){
-    for(let c=0;c<9;c++){
-      if(board[r][c]!==0) continue;
-
-      const count=popcount(cand[r][c]);
-
-      if(count>0 && (!best || count<best.count)){
-        best={
-          r,c,
-          val:solution[r][c],
-          count,
-          technique:"Good Move"
-        };
-      }
-    }
-  }
-
-  return best;
-}
-
-function buildHintUnit(r,c){
-  const set=new Set();
-
-  for(let i=0;i<9;i++){
-    set.add(r*9+i);
-    set.add(i*9+c);
-  }
-
-  const br=Math.floor(r/3)*3;
-  const bc=Math.floor(c/3)*3;
-
-  for(let rr=br;rr<br+3;rr++){
-    for(let cc=bc;cc<bc+3;cc++){
-      set.add(rr*9+cc);
-    }
-  }
-
-  return set;
-}
-
-function showHint(){
-  if(gameOver || paused || solved) return;
-
-  if(hintsLeft<=0){
-    setStatus("No hints left.",true);
-    return;
-  }
-
-  const target=findHintTarget();
-
-  if(!target){
-    setStatus("No hint available.",true);
-    return;
-  }
-
-  hintsLeft--;
-
-  selected={r:target.r,c:target.c};
-  hintCtx={set:buildHintUnit(target.r,target.c)};
-
-  renderBoard();
-  renderPalette();
-  updateHud();
-
-  const title=document.getElementById("hcTitle");
-  const left=document.getElementById("hcLeft");
-  const body=document.getElementById("hcBody");
-
-  title.textContent=target.technique;
-  left.textContent=`${hintsLeft} left`;
-
-  if(target.technique==="Naked Single"){
-    body.textContent=`R${target.r+1}C${target.c+1} can only be ${target.val}.`;
-  }else if(target.technique==="Hidden Single"){
-    body.textContent=`${target.val} can only go in R${target.r+1}C${target.c+1} within this row, column, or box.`;
-  }else{
-    body.textContent=`Try ${target.val} at R${target.r+1}C${target.c+1}.`;
-  }
-
-  const card=document.getElementById("hintCard");
-  card.classList.add("show");
-
-  document.body.classList.add("hint-open");
-  positionHintCard();
-
-  const cell=getCellEl(target.r,target.c);
-
-  if(cell){
-    cell.classList.add("hint-glow");
-
-    setTimeout(()=>{
-      cell.classList.remove("hint-glow");
-    },1800);
-  }
-
-  playSound("hint");
-  vibrate(25);
-
-  clearTimeout(hintCardTimer);
-  hintCardTimer=setTimeout(clearHintExplain,6000);
-
-  saveState();
-}
-
-function clearHintExplain(){
-  hintCtx=null;
-
-  const card=document.getElementById("hintCard");
-  card.classList.remove("show");
-
-  document.body.classList.remove("hint-open");
-
-  clearTimeout(hintCardTimer);
-  hintCardTimer=null;
-
-  if(board){
-    renderBoard();
-  }
-}
-
-function positionHintCard(){
-  const card=document.getElementById("hintCard");
-  if(!card.classList.contains("show")) return;
-
-  const header=document.getElementById("appHeader");
-  const rect=header.getBoundingClientRect();
-
-  card.style.top=`${Math.max(6,rect.bottom+6)}px`;
-}
-
-document.getElementById("hintBtn").onclick=showHint;
-document.getElementById("hintCard").onclick=clearHintExplain;
-
-/* ---------- SMART NUDGE ---------- */
-let nudgeTimer=null;
-let nudgeLastTouch=null;
-
-function resetNudgeActivity(){
-  clearTimeout(nudgeTimer);
-
-  document.querySelectorAll(".nudge-cell").forEach(el=>{
-    el.classList.remove("nudge-cell");
-  });
-
-  if(!nudgeEnabled || paused || gameOver || solved) return;
-
-  nudgeTimer=setTimeout(()=>{
-    if(!nudgeEnabled || paused || gameOver || solved) return;
-
-    const cand=buildCandidates();
-    let target=null;
-
-    // Prefer a cell with a single candidate.
-    for(let r=0;r<9 && !target;r++){
-      for(let c=0;c<9;c++){
-        if(board[r][c]===0 && popcount(cand[r][c])===1){
-          target={r,c};
-          break;
-        }
-      }
-    }
-
-    // Otherwise choose the most constrained empty cell.
-    if(!target){
-      let best=null;
-
-      for(let r=0;r<9;r++){
-        for(let c=0;c<9;c++){
-          if(board[r][c]!==0) continue;
-
-          const count=popcount(cand[r][c]);
-
-          if(count>0 && (!best || count<best.count)){
-            best={r,c,count};
-          }
-        }
-      }
-
-      if(best) target={r:best.r,c:best.c};
-    }
-
-    if(target){
-      const el=getCellEl(target.r,target.c);
-
-      if(el){
-        el.classList.add("nudge-cell");
-
-        setTimeout(()=>{
-          el.classList.remove("nudge-cell");
-        },2600);
-      }
-    }
-  },6500);
-}
-
-/* ---------- SETTINGS ---------- */
-function openSettings(){
-  syncSettingsUI();
-
-  document.getElementById("settingsModal").classList.add("show");
-}
-
-function closeSettings(){
-  document.getElementById("settingsModal").classList.remove("show");
-}
-
-function syncSettingsUI(){
-  const theme=localStorage.getItem("navasudoku_theme")||"dark";
-
-  document.getElementById("lightThemeBtn").classList.toggle("active",theme==="light");
-  document.getElementById("darkThemeBtn").classList.toggle("active",theme==="dark");
-
-  document.getElementById("zenOffBtn").classList.toggle("active",!zenMode);
-  document.getElementById("zenOnBtn").classList.toggle("active",zenMode);
-
-  document.getElementById("soundOffBtn").classList.toggle("active",!soundEnabled);
-  document.getElementById("soundOnBtn").classList.toggle("active",soundEnabled);
-
-  document.getElementById("nudgeOffBtn").classList.toggle("active",!nudgeEnabled);
-  document.getElementById("nudgeOnBtn").classList.toggle("active",nudgeEnabled);
-
-  renderDiffRow();
-}
-
-document.getElementById("settingsBtn").onclick=()=>{
-  openSettings();
-};
-
-document.getElementById("closeSettingsBtn").onclick=closeSettings;
-
-document.getElementById("lightThemeBtn").onclick=()=>{
-  setTheme("light");
-};
-
-document.getElementById("darkThemeBtn").onclick=()=>{
-  setTheme("dark");
-};
-
-document.getElementById("zenOffBtn").onclick=()=>{
-  zenMode=false;
-  localStorage.setItem("navasudoku_zen","off");
-  updateHud();
-  updateModeButtons();
-  saveState();
-};
-
-document.getElementById("zenOnBtn").onclick=()=>{
-  zenMode=true;
-  localStorage.setItem("navasudoku_zen","on");
-  updateHud();
-  updateModeButtons();
-  saveState();
-};
-
-document.getElementById("soundOffBtn").onclick=()=>{
-  soundEnabled=false;
-  localStorage.setItem("navasudoku_sound","off");
-  updateModeButtons();
-};
-
-document.getElementById("soundOnBtn").onclick=()=>{
-  soundEnabled=true;
-  localStorage.setItem("navasudoku_sound","on");
-  updateModeButtons();
-};
-
-document.getElementById("nudgeOffBtn").onclick=()=>{
-  nudgeEnabled=false;
-  localStorage.setItem("navasudoku_smartnudge","off");
-  resetNudgeActivity();
-  updateModeButtons();
-};
-
-document.getElementById("nudgeOnBtn").onclick=()=>{
-  nudgeEnabled=true;
-  localStorage.setItem("navasudoku_smartnudge","on");
-  resetNudgeActivity();
-  updateModeButtons();
-};
-
-/* ---------- DIFFICULTY ---------- */
-function renderDiffRow(){
-  const row=document.getElementById("diffRow");
-  row.innerHTML="";
-
-  Object.keys(DIFFICULTIES).forEach(key=>{
-    const btn=document.createElement("button");
-
-    btn.className=key===currentDifficulty ? "active" : "";
-    btn.textContent=key[0].toUpperCase()+key.slice(1);
-
-    btn.onclick=()=>{
-      if(key===currentDifficulty) return;
-
-      openConfirm(()=>{
-        currentDifficulty=key;
-
-        renderDiffRow();
-        closeSettings();
-        newGame();
-      });
-    };
-
-    row.appendChild(btn);
-  });
-}
-
-/* ---------- CONFIRMATION ---------- */
-let confirmAction=null;
-
-function openConfirm(action){
-  confirmAction=action;
-
-  document.getElementById("confirmHeading").style.display="none";
-  document.getElementById("confirmStats").style.display="none";
-  document.getElementById("confirmRestartBtn").style.display="none";
-  document.getElementById("confirmMessage").innerHTML="Start a New Puzzle?<br>Your current puzzle progress will be lost.";
-
-  document.getElementById("confirmOverlay").classList.add("show");
-}
-
-function closeConfirm(){
-  confirmAction=null;
-  document.getElementById("confirmOverlay").classList.remove("show");
-}
-
-document.getElementById("confirmCancelBtn").onclick=closeConfirm;
-
-document.getElementById("confirmYesBtn").onclick=()=>{
-  const action=confirmAction;
-  closeConfirm();
-
-  if(action) action();
-};
-
-document.getElementById("newGameSettingsBtn").onclick=()=>{
-  openConfirm(()=>newGame());
-};
-
-document.getElementById("confirmRestartBtn").onclick=()=>{
-  closeConfirm();
-  restartBoard();
-};
-
-/* ---------- PAUSE ---------- */
-function setPaused(value){
-  paused=value;
-
-  document.getElementById("pauseOverlay").classList.toggle("show",paused);
-
-  if(paused){
-    clearInterval(timerInterval);
-    clearTimeout(nudgeTimer);
-  }else if(!solved && !gameOver){
-    restartTimer();
-    resetNudgeActivity();
-  }
-
-  saveState();
-}
-
-document.getElementById("pauseBtn").onclick=()=>{
-  if(solved || gameOver) return;
-  setPaused(!paused);
-};
-
-document.getElementById("pauseOverlay").onclick=(e)=>{
-  if(e.target.closest("#pauseSettingsBtn")) return;
-
-  if(paused){
-    setPaused(false);
-  }
-};
-
-document.getElementById("pauseSettingsBtn").onclick=()=>{
-  document.getElementById("pauseOverlay").classList.remove("show");
-  paused=false;
-  openSettings();
-};
-
-/* ---------- HOW TO PLAY ---------- */
-const HOWTO_STEPS=[
-  {
-    target:"#themeRow",
-    title:"Choose Your Mode",
-    body:"Switch between Numbers, Chroma and Fusion. Each mode uses the same Sudoku logic with a different visual language."
-  },
-  {
-    target:"#board",
-    title:"Solve the Grid",
-    body:"Every number or symbol must appear once in each row, column and 3×3 box."
-  },
-  {
-    target:"#palette",
-    title:"Fill a Cell",
-    body:"Select a cell and tap the symbol you want to place."
-  },
-  {
-    target:"#notesBtn",
-    title:"Use Smart Notes",
-    body:"Notes let you mark possible candidates without committing to an answer."
-  },
-  {
-    target:"#hintBtn",
-    title:"Use Hints",
-    body:"Hints explain a useful next move and highlight the relevant row, column and box."
-  }
-];
-
-let howtoStep=0;
-
-function startHowTo(){
-  howtoStep=0;
-  document.getElementById("howto").classList.add("show");
-  renderHowToStep();
-}
-
-function endHowTo(){
-  document.getElementById("howto").classList.remove("show");
-  localStorage.setItem("navasudoku_howto_seen","1");
-}
-
-function renderHowToStep(){
-  const step=HOWTO_STEPS[howtoStep];
-
-  document.getElementById("howtoTitle").textContent=step.title;
-  document.getElementById("howtoBody").textContent=step.body;
-
-  const dots=document.getElementById("howtoDots");
-  dots.innerHTML="";
-
-  HOWTO_STEPS.forEach((_,i)=>{
-    const dot=document.createElement("span");
-    dot.classList.toggle("on",i===howtoStep);
-    dots.appendChild(dot);
-  });
-
-  document.getElementById("howtoNext").textContent =
-    howtoStep===HOWTO_STEPS.length-1 ? "Done" : "Next";
-
-  const target=document.querySelector(step.target);
-  const spot=document.getElementById("howtoSpot");
-
-  if(target){
-    const r=target.getBoundingClientRect();
-
-    spot.style.left=`${r.left-5}px`;
-    spot.style.top=`${r.top-5}px`;
-    spot.style.width=`${r.width+10}px`;
-    spot.style.height=`${r.height+10}px`;
-  }
-
-  positionHowtoCard();
-}
-
-function positionHowtoCard(){
-  if(!document.getElementById("howto").classList.contains("show")) return;
-
-  const card=document.getElementById("howtoCard");
-  const target=document.querySelector(HOWTO_STEPS[howtoStep].target);
-
-  if(!target) return;
-
-  const r=target.getBoundingClientRect();
-  const h=card.offsetHeight||150;
-
-  let top;
-
-  if(r.bottom+14+h<window.innerHeight){
-    top=r.bottom+14;
-  }else{
-    top=Math.max(12,r.top-h-14);
-  }
-
-  card.style.top=`${top}px`;
-}
-
-document.getElementById("howtoNext").onclick=()=>{
-  if(howtoStep>=HOWTO_STEPS.length-1){
-    endHowTo();
-    return;
-  }
-
-  howtoStep++;
-  renderHowToStep();
-};
-
-document.getElementById("howtoSkip").onclick=endHowTo;
-
-document.getElementById("howtoSettingsBtn").onclick=()=>{
-  closeSettings();
-  startHowTo();
-};
-
-/* ---------- STATS ---------- */
-function defaultStats(){
-  return {
-    wins:0,
-    streak:0,
-    bestStreak:0,
-    lastWinDate:null,
-    difficulties:{
-      easy:{wins:0,best:null},
-      medium:{wins:0,best:null},
-      hard:{wins:0,best:null}
-    }
-  };
-}
-
-function getStats(){
-  try{
-    const raw=localStorage.getItem(STATS_KEY);
-
-    if(!raw) return defaultStats();
-
-    const s=JSON.parse(raw);
-    const d=defaultStats();
-
-    return {
-      ...d,
-      ...s,
-      difficulties:{
-        ...d.difficulties,
-        ...(s.difficulties||{})
-      }
-    };
-  }catch(e){
-    return defaultStats();
-  }
-}
-
-function renderStats(){
-  const s=getStats();
-
-  document.getElementById("stWins").textContent=s.wins;
-  document.getElementById("stStreak").textContent=s.streak;
-  document.getElementById("stBestStreak").textContent=s.bestStreak;
-
-  ["easy","medium","hard"].forEach(diff=>{
-    const d=s.difficulties[diff];
-
-    document.getElementById(`stBest_${diff}`).textContent =
-      d.best===null ? "—" : formatTime(d.best);
-
-    document.getElementById(`stWins_${diff}`).textContent =
-      `${d.wins} win${d.wins===1?"":"s"}`;
-  });
-}
-
-document.getElementById("statsSettingsBtn").onclick=()=>{
-  closeSettings();
-  renderStats();
-  document.getElementById("statsModal").classList.add("show");
-};
-
-document.getElementById("closeStatsBtn").onclick=()=>{
-  document.getElementById("statsModal").classList.remove("show");
-};
-
-/* ---------- SHARE ---------- */
-function buildShareText(){
-  const mode=THEMES[currentTheme];
-
-  return `🧩 Neo Sudoku — ${mode.title}
-${mode.tagline}
-
-Can you solve it?`;
-}
-
-async function shareNeoSudoku(){
-  const text=buildShareText();
-
-  if(navigator.share){
-    try{
-      await navigator.share({
-        title:"Neo Sudoku",
-        text,
-        url:SHARE_URL
-      });
-      return;
-    }catch(e){}
-  }
-
-  try{
-    await navigator.clipboard.writeText(`${text}\n${SHARE_URL}`);
-
-    document.getElementById("shareSettingsStatus").textContent="Copied!";
-    setTimeout(()=>{
-      document.getElementById("shareSettingsStatus").textContent="";
-    },1800);
-  }catch(e){
-    document.getElementById("shareSettingsStatus").textContent="Copy failed";
-  }
-}
-
-document.getElementById("shareSettingsBtn").onclick=shareNeoSudoku;
-
-document.getElementById("shareBtn").onclick=async()=>{
-  try{
-    await navigator.clipboard.writeText(buildShareText());
-
-    document.getElementById("shareStatus").textContent="Copied!";
-
-    setTimeout(()=>{
-      document.getElementById("shareStatus").textContent="";
-    },1500);
-  }catch(e){
-    document.getElementById("shareStatus").textContent="Copy failed";
-  }
-};
-
-document.getElementById("shareNativeBtn").onclick=shareNeoSudoku;
-
-/* ---------- KEYBOARD / ACCESSIBILITY ---------- */
-document.addEventListener("keydown",(e)=>{
-  if(document.getElementById("howto").classList.contains("show")){
-    if(e.key==="Escape"){
-      endHowTo();
-    }
-    return;
-  }
-
-  if(document.getElementById("settingsModal").classList.contains("show")){
-    if(e.key==="Escape"){
-      closeSettings();
-    }
-    return;
-  }
-
-  if(document.getElementById("statsModal").classList.contains("show")){
-    if(e.key==="Escape"){
-      document.getElementById("statsModal").classList.remove("show");
-    }
-    return;
-  }
-
-  if(document.getElementById("confirmOverlay").classList.contains("show")){
-    if(e.key==="Escape"){
-      closeConfirm();
-    }
-    return;
-  }
-
-  if(document.getElementById("winModal").classList.contains("show")){
-    if(e.key==="Escape"){
-      document.getElementById("winModal").classList.remove("show");
-    }
-    return;
-  }
-
-  if(document.getElementById("gameOverModal").classList.contains("show")){
-    if(e.key==="Escape"){
-      document.getElementById("gameOverModal").classList.remove("show");
-    }
-    return;
-  }
-
-  if(paused || gameOver || solved) return;
-
-  if(e.key>="1" && e.key<="9"){
-    onPaletteTap(Number(e.key));
-    return;
-  }
-
-  if(e.key==="Backspace" || e.key==="Delete"){
-    onPaletteTap(0);
-    return;
-  }
-
-  if(e.key==="n" || e.key==="N"){
-    document.getElementById("notesBtn").click();
-    return;
-  }
-
-  if(e.key==="h" || e.key==="H"){
-    showHint();
-    return;
-  }
-
-  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==="z"){
-    e.preventDefault();
-    document.getElementById("undoBtn").click();
-    return;
-  }
-
-  if(!selected) return;
-
-  let r=selected.r;
-  let c=selected.c;
-
-  if(e.key==="ArrowUp"){
-    r=(r+8)%9;
-  }else if(e.key==="ArrowDown"){
-    r=(r+1)%9;
-  }else if(e.key==="ArrowLeft"){
-    c=(c+8)%9;
-  }else if(e.key==="ArrowRight"){
-    c=(c+1)%9;
-  }else{
-    return;
-  }
-
-  e.preventDefault();
-
-  selected={r,c};
-
+  setStatus("", false);
   clearHintExplain();
-  resetNudgeActivity();
-  renderBoard();
-});
-
-/* ---------- TOUCH / CLICK OUTSIDE ---------- */
-document.getElementById("settingsModal").addEventListener("click",(e)=>{
-  if(e.target.id==="settingsModal"){
-    closeSettings();
-  }
-});
-
-document.getElementById("statsModal").addEventListener("click",(e)=>{
-  if(e.target.id==="statsModal"){
-    document.getElementById("statsModal").classList.remove("show");
-  }
-});
-
-document.getElementById("confirmOverlay").addEventListener("click",(e)=>{
-  if(e.target.id==="confirmOverlay"){
-    closeConfirm();
-  }
-});
-
-/* ---------- THEME INITIALIZATION ---------- */
-function initializePreferences(){
-  const storedTheme=localStorage.getItem("navasudoku_theme")||"dark";
-
-  document.documentElement.dataset.theme=storedTheme;
-
-  zenMode=(localStorage.getItem("navasudoku_zen")||"off")==="on";
-  soundEnabled=(localStorage.getItem("navasudoku_sound")||"off")==="on";
-  nudgeEnabled=(localStorage.getItem("navasudoku_smartnudge")??"on")==="on";
-
-  setTheme(storedTheme);
-
-  updateModeButtons();
-  updateHud();
-}
-
-/* ---------- APP BOOT ---------- */
-function boot(){
-  initializePreferences();
-
-  renderThemeRow();
-  renderDiffRow();
-
-  const saved=loadState();
-
-  if(saved){
-    resumeFromSave(saved);
-  }else{
-    newGame();
-  }
-
-  if(!localStorage.getItem("navasudoku_howto_seen")){
-    setTimeout(()=>{
-      if(!document.getElementById("settingsModal").classList.contains("show")){
-        startHowTo();
-      }
-    },600);
-  }
-}
-
-window.addEventListener("resize",()=>{
-  positionHintCard();
-  positionHowtoCard();
-});
-
-window.addEventListener("beforeunload",()=>{
-  saveState();
-});
-
-document.addEventListener("visibilitychange",()=>{
-  if(document.visibilityState==="hidden"){
-    saveState();
-  }
-});
-
-boot();  }
-}
-document.getElementById("zenOffBtn").onclick=()=>setZenMode(false);
-document.getElementById("zenOnBtn").onclick=()=>setZenMode(true);
-
-let soundEnabled = (localStorage.getItem("navasudoku_sound") ?? "off") === "on";
-let vibrationEnabled = (localStorage.getItem("navasudoku_vibration") ?? "off") === "on";
-
-function setSound(on){
-  soundEnabled=!!on;
-  localStorage.setItem("navasudoku_sound",soundEnabled?"on":"off");
-  document.getElementById("soundOffBtn").classList.toggle("active",!soundEnabled);
-  document.getElementById("soundOnBtn").classList.toggle("active",soundEnabled);
-}
-function setVibration(on){
-  vibrationEnabled=!!on;
-  localStorage.setItem("navasudoku_vibration",vibrationEnabled?"on":"off");
-  document.getElementById("vibeOffBtn").classList.toggle("active",!vibrationEnabled);
-  document.getElementById("vibeOnBtn").classList.toggle("active",vibrationEnabled);
-}
-document.getElementById("soundOffBtn").onclick=()=>setSound(false);
-document.getElementById("soundOnBtn").onclick=()=>setSound(true);
-document.getElementById("vibeOffBtn").onclick=()=>setVibration(false);
-document.getElementById("vibeOnBtn").onclick=()=>setVibration(true);
-
-function syncSettingsButtons(){
-  const appearance=localStorage.getItem("navasudoku_appearance")||"dark";
-  applyAppearance(appearance);
-  document.getElementById("zenOffBtn").classList.toggle("active",!zenMode);
-  document.getElementById("zenOnBtn").classList.toggle("active",zenMode);
-  document.getElementById("soundOffBtn").classList.toggle("active",!soundEnabled);
-  document.getElementById("soundOnBtn").classList.toggle("active",soundEnabled);
-  document.getElementById("vibeOffBtn").classList.toggle("active",!vibrationEnabled);
-  document.getElementById("vibeOnBtn").classList.toggle("active",vibrationEnabled);
-  document.getElementById("nudgeOffBtn").classList.toggle("active",!nudgeEnabled);
-  document.getElementById("nudgeOnBtn").classList.toggle("active",nudgeEnabled);
-  renderDiffRow();
-}
-
-/* ---------- SMART NUDGE SETTINGS ---------- */
-function setNudgeEnabled(on){
-  nudgeEnabled=!!on;
-  localStorage.setItem("navasudoku_smartnudge",nudgeEnabled?"on":"off");
-  document.getElementById("nudgeOffBtn").classList.toggle("active",!nudgeEnabled);
-  document.getElementById("nudgeOnBtn").classList.toggle("active",nudgeEnabled);
-  resetNudgeActivity();
-}
-
-document.getElementById("nudgeOffBtn").onclick=()=>setNudgeEnabled(false);
-document.getElementById("nudgeOnBtn").onclick=()=>setNudgeEnabled(true);
-
-/* ---------- HOW TO PLAY TUTORIAL ---------- */
-const HOW_TO_STEPS=[
-  {
-    target:"#themeRow",
-    title:"Choose Your Mode",
-    body:"Start with Numbers, switch to Chroma for colors, or try Fusion for numbers + colors."
-  },
-  {
-    target:"#board",
-    title:"Solve the Grid",
-    body:"Fill every row, column and 3×3 box without repeating a symbol."
-  },
-  {
-    target:"#palette",
-    title:"Pick a Symbol",
-    body:"Select an empty cell, then choose the number or color from the keypad."
-  },
-  {
-    target:"#notesBtn",
-    title:"Smart Notes",
-    body:"Use Notes to mark possible candidates while solving."
-  },
-  {
-    target:"#hintBtn",
-    title:"Need Help?",
-    body:"Hints explain a logical next move and highlight the relevant area."
-  }
-];
-
-let howtoOpen=false;
-let howtoIndex=0;
-
-function openHowTo(){
-  howtoOpen=true;
-  howtoIndex=0;
-  document.getElementById("howto").classList.add("show");
-  renderHowTo();
-}
-
-function closeHowTo(){
-  howtoOpen=false;
-  document.getElementById("howto").classList.remove("show");
-  localStorage.setItem("navasudoku_howto_seen","1");
-  resetNudgeActivity();
-}
-
-function renderHowTo(){
-  const step=HOW_TO_STEPS[howtoIndex];
-
-  document.getElementById("howtoTitle").textContent=step.title;
-  document.getElementById("howtoBody").textContent=step.body;
-
-  const dots=document.getElementById("howtoDots");
-  dots.innerHTML="";
-
-  HOW_TO_STEPS.forEach((_,i)=>{
-    const dot=document.createElement("span");
-    if(i===howtoIndex) dot.classList.add("on");
-    dots.appendChild(dot);
-  });
-
-  document.getElementById("howtoNext").textContent =
-    howtoIndex===HOW_TO_STEPS.length-1 ? "Done" : "Next";
-
-  const target=document.querySelector(step.target);
-  const spot=document.getElementById("howtoSpot");
-
-  if(target){
-    const rect=target.getBoundingClientRect();
-
-    spot.style.left=`${rect.left-5}px`;
-    spot.style.top=`${rect.top-5}px`;
-    spot.style.width=`${rect.width+10}px`;
-    spot.style.height=`${rect.height+10}px`;
-  }
-
-  positionHowToCard();
-}
-
-function positionHowToCard(){
-  if(!howtoOpen) return;
-
-  const card=document.getElementById("howtoCard");
-  const target=document.querySelector(HOW_TO_STEPS[howtoIndex].target);
-
-  if(!target) return;
-
-  const rect=target.getBoundingClientRect();
-  const cardHeight=card.offsetHeight||160;
-
-  let top=rect.bottom+14;
-
-  if(top+cardHeight>window.innerHeight-12){
-    top=rect.top-cardHeight-14;
-  }
-
-  top=Math.max(12,Math.min(top,window.innerHeight-cardHeight-12));
-  card.style.top=`${top}px`;
-}
-
-document.getElementById("howtoNext").onclick=()=>{
-  if(howtoIndex>=HOW_TO_STEPS.length-1){
-    closeHowTo();
-  }else{
-    howtoIndex++;
-    renderHowTo();
-  }
-};
-
-document.getElementById("howtoSkip").onclick=closeHowTo;
-
-document.getElementById("howtoSettingsBtn").onclick=()=>{
-  document.getElementById("settingsModal").classList.remove("show");
-  openHowTo();
-};
-
-/* ---------- SHARE ---------- */
-function buildShareText(){
-  const diff=currentDifficulty[0].toUpperCase()+currentDifficulty.slice(1);
-  const usedHints=3-hintsLeft;
-
-  let gridText="";
-
-  if(currentTheme==="numbers"){
-    gridText=board.map(row=>row.map(v=>v?String(v):"·").join(" ")).join("\n");
-  }else{
-    gridText=board.map(row=>row.map(v=>v?EMOJI_MAP[v-1]:"·").join("")).join("\n");
-  }
-
-  return `🧩 Neo Sudoku — ${diff}
-${THEMES[currentTheme].title}
-⏱ ${formatTime(seconds)}  ✕ ${mistakes}  💡 ${usedHints}
-
-${gridText}
-
-Play Neo Sudoku:
-${SHARE_URL}`;
-}
-
-async function shareGame(){
-  const text=buildShareText();
-
-  if(navigator.share){
-    try{
-      await navigator.share({
-        title:"Neo Sudoku",
-        text
-      });
-      return;
-    }catch(e){}
-  }
-
-  try{
-    await navigator.clipboard.writeText(text);
-    document.getElementById("shareStatus").textContent="Copied!";
-    setTimeout(()=>{
-      document.getElementById("shareStatus").textContent="";
-    },1800);
-  }catch(e){
-    document.getElementById("shareStatus").textContent="Copy failed";
-  }
-}
-
-document.getElementById("shareSettingsBtn").onclick=async()=>{
-  const text=buildShareText();
-
-  if(navigator.share){
-    try{
-      await navigator.share({
-        title:"Neo Sudoku",
-        text
-      });
-      return;
-    }catch(e){}
-  }
-
-  try{
-    await navigator.clipboard.writeText(text);
-    document.getElementById("shareSettingsStatus").textContent="Copied!";
-    setTimeout(()=>{
-      document.getElementById("shareSettingsStatus").textContent="";
-    },1800);
-  }catch(e){
-    document.getElementById("shareSettingsStatus").textContent="Copy failed";
-  }
-};
-
-document.getElementById("shareBtn").onclick=shareGame;
-
-document.getElementById("shareNativeBtn").onclick=shareGame;
-
-/* ---------- MODE / THEME SELECTOR ---------- */
-function dimModeSelector(){
-  const row=document.getElementById("themeRow");
-  if(row) row.classList.add("mode-dimmed");
-}
-
-function restoreModeSelector(){
-  const row=document.getElementById("themeRow");
-  if(row) row.classList.remove("mode-dimmed");
-}
-
-document.getElementById("themeRow").addEventListener("pointerdown",()=>{
   restoreModeSelector();
-},{passive:true});
-
-["board","palette","hintBtn"].forEach(id=>{
-  const el=document.getElementById(id);
-  if(el){
-    el.addEventListener("pointerdown",dimModeSelector,{passive:true});
-  }
-});
-
-/* ---------- BOARD TOUCH HANDLING ---------- */
-document.getElementById("board").addEventListener("pointerdown",(e)=>{
-  const cell=e.target.closest(".cell");
-  if(!cell) return;
-
-  if(gameOver || paused) return;
-
-  const r=Number(cell.dataset.r);
-  const c=Number(cell.dataset.c);
-
-  nudgeLastTouch={r,c};
-  resetNudgeActivity();
-
-  clearHintExplain();
-
-  selected={r,c};
-
-  if(rapidFillMode && lockedSymbol!==null && !given[r][c]){
-    placeValue(lockedSymbol);
-  }else{
-    renderBoard();
-  }
-});
-
-/* ---------- PALETTE TOUCH HANDLING ---------- */
-document.getElementById("palette").addEventListener("pointerdown",(e)=>{
-  const btn=e.target.closest(".sym-btn");
-  if(!btn) return;
-
-  if(gameOver || paused) return;
-
-  const children=[...document.getElementById("palette").children];
-  const index=children.indexOf(btn);
-
-  if(index<0) return;
-
-  const val=index<9 ? index+1 : 0;
-
-  resetNudgeActivity();
-
-  if(rapidFillMode){
-    lockedSymbol=(lockedSymbol===val) ? null : val;
-    renderPalette();
-    return;
-  }
-
-  placeValue(val);
-});
-
-/* ---------- NOTES BUTTON ---------- */
-document.getElementById("notesBtn").onclick=()=>{
-  if(gameOver || paused) return;
-
-  notesMode=!notesMode;
-
-  if(notesMode){
-    rapidFillMode=false;
-    lockedSymbol=null;
-  }
-
-  updateModeButtons();
-  renderPalette();
-
-  setStatus(
-    notesMode
-      ? "Notes mode on — mark possible candidates."
-      : "Notes mode off.",
-    false,
-    2500
-  );
-
-  resetNudgeActivity();
-};
-
-/* ---------- RAPID FILL ---------- */
-document.getElementById("rapidBtn").onclick=()=>{
-  if(gameOver || paused) return;
-
-  rapidFillMode=!rapidFillMode;
-
-  if(rapidFillMode){
-    notesMode=false;
-  }else{
-    lockedSymbol=null;
-  }
-
-  updateModeButtons();
-  renderPalette();
-
-  setStatus(
-    rapidFillMode
-      ? "Rapid Fill on — lock a symbol."
-      : "Rapid Fill off.",
-    false,
-    2500
-  );
-
-  resetNudgeActivity();
-};
-
-/* ---------- KEYBOARD ---------- */
-document.addEventListener("keydown",(e)=>{
-  if(howtoOpen){
-    if(e.key==="Escape"){
-      closeHowTo();
-    }
-    return;
-  }
-
-  if(document.getElementById("settingsModal").classList.contains("show")){
-    if(e.key==="Escape"){
-      document.getElementById("settingsModal").classList.remove("show");
-      resetNudgeActivity();
-    }
-    return;
-  }
-
-  if(document.getElementById("statsModal").classList.contains("show")){
-    if(e.key==="Escape"){
-      document.getElementById("statsModal").classList.remove("show");
-      resetNudgeActivity();
-    }
-    return;
-  }
-
-  if(document.getElementById("confirmOverlay").classList.contains("show")){
-    if(e.key==="Escape"){
-      document.getElementById("confirmOverlay").classList.remove("show");
-      pendingConfirmAction=null;
-    }
-    return;
-  }
-
-  if(document.getElementById("winModal").classList.contains("show")){
-    if(e.key==="Escape"){
-      document.getElementById("winModal").classList.remove("show");
-    }
-    return;
-  }
-
-  if(document.getElementById("gameOverModal").classList.contains("show")){
-    if(e.key==="Escape"){
-      document.getElementById("gameOverModal").classList.remove("show");
-    }
-    return;
-  }
-
-  if(paused || gameOver || solved) return;
-
-  if(e.key>="1" && e.key<="9"){
-    onPaletteTap(Number(e.key));
-    resetNudgeActivity();
-    return;
-  }
-
-  if(e.key==="Backspace" || e.key==="Delete"){
-    onPaletteTap(0);
-    resetNudgeActivity();
-    return;
-  }
-
-  if(e.key==="n" || e.key==="N"){
-    document.getElementById("notesBtn").click();
-    return;
-  }
-
-  if(e.key==="r" || e.key==="R"){
-    document.getElementById("rapidBtn").click();
-    return;
-  }
-
-  if(e.key==="h" || e.key==="H"){
-    document.getElementById("hintBtn").click();
-    return;
-  }
-
-  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase()==="z"){
-    e.preventDefault();
-    document.getElementById("undoBtn").click();
-    return;
-  }
-
-  if(!selected) return;
-
-  let r=selected.r;
-  let c=selected.c;
-
-  switch(e.key){
-    case "ArrowUp":
-      r=(r+8)%9;
-      break;
-    case "ArrowDown":
-      r=(r+1)%9;
-      break;
-    case "ArrowLeft":
-      c=(c+8)%9;
-      break;
-    case "ArrowRight":
-      c=(c+1)%9;
-      break;
-    default:
-      return;
-  }
-
-  e.preventDefault();
-
-  selected={r,c};
-  nudgeLastTouch={r,c};
-
-  clearHintExplain();
-  resetNudgeActivity();
   renderBoard();
-});
+  restartTimer();
+  resetNudgeActivity();
+  saveState();
+}
 
-/* ---------- INITIALIZATION ---------- */
-function init(){
-  const appearance=localStorage.getItem("navasudoku_appearance")||"dark";
-  applyAppearance(appearance);
+function restartTimer(){
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    if(!paused && !gameOver){
+      seconds++;
+      document.getElementById("timerDisplay").textContent = zenMode ? "Zen" : formatTime(seconds);
+    }
+  },1000);
+}
 
-  zenMode=(localStorage.getItem("navasudoku_zen")||"off")==="on";
-  soundEnabled=(localStorage.getItem("navasudoku_sound")||"off")==="on";
-  vibrationEnabled=(localStorage.getItem("navasudoku_vibration")||"off")==="on";
-  nudgeEnabled=(localStorage.getItem("navasudoku_smartnudge")??"on")==="on";
+const STORAGE_KEY = "navasudoku_save_v1";
+let storageAvailable = true;
 
-  syncSettingsButtons();
+function saveState(){
+  if(!storageAvailable || isGenerating) return;
+  try{
+    const snapshot = {
+      theme: currentTheme,
+      difficulty: currentDifficulty,
+      puzzle, given, board, solution, notes, zenMode,
+      mistakes, hintsLeft, seconds, gameOver, solved, continueUsed, retried
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+  }catch(e){
+    storageAvailable = false;
+  }
+}
 
-  const saved=loadState();
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return null;
+    const s = JSON.parse(raw);
+    if(!s || !s.board || !s.solution || !s.given || !s.puzzle) return null;
+    return s;
+  }catch(e){
+    storageAvailable = false;
+    return null;
+  }
+}
 
+function resumeFromSave(s){
+  currentTheme = s.theme || "numbers";
+  currentDifficulty = s.difficulty || "easy";
+  given = s.given; board = s.board; solution = s.solution; puzzle = s.puzzle;
+  mistakes = s.mistakes || 0;
+  hintsLeft = (typeof s.hintsLeft === "number") ? s.hintsLeft : 3;
+  seconds = s.seconds || 0;
+  gameOver = !!s.gameOver;
+  solved = !!s.solved;
+  continueUsed = !!s.continueUsed;
+  retried = !!s.retried;
+  zenMode = !!s.zenMode;
+  notes = s.notes || freshNotes();
+  notesMode = false;
+  rapidFillMode = false;
+  lockedSymbol = null;
+  paused = false;
+  selected = null;
+  history = [];
+  isGenerating = false;
+  renderThemeRow();
+  renderPalette();
+  document.getElementById("pauseOverlay").classList.remove("show");
+  document.getElementById("winModal").classList.remove("show");
+  document.getElementById("gameOverModal").classList.remove("show");
+  updateHud();
+  updateModeButtons();
+  renderBoard();
+  restartTimer();
+  resetNudgeActivity();
+}
+
+function formatTime(s){
+  const m=Math.floor(s/60).toString().padStart(2,"0");
+  const sec=(s%60).toString().padStart(2,"0");
+  return `${m}:${sec}`;
+}
+
+function updateHud(){
+  document.getElementById("timerDisplay").textContent = zenMode ? "Zen" : formatTime(seconds);
+  document.getElementById("mistakeDisplay").textContent = zenMode ? `${mistakes}/∞` : `${mistakes}/${maxMistakes}`;
+  document.getElementById("mistakeItem").classList.toggle("warn", mistakes>0 && !zenMode);
+  document.getElementById("hintDisplay").textContent=hintsLeft;
+  document.getElementById("hintBadge").textContent=hintsLeft;
+  document.getElementById("undoBtn").disabled = history.length===0;
+  document.getElementById("hintBtn").disabled = hintsLeft<=0;
+}
+function updateModeButtons(){
+  document.getElementById("notesBtn").classList.toggle("active", notesMode);
+  document.getElementById("zenOffBtn").classList.toggle("active", !zenMode);
+  document.getElementById("zenOnBtn").classList.toggle("active", zenMode);
+  document.getElementById("rapidBtn").classList.toggle("active", rapidFillMode);
+  document.getElementById("nudgeOffBtn").classList.toggle("active", !nudgeEnabled);
+  document.getElementById("nudgeOnBtn").classList.toggle("active", nudgeEnabled);
+}
+
+function renderBoard(){
+  const boardEl = document.getElementById("board");
+  if(!boardEl) return;
+  boardEl.innerHTML = "";
+  for(let r=0; r<9; r++){
+    for(let c=0; c<9; c++){
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      if(r===2 || r===5) cell.classList.add("row-thick");
+      if(given && given[r][c]) cell.classList.add("given");
+      const val = board ? board[r][c] : 0;
+      if(val !== 0){
+        const theme = THEMES[currentTheme];
+        cell.innerHTML = theme.render(theme.symbols[val-1]);
+      }
+      boardEl.appendChild(cell);
+    }
+  }
+}
+
+function renderPalette(){
+  const pal = document.getElementById("palette");
+  if(!pal) return;
+  pal.innerHTML = "";
+  const theme = THEMES[currentTheme];
+  theme.symbols.forEach((sym, i)=>{
+    const btn = document.createElement("button");
+    btn.className = "sym-btn";
+    const inner = document.createElement("div");
+    inner.className = "btn-inner";
+    if(currentTheme === "numbers"){
+      inner.innerHTML = `<span class="number-text">${sym}</span>`;
+    } else if(currentTheme === "colors"){
+      inner.innerHTML = `<div class="sw" style="background:${sym.c}">${sym.icon}</div>`;
+    } else {
+      inner.innerHTML = `<div class="sw" style="background:${sym.c}">${sym.icon}</div>`;
+    }
+    btn.appendChild(inner);
+    pal.appendChild(btn);
+  });
+}
+
+function modeIconHtml(key){
+  if(key==="numbers"){
+    const dots=Array.from({length:9}).map(()=>`<div style="width:5px;height:5px;border-radius:1.5px;background:${COLOR_SET[1].c};"></div>`).join("");
+    return `<div class="mode-icon"><div style="display:grid;grid-template-columns:repeat(3,5px);grid-template-rows:repeat(3,5px);gap:2px;">${dots}</div></div>`;
+  }
+  if(key==="colors"){
+    return `<div class="mode-icon"><div class="sw" style="background:${COLOR_SET[0].c};width:20px;height:20px;border-radius:4px;">${SHAPE_ICONS[0]}</div></div>`;
+  }
+  return `<div class="mode-icon"><div class="sw" style="background:${COLOR_SET[0].c};width:20px;height:20px;border-radius:4px;font-size:0.7rem;">1</div></div>`;
+}
+
+function renderThemeRow(){
+  const container = document.getElementById("themeRow");
+  if(!container) return;
+  container.innerHTML = Object.keys(THEMES).map(k => {
+    const t = THEMES[k];
+    const active = k === currentTheme ? "active" : "";
+    return `<button class="theme-btn ${active}" onclick="switchTheme('${k}')">
+      ${modeIconHtml(k)}
+      <div class="mode-text">
+        <span class="mode-title">${t.title}</span>
+        <span class="mode-sub">${t.sub}</span>
+      </div>
+    </button>`;
+  }).join("");
+}
+
+function switchTheme(newKey){
+  if(newKey === currentTheme) return;
+  currentTheme = newKey;
+  renderThemeRow();
+  renderBoard();
+  renderPalette();
+  saveState();
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  const saved = loadState();
   if(saved){
     resumeFromSave(saved);
-  }else{
-    newGame();
-  }
-
-  if(!localStorage.getItem("navasudoku_howto_seen")){
-    setTimeout(()=>{
-      if(!paused && !gameOver && !solved){
-        openHowTo();
-      }
-    },700);
-  }
-
-  resetNudgeActivity();
-}
-
-window.addEventListener("resize",()=>{
-  positionHintCard();
-  positionHowToCard();
-  resetNudgeActivity();
-});
-
-window.addEventListener("beforeunload",()=>{
-  saveState();
-});
-
-document.addEventListener("visibilitychange",()=>{
-  if(document.visibilityState==="hidden"){
-    saveState();
-  }else{
-    resetNudgeActivity();
-  }
-});
-
-init();    p.style.left=(Math.random()*100)+"%";
-    p.style.background=colors[Math.floor(Math.random()*colors.length)];
-    p.style.animationDelay=(Math.random()*0.4)+"s";
-    p.style.transform=`rotate(${Math.floor(Math.random()*360)}deg)`;
-    layer.appendChild(p);
-  }
-}
-/* ---------- STATS: wins, best times, day streak (localStorage only) ---------- */
-const STATS_KEY = "navasudoku_stats_v1";
-const STATS_BEST_REQUIRES_NO_HINTS = true; // set to false if wins that used hints should also be allowed to set a best time
-function emptyStats(){
-  return { wins:{easy:0,medium:0,hard:0}, best:{easy:null,medium:null,hard:null}, streak:0, bestStreak:0, lastWinDay:null };
-}
-function loadStats(){
-  const e = emptyStats();
-  try{
-    const raw = localStorage.getItem(STATS_KEY);
-    if(!raw) return e;
-    const x = JSON.parse(raw);
-    return {
-      wins:{...e.wins, ...(x.wins||{})},
-      best:{...e.best, ...(x.best||{})},
-      streak:(x.streak|0), bestStreak:(x.bestStreak|0), lastWinDay:x.lastWinDay||null
-    };
-  }catch(err){ return e; }
-}
-function saveStats(st){ try{ localStorage.setItem(STATS_KEY, JSON.stringify(st)); }catch(err){} }
-function localDayKey(d){
-  d = d || new Date();
-  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-}
-function yesterdayKey(){ const d=new Date(); d.setDate(d.getDate()-1); return localDayKey(d); }
-// A streak only counts while it's still alive: won today or yesterday
-function currentStreak(st){
-  return (st.lastWinDay===localDayKey() || st.lastWinDay===yesterdayKey()) ? st.streak : 0;
-}
-function recordWin(){
-  lastWinNote = null;
-  if(retried){ lastWinNote = {best:"Replay — not counted in stats", streak:"", newBest:false}; return; }
-  const st = loadStats();
-  const diff = currentDifficulty;
-  st.wins[diff] = (st.wins[diff]||0) + 1;
-
-  const today = localDayKey();
-  if(st.lastWinDay!==today){
-    st.streak = (st.lastWinDay===yesterdayKey()) ? st.streak+1 : 1;
-    st.lastWinDay = today;
-  }
-  st.bestStreak = Math.max(st.bestStreak, st.streak);
-
-  const hintsUsed = 3 - hintsLeft;
-  const noHintOk = !(STATS_BEST_REQUIRES_NO_HINTS && hintsUsed>0);
-  const eligible = !zenMode && noHintOk;
-  const prev = st.best[diff];
-  let bestLine, newBest=false;
-  if(eligible){
-    if(prev==null || seconds<prev){
-      st.best[diff] = seconds; newBest = true;
-      bestLine = prev==null ? "🏅 New best time!" : `🏅 New best! (was ${formatTime(prev)})`;
-    } else {
-      bestLine = `Best: ${formatTime(prev)}`;
-    }
   } else {
-    bestLine = (prev!=null ? `Best: ${formatTime(prev)} · ` : "") + (zenMode ? "Zen wins don't set records" : "hint used, so no record");
-  }
-  saveStats(st);
-  const streakNow = currentStreak(st);
-  lastWinNote = { best:bestLine, streak: streakNow>=2 ? `🔥 ${streakNow}-day streak` : "", newBest };
-}
-function openStats(){
-  const st = loadStats();
-  const total = st.wins.easy + st.wins.medium + st.wins.hard;
-  document.getElementById("stWins").textContent = total;
-  document.getElementById("stStreak").textContent = currentStreak(st);
-  document.getElementById("stBestStreak").textContent = st.bestStreak;
-  ["easy","medium","hard"].forEach(d=>{
-    document.getElementById("stBest_"+d).textContent = st.best[d]==null ? "—" : formatTime(st.best[d]);
-    document.getElementById("stWins_"+d).textContent = `${st.wins[d]} win${st.wins[d]===1?"":"s"}`;
-  });
-  document.getElementById("statsModal").classList.add("show");
-}
-document.getElementById("statsSettingsBtn").onclick = openStats;
-document.getElementById("closeStatsBtn").onclick = ()=>document.getElementById("statsModal").classList.remove("show");
-document.getElementById("statsModal").addEventListener("click",(e)=>{ if(e.target.id==="statsModal") document.getElementById("statsModal").classList.remove("show"); });
-
-function getWinTitle(){
-  const hintsUsed = 3 - hintsLeft;
-  const t = STAR_THRESHOLDS[currentDifficulty] || STAR_THRESHOLDS.easy;
-  const isFast = seconds <= t.threeMinSec;
-  if(mistakes===0 && hintsUsed===0) return "Flawless! 🏆";
-  if(mistakes===0) return "No Mistakes! ✨";
-  if(isFast) return "Lightning Fast! ⚡";
-  if(mistakes<=1) return "Great Job! 👍";
-  return "Puzzle Solved!";
-}
-// Populates and shows the win modal. Used both right after solving a puzzle
-// and when resuming a session that was already solved before the app was
-// backgrounded (see resumeFromSave). skipConfetti avoids re-firing confetti
-// on a plain resume.
-function showWinModal(skipConfetti){
-  // Track which modes have been won at least once, to power the "Try Another Mode" prompt
-  let modesPlayed={};
-  try{ modesPlayed=JSON.parse(localStorage.getItem("navasudoku_modes_played")||"{}"); }catch(e){ modesPlayed={}; }
-  modesPlayed[currentTheme]=true;
-  localStorage.setItem("navasudoku_modes_played", JSON.stringify(modesPlayed));
-  const untriedModes=Object.keys(THEMES).filter(k=>!modesPlayed[k]);
-  const tryGrid=document.getElementById("tryAnotherGrid");
-  tryGrid.innerHTML="";
-  if(untriedModes.length>0){
-    untriedModes.forEach(key=>{
-      const card=document.createElement("div");
-      card.className="try-mode-card";
-      card.innerHTML=`${modeIconHtml(key)}<div class="try-title">Try ${THEMES[key].title}!</div><div class="try-sub">${THEMES[key].tagline}</div>`;
-      card.onclick=()=>{
-        currentTheme=key;
-        renderThemeRow();
-        document.getElementById("winModal").classList.remove("show");
-        newGame();
-      };
-      tryGrid.appendChild(card);
-    });
-  }
-  document.getElementById("tryAnotherSection").style.display = untriedModes.length>0 ? "" : "none";
-
-  renderStars(computeStars());
-  if(!skipConfetti) spawnConfetti();
-  document.getElementById("winTitle").textContent=getWinTitle();
-  document.getElementById("winTime").textContent=formatTime(seconds);
-  document.getElementById("winMistakes").textContent=mistakes;
-  const winBestEl=document.getElementById("winBest"), winStreakEl=document.getElementById("winStreak");
-  if(lastWinNote){
-    winBestEl.textContent=lastWinNote.best; winStreakEl.textContent=lastWinNote.streak;
-    winBestEl.classList.toggle("hl", !!lastWinNote.newBest);
-  } else { // e.g. resumed an already-solved session: just show the current record
-    const b=loadStats().best[currentDifficulty];
-    winBestEl.textContent = b==null ? "" : `Best: ${formatTime(b)}`; winStreakEl.textContent="";
-    winBestEl.classList.remove("hl");
-  }
-  document.getElementById("winMistakesLabel").textContent = `❌ Mistake${mistakes===1?"":"s"}`;
-  document.getElementById("shareText").textContent=buildShareText();
-  document.getElementById("shareStatus").textContent="";
-  document.getElementById("winModal").classList.add("show");
-}
-function checkWin(){
-  for(let r=0;r<9;r++) for(let c=0;c<9;c++){
-    if(board[r][c]!==solution[r][c]) return false;
-  }
-  gameOver=true;
-  solved=true;
-  clearInterval(timerInterval);
-  recordWin();
-  vibrate([40,60,40,60,80]);
-  playSound("win");
-
-  if(prefersReducedMotion()){
-    showWinModal(false);
-    return true;
-  }
-
-  const cellEls=document.getElementById("board").children;
-  let maxDelay=0;
-  for(let r=0;r<9;r++) for(let c=0;c<9;c++){
-    const delay=(r+c)*18;
-    if(delay>maxDelay) maxDelay=delay;
-    const el=cellEls[r*9+c];
-    el.style.animationDelay=delay+"ms";
-    el.classList.add("win-glow");
-  }
-  setTimeout(()=>showWinModal(false), maxDelay+480+60);
-  return true;
-}
-
-let statusClearToken=0;
-function setStatus(msg, warn, autoClearMs){
-  const el=document.getElementById("status");
-  el.textContent=msg;
-  el.className = warn ? "warnText" : "";
-  statusClearToken++;
-  if(autoClearMs){
-    const myToken=statusClearToken;
-    setTimeout(()=>{
-      if(statusClearToken===myToken){
-        el.textContent="";
-        el.className="";
-      }
-    }, autoClearMs);
-  }
-}
-
-/* ---------- SETTINGS MODAL ---------- */
-document.getElementById("settingsBtn").onclick=()=>{
-  document.getElementById("settingsModal").classList.add("show");
-  document.getElementById("shareSettingsStatus").textContent="";
-};
-document.getElementById("closeSettingsBtn").onclick=()=>{
-  document.getElementById("settingsModal").classList.remove("show");
-  document.getElementById("confirmOverlay").classList.remove("show");
-  resetNudgeActivity();
-};
-document.getElementById("settingsModal").addEventListener("click", (e)=>{
-  if(e.target.id==="settingsModal"){
-    document.getElementById("settingsModal").classList.remove("show");
-    document.getElementById("confirmOverlay").classList.remove("show");
-  }
-});
-let pendingConfirmAction=null;
-function openConfirm(action, message, yesLabel){
-  pendingConfirmAction=action;
-  document.getElementById("confirmHeading").style.display="none";
-  document.getElementById("confirmStats").style.display="none";
-  document.getElementById("confirmRestartBtn").style.display="none";
-  document.getElementById("confirmMessage").innerHTML = message || "Start New Puzzle?<br>Your current puzzle progress will be lost.";
-  document.getElementById("confirmYesBtn").textContent = yesLabel || "New Puzzle";
-  document.getElementById("confirmCancelBtn").style.display = "";
-  document.getElementById("confirmOverlay").classList.add("show");
-}
-const newGameSettingsBtnEl=document.getElementById("newGameSettingsBtn");
-newGameSettingsBtnEl.onclick=()=>{
-  openConfirm(()=>{
-    document.getElementById("settingsModal").classList.remove("show");
+    renderThemeRow();
     newGame();
-  });
-};
-document.getElementById("confirmCancelBtn").onclick=()=>{
-  document.getElementById("confirmOverlay").classList.remove("show");
-  pendingConfirmAction=null;
-};
-document.getElementById("confirmYesBtn").onclick=()=>{
-  const action=pendingConfirmAction;
-  pendingConfirmAction=null;
-  const keepOpen = action ? action() : false;
-  if(!keepOpen) document.getElementById("confirmOverlay").classList.remove("show");
-};
-document.getElementById("confirmOverlay").addEventListener("click", (e)=>{
-  if(e.target.id==="confirmOverlay"){
-    document.getElementById("confirmOverlay").classList.remove("show");
-    pendingConfirmAction=null;
   }
 });
-
-
-/* ---------- LIGHT/DARK THEME ---------- */
-function applyAppearance(mode){
-  document.documentElement.setAttribute("data-theme", mode);
-  document.getElementById("lightThemeBtn").classList.toggle("active", mode==="light");
-  document.getElementById("darkThemeBtn").classList.toggle("active", mode==="dark");
-  localStorage.setItem("navasudoku_appearance", mode);
-}
-document.getElementById("lightThemeBtn").onclick=()=>applyAppearance("light");
-document.getElementById("darkThemeBtn").onclick=()=>applyAppearance("dark");
-applyAppearance(localStorage.getItem("navasudoku_appearance") || "dark");
-
-/* ---------- CONTROLS ---------- */
-document.getElementById("newGameBtn") && (document.getElementById("newGameBtn").onclick=newGame);
-document.getElementById("winNextBtn").onclick=newGame;
-document.getElementById("winRetryBtn").onclick=()=>{
-  document.getElementById("winModal").classList.remove("show");
-  restartBoard();
-};
-document.getElementById("gameOverContinueBtn").onclick=()=>{
-  continueUsed=true;
-  mistakes=0;
-  gameOver=false;
-  // clear any incorrect entries so the player isn't left with stale wrong values after mistakes are forgiven
-  for(let r=0;r<9;r++){
-    for(let c=0;c<9;c++){
-      if(!given[r][c] && board[r][c]!==0 && board[r][c]!==solution[r][c]){
-        board[r][c]=0;
-      }
-    }
-  }
-  document.getElementById("gameOverModal").classList.remove("show");
-  renderBoard();
-  renderPalette();
-  updateHud();
-  restartTimer();
-  setStatus("Continuing — wrong entries cleared, mistakes reset.", false, 3000);
-  saveState();
-};
-document.getElementById("gameOverNewBtn").onclick=()=>{
-  document.getElementById("gameOverModal").classList.remove("show");
-  newGame();
-};
-document.getElementById("gameOverRestartBtn").onclick=()=>{
-  document.getElementById("gameOverModal").classList.remove("show");
-  restartBoard();
-};
-document.getElementById("undoBtn").onclick=undo;
-document.getElementById("hintBtn").onclick=useHint;
-
-/* ---------- MODE SELECTOR: action-triggered dimming ----------
-   Dim (to ~55%) on the first gameplay action: grid tap, keypad tap or Hint tap.
-   Restore to 100% only on a genuine tap inside the selector itself (and on New Puzzle / Retry). */
-function dimModeSelector(){ const r=document.getElementById("themeRow"); if(r) r.classList.add("mode-dimmed"); }
-function restoreModeSelector(){ const r=document.getElementById("themeRow"); if(r) r.classList.remove("mode-dimmed"); }
-["board","palette","hintBtn"].forEach(id=>{
-  document.getElementById(id).addEventListener("pointerdown", dimModeSelector, {passive:true});
-});
-document.getElementById("themeRow").addEventListener("pointerdown", restoreModeSelector, {passive:true});
-/* ---------- SMART NUDGE ----------
-   After the player idles (Easy 20s / Medium 30s / Hard: disabled), softly pulse one
-   "last empty cell" (a row/column/box with exactly one empty cell left) for ~2.4s, then
-   fade. If several such cells exist, rotate to a new one roughly every 20s, nearest to
-   the player's last-touched cell first, until each has been shown once this idle round.
-   Any interaction cancels the current pulse and restarts the idle clock. */
-let nudgeTimer = null;
-let nudgeActiveEl = null;
-let nudgeShownCells = new Set();
-let nudgeLastTouch = {r:0, c:0};
-
-function nudgeThresholdMs(){
-  if(currentDifficulty==="easy") return 20000;
-  if(currentDifficulty==="medium") return 30000;
-  return null; // Hard: Smart Nudge off
-}
-function nudgeReducedMotion(){
-  return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-function nudgeEligible(){
-  return nudgeEnabled && !nudgeReducedMotion() && !paused && !gameOver && !solved
-    && !(typeof howtoOpen!=="undefined" && howtoOpen)
-    && !document.getElementById("settingsModal").classList.contains("show")
-    && !document.getElementById("statsModal").classList.contains("show")
-    && nudgeThresholdMs()!==null;
-}
-function clearActiveNudgePulse(){
-  if(nudgeActiveEl){ nudgeActiveEl.classList.remove("nudge-cell"); nudgeActiveEl=null; }
-}
-function resetNudgeActivity(){
-  clearActiveNudgePulse();
-  nudgeShownCells.clear();
-  if(nudgeTimer){ clearTimeout(nudgeTimer); nudgeTimer=null; }
-  if(!nudgeEligible()) return;
-  nudgeTimer = setTimeout(showNextNudge, nudgeThresholdMs());
-}
-function showNextNudge(){
-  clearActiveNudgePulse();
-  if(!nudgeEligible()) return; // stays dormant until the next interaction re-arms it
-  const clean = board.map((row,r)=>row.map((v,c)=>(v!==0 && v===solution[r][c]) ? v : 0));
-  const seen = new Set(), cands = [];
-  collectHintSteps(clean).filter(st=>st.kind==="full").forEach(st=>{
-    const k = st.r+","+st.c;
-    if(!seen.has(k)){ seen.add(k); cands.push({r:st.r, c:st.c}); }
-  });
-  const remaining = cands.filter(p=>!nudgeShownCells.has(p.r+","+p.c));
-  if(remaining.length===0) return; // no last-empty-cell right now, or this round's already shown them all
-  const ref = selected || nudgeLastTouch;
-  remaining.sort((a,b)=>(Math.abs(a.r-ref.r)+Math.abs(a.c-ref.c)) - (Math.abs(b.r-ref.r)+Math.abs(b.c-ref.c)));
-  const pick = remaining[0];
-  nudgeShownCells.add(pick.r+","+pick.c);
-  const el = document.querySelectorAll("#board .cell")[pick.r*9+pick.c];
-  if(el){
-    el.classList.add("nudge-cell");
-    nudgeActiveEl = el;
-    setTimeout(()=>{ if(nudgeActiveEl===el){ el.classList.remove("nudge-cell"); nudgeActiveEl=null; } }, 2400);
-  }
-  nudgeTimer = setTimeout(showNextNudge, 20000); // next candidate in the rotation, ~20s later
-}
-["board","palette","hintBtn"].forEach(id=>{
-  document.getElementById(id).addEventListener("pointerdown", resetNudgeActivity, {passive:true});
-});
-document.querySelector(".controls").addEventListener("pointerdown", resetNudgeActivity, {passive:true});
-document.getElementById("hintCard").onclick=()=>clearHintExplain();
-document.getElementById("pauseBtn").onclick=()=>{
-  if(gameOver) return;
-  clearHintExplain();
-  paused=!paused;
-  document.getElementById("pauseOverlay").classList.toggle("show", paused);
-  document.getElementById("pauseBtn").title = paused ? "Resume" : "Pause";
-  document.getElementById("pauseBtn").classList.toggle("active", paused);
-  if(!paused) resetNudgeActivity();
-};
-document.getElementById("pauseOverlay").onclick=()=>{
-  paused=false;
-  document.getElementById("pauseOverlay").classList.remove("show");
-  document.getElementById("pauseBtn").title="Pause";
-  document.getElementById("pauseBtn").classList.remove("active");
-  resetNudgeActivity();
-};
-document.getElementById("pauseSettingsBtn").onclick=(e)=>{
-  e.stopPropagation(); // open Settings without resuming the game
-  document.getElementById("settingsBtn").click();
-};
-document.getElementById("notesBtn").onclick=()=>{
-  notesMode=!notesMode;
-  if(notesMode && rapidFillMode){ rapidFillMode=false; lockedSymbol=null; } // mutually exclusive input modes
-  updateModeButtons();
-  renderPalette();
-  setStatus(notesMode ? "Notes mode on — tap numbers to mark candidates." : "Notes mode off.", false, 3000);
-};
-function setZenMode(on){
-  if(zenMode===on) return;
-  zenMode=on;
-  updateModeButtons();
-  updateHud();
-  setStatus(zenMode ? "Zen mode on — no timer pressure, no mistake limit." : "Zen mode off.", false, 3000);
-  saveState();
-  if(!zenMode && mistakes>=maxMistakes && !gameOver){
-    document.getElementById("settingsModal").classList.remove("show");
-    triggerGameOver();
-  }
-}
-document.getElementById("zenOffBtn").onclick=()=>{
-  if(zenMode && mistakes>=maxMistakes){
-    openConfirm(()=>{
-      // Stage 1 confirmed: end the game, then morph this same popup into the Game Over screen
-      zenMode=false;
-      updateModeButtons();
-      updateHud();
-      gameOver=true;
-      clearInterval(timerInterval);
-      document.getElementById("settingsModal").classList.remove("show");
-      document.getElementById("confirmHeading").style.display="";
-      document.getElementById("confirmMessage").textContent="You've made too many mistakes for this puzzle.";
-      document.getElementById("confirmStatTime").textContent=formatTime(seconds);
-      document.getElementById("confirmStatMistakes").textContent=`${mistakes}/${maxMistakes}`;
-      document.getElementById("confirmStats").style.display="";
-      document.getElementById("confirmCancelBtn").style.display="none";
-      document.getElementById("confirmYesBtn").textContent="🔄 Start New Puzzle";
-      document.getElementById("confirmRestartBtn").style.display="";
-      document.getElementById("confirmRestartBtn").onclick=()=>{
-        document.getElementById("confirmOverlay").classList.remove("show");
-        restartBoard();
-      };
-      pendingConfirmAction=()=>{ newGame(); };
-      saveState();
-      return true; // keep the popup open, now showing Game Over content
-    }, "Turning off Zen now will end this game — you're already over the mistake limit.<br>Continue?", "Yes, end game");
-    return;
-  }
-  setZenMode(false);
-};
-document.getElementById("zenOnBtn").onclick=()=>setZenMode(true);
-function setNudgeEnabled(on){
-  nudgeEnabled = on;
-  try{ localStorage.setItem("navasudoku_smartnudge", on ? "on" : "off"); }catch(e){}
-  updateModeButtons();
-  resetNudgeActivity();
-}
-document.getElementById("nudgeOffBtn").onclick=()=>setNudgeEnabled(false);
-document.getElementById("nudgeOnBtn").onclick=()=>setNudgeEnabled(true);
-function updateVibrationButtons(){
-  document.getElementById("vibeOffBtn").classList.toggle("active", !vibrationEnabled);
-  document.getElementById("vibeOnBtn").classList.toggle("active", vibrationEnabled);
-}
-function setVibration(on){
-  vibrationEnabled=on;
-  localStorage.setItem("navasudoku_vibration", on ? "on" : "off");
-  updateVibrationButtons();
-  if(on) vibrate(30);
-}
-document.getElementById("vibeOffBtn").onclick=()=>setVibration(false);
-document.getElementById("vibeOnBtn").onclick=()=>setVibration(true);
-updateVibrationButtons();
-
-function updateSoundButtons(){
-  document.getElementById("soundOffBtn").classList.toggle("active", !soundEnabled);
-  document.getElementById("soundOnBtn").classList.toggle("active", soundEnabled);
-}
-function setSound(on){
-  soundEnabled=on;
-  localStorage.setItem("navasudoku_sound", on ? "on" : "off");
-  updateSoundButtons();
-  if(on) playSound("correct");
-}
-document.getElementById("soundOffBtn").onclick=()=>setSound(false);
-document.getElementById("soundOnBtn").onclick=()=>setSound(true);
-updateSoundButtons();
-document.getElementById("rapidBtn").onclick=()=>{
-  rapidFillMode=!rapidFillMode;
-  if(rapidFillMode && notesMode){ notesMode=false; } // mutually exclusive input modes
-  lockedSymbol=null;
-  updateModeButtons();
-  renderPalette();
-  setStatus(rapidFillMode ? "Rapid Fill on — pick a symbol, then tap cells to fill." : "Rapid Fill off.", false, 3000);
-};
-document.getElementById("shareBtn").onclick=async ()=>{
-  const text=buildShareText();
-  try{
-    await navigator.clipboard.writeText(text);
-    document.getElementById("shareStatus").textContent="Copied to clipboard!";
-  }catch(e){
-    try{
-      const ta=document.createElement("textarea");
-      ta.value=text; ta.style.position="fixed"; ta.style.opacity="0";
-      document.body.appendChild(ta); ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-      document.getElementById("shareStatus").textContent="Copied to clipboard!";
-    }catch(e2){
-      document.getElementById("shareStatus").textContent="Couldn't auto-copy — long-press the text above to copy manually.";
-    }
-  }
-};
-
-const shareNativeBtn=document.getElementById("shareNativeBtn");
-if(navigator.share){
-  shareNativeBtn.onclick=async ()=>{
-    const text=buildShareText();
-    // Only pass a url to the native share sheet if it's a real http(s) link —
-    // some contexts (e.g. a locally-opened file) resolve to a non-web URI
-    // like content:// or file://, which can crash the share sheet.
-    const shareData = /^https?:\/\//i.test(SHARE_URL)
-      ? { title:"Neo Sudoku", text, url:SHARE_URL }
-      : { title:"Neo Sudoku", text };
-    try{
-      await navigator.share(shareData);
-    }catch(e){
-      // user cancelled the native share sheet — no error message needed
-    }
-  };
-}else{
-  // Progressive enhancement: hide the native-share button on browsers that
-  // don't support the Web Share API. "Copy" already covers this case.
-  shareNativeBtn.style.display="none";
-}
-
-document.getElementById("shareSettingsBtn").onclick=async ()=>{
-  const inviteText="Come play Neo Sudoku with me! 🧩";
-  const statusEl=document.getElementById("shareSettingsStatus");
-  if(navigator.share){
-    try{
-      await navigator.share({ title:"Neo Sudoku", text:inviteText, url:SHARE_URL });
-    }catch(e){
-      // user cancelled the share sheet — no error message needed
-    }
-    return;
-  }
-  const fallbackText=`${inviteText} ${SHARE_URL}`;
-  try{
-    await navigator.clipboard.writeText(fallbackText);
-    statusEl.textContent="Link copied!";
-  }catch(e){
-    try{
-      const ta=document.createElement("textarea");
-      ta.value=fallbackText; ta.style.position="fixed"; ta.style.opacity="0";
-      document.body.appendChild(ta); ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-      statusEl.textContent="Link copied!";
-    }catch(e2){
-      statusEl.textContent="Couldn't auto-copy the link.";
-    }
-  }
-};
-
-/* ---------- HOW TO PLAY (first-run tutorial) ---------- */
-const HOWTO_KEY = "navasudoku_howto_seen";
-const HOWTO_STEPS = [
-  {icon:"🧩", title:"Welcome to Neo Sudoku", body:"Fill the grid so every row, column and 3×3 box has each symbol exactly once. Easy and Medium puzzles never need guessing.", target:"#board"},
-  {icon:"🎨", title:"Three ways to play", body:"Classic uses numbers, Chroma uses colours, Fusion uses both. Same puzzle, different look. Tap a mode any time.", target:"#themeRow"},
-  {icon:"👆", title:"Tap a cell, then a symbol", body:"Pick an empty cell, then choose a symbol on the keypad. A wrong entry turns red and counts as a mistake (3 mistakes = game over).", target:"#palette"},
-  {icon:"💡", title:"Stuck? Get help", body:"Notes for pencil marks, Undo to step back, Hint explains the next logical step, Rapid Fill lets you pick a symbol first.", target:".controls"},
-  {icon:"🧘", title:"Play your way", body:"Zen mode removes the mistake limit. Find it in Settings, along with your stats and best times.", target:"#settingsBtn"}
-];
-let howtoStep = 0, howtoOpen = false, howtoWasPaused = false;
-// New player = no saved game, no stats, tutorial never shown, and the phone can actually store the "seen" flag
-function isFirstRun(savedGame){
-  try{
-    if(savedGame) return false;
-    if(localStorage.getItem(HOWTO_KEY)) return false;
-    if(localStorage.getItem("navasudoku_stats_v1")) return false;
-    localStorage.setItem("navasudoku_probe","1"); localStorage.removeItem("navasudoku_probe");
-    return true;
-  }catch(e){ return false; }
-}
-function markHowtoSeen(){ try{ localStorage.setItem(HOWTO_KEY,"1"); }catch(e){} }
-function positionHowto(){
-  const el = document.querySelector(HOWTO_STEPS[howtoStep].target);
-  if(!el) return;
-  const t = el.getBoundingClientRect(), pad = 6, vh = window.innerHeight;
-  const spot = document.getElementById("howtoSpot");
-  spot.style.left = (t.left-pad)+"px"; spot.style.top = (t.top-pad)+"px";
-  spot.style.width = (t.width+pad*2)+"px"; spot.style.height = (t.height+pad*2)+"px";
-  const card = document.getElementById("howtoCard");
-  const ch = card.offsetHeight;
-  const below = vh-(t.bottom+pad), above = t.top-pad;
-  let top;
-  if(below >= ch+16 || below >= above) top = Math.min(t.bottom+pad+12, vh-ch-8);   // card under the highlighted part
-  else top = Math.max(8, t.top-pad-12-ch);                                          // or above it
-  card.style.top = top+"px";
-}
-function renderHowtoStep(){
-  const s = HOWTO_STEPS[howtoStep], last = howtoStep === HOWTO_STEPS.length-1;
-  document.getElementById("howtoTitle").textContent = s.icon+" "+s.title;
-  document.getElementById("howtoBody").textContent = s.body;
-  document.getElementById("howtoDots").innerHTML = HOWTO_STEPS.map((_,i)=>`<span class="${i===howtoStep?"on":""}"></span>`).join("");
-  document.getElementById("howtoNext").textContent = last ? "Let's play" : "Next";
-  document.getElementById("howtoSkip").style.display = last ? "none" : "";
-  positionHowto();
-}
-function openHowto(auto){
-  if(howtoOpen) return;
-  howtoOpen = true; howtoStep = 0;
-  howtoWasPaused = paused; paused = true;           // timer and board input stay frozen while the tutorial is up
-  clearHintExplain();
-  document.getElementById("howto").classList.add("show");
-  renderHowtoStep();
-  if(auto) markHowtoSeen();                          // auto-open happens only once, even if the app is killed mid-way
-}
-function closeHowto(){
-  if(!howtoOpen) return;
-  howtoOpen = false;
-  document.getElementById("howto").classList.remove("show");
-  paused = howtoWasPaused;
-  markHowtoSeen();
-  resetNudgeActivity();
-}
-document.getElementById("howtoNext").onclick = ()=>{
-  if(howtoStep >= HOWTO_STEPS.length-1) closeHowto();
-  else { howtoStep++; renderHowtoStep(); }
-};
-document.getElementById("howtoSkip").onclick = closeHowto;
-document.getElementById("howtoSettingsBtn").onclick = ()=>{
-  document.getElementById("settingsModal").classList.remove("show");
-  document.getElementById("confirmOverlay").classList.remove("show");
-  openHowto(false);
-};
-window.addEventListener("resize", ()=>{ if(howtoOpen) positionHowto(); });
-
-/* ---------- INIT ---------- */
-document.addEventListener("visibilitychange", ()=>{
-  if(document.hidden) saveState(); // Android can kill the process any time it's backgrounded
-});
-
-const savedGame = loadState();
-const firstRun = isFirstRun(savedGame);
-if(savedGame){
-  resumeFromSave(savedGame);
-} else {
-  renderThemeRow();
-  renderDiffRow();
-  Promise.resolve(newGame()).then(()=>{ if(firstRun) openHowto(true); });
-}
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js").catch(()=>{});
-  });
-}
 </script>
 </body>
 </html>
